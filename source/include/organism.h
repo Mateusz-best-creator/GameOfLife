@@ -12,5 +12,5 @@ public:
     
     virtual void action() = 0;
     virtual void collision() = 0;
-    virtual char draw() = 0;
+    virtual char draw() const = 0;
 };
