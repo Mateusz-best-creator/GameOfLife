@@ -4,7 +4,7 @@
 class Organism
 {
 private:
-    int strength, initiative, position_x, position_y;
+    int position_x, position_y;
 
 public:
     Organism();

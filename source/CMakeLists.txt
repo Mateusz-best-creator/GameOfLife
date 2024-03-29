@@ -12,4 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_subdirectory(src)
 
 add_executable(GameOfLife src/main.cpp )
-target_link_libraries(GameOfLife PRIVATE libworld)
+target_link_libraries(GameOfLife PRIVATE world)
+
+# Add compiler flags
+target_compile_options(GameOfLife PRIVATE -Wall -Wextra)

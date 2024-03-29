@@ -1,9 +1,13 @@
 #include "animal.h"
+#include "organism_info.h"
 
-Animal::Animal(char ch)
-    : character(ch)
+Animal::Animal(std::string n)
 {
-
+    name = n;
+    AnimalInfo obj = animalsInfo[n];
+    character = obj.character;
+    initiative = obj.initiative;
+    strength = obj.strength;
 }
 
 Animal::~Animal()

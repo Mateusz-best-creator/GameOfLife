@@ -1,7 +1,7 @@
 #include "human.h"
 
-Human::Human(char ch)
-    : Animal(ch)
+Human::Human(std::string n)
+    : Animal(n)
 {
 
 }

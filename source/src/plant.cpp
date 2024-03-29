@@ -1,9 +1,12 @@
 #include "plant.h"
+#include "organism_info.h"
 
-Plant::Plant(char ch)
-    : character(ch)
+Plant::Plant(std::string n)
 {
-
+    name = n;
+    PlantInfo obj = plantsInfo[n];
+    character = obj.character;
+    strength = obj.strength;
 }
 
 Plant::~Plant()

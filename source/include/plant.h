@@ -1,14 +1,19 @@
 #pragma once
 
 #include "organism.h"
+#include <string>
+
 
 class Plant : public Organism
 {
 private:
+    std::string name;
     char character;
+    int strength;
+    const int initiative = 0;
 
 public:
-    Plant(char);
+    Plant(std::string n);
     ~Plant();
 
     virtual void action() override;
