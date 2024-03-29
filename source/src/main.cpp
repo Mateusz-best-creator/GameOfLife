@@ -12,5 +12,14 @@ int main()
     std::cin >> m;
 
     World world(n, m);
-    world.drawWorld();
+    world.legend();
+    int turn = 1;
+    while (true)
+    {
+        std::cout << "\nTurn " << turn++ << ":\n";
+        world.drawWorld();
+        world.makeTurn();
+        std::cin >> n;
+    }
+
 }

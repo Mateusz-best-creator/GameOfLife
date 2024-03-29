@@ -3,7 +3,7 @@
 #include <vector>
 #include "organism.h"
 
-const int KINDS_OF_ORGANISMS = 11;
+const int KINDS_OF_ORGANISMS = 12;
 
 class World
 {
@@ -18,8 +18,9 @@ public:
     ~World();
 
     void makeTurn();
+    void legend();
     void drawWorld() const;
     bool is_human_on_map() const;
 
-    void add(std::vector<Organism*>& data, const std::string& name, int times, bool is_animal = true);
+    void add(std::vector<Organism*>& data, const std::string& name, int times, bool is_animal = true, bool is_human = false);
 };

@@ -1,10 +1,12 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <iomanip>
 
 #include "world.h"
 #include "animal.h"
 #include "plant.h"
+#include "human.h"
 
 World::World(int h, int w)
     : height(h), width(w), max_organisms(h * w), number_of_organisms(0)
@@ -66,7 +68,34 @@ World::World(int h, int w)
         case 11:
             add(organisms, "Sosnowsky_hogweed", randomNumber, false);
             break;
+        case 12:
+            // We always want one human at our board
+            add(organisms, "Human", 1, false);
+            break;
+        default:
+            break;
         }
+    }
+}
+
+void World::add(std::vector<Organism*>& data, const std::string& name, int times, bool is_animal, bool is_human)
+{
+    int random_row = rand() % height, random_column = rand() % width;
+    
+    for (int j = 0; j < times; j++)
+    {
+        while (board[random_row][random_column] != ' ')
+        {
+            random_row = rand() % height;
+            random_column = rand() % width;
+        }
+        if (is_human)
+            data.push_back(new Human(name, random_row, random_column));
+        else if (is_animal)
+            data.push_back(new Animal(name, random_row, random_column));
+        else
+            data.push_back(new Plant(name, random_row, random_column));
+        board[random_row][random_column] = name[0];
     }
 }
 
@@ -107,22 +136,26 @@ void World::drawWorld() const
     std::cout << "\n\n";
 }
 
-
-void World::add(std::vector<Organism*>& data, const std::string& name, int times, bool is_animal)
+void World::makeTurn()
 {
-    int random_row = rand() % height, random_column = rand() % width;
+
+}
+
+void World::legend() 
+{
+    std::cout << "\nLegend of symbols:\n";
+    std::cout << std::left << std::setw(25) << "w -> wolf";
+    std::cout << std::left << std::setw(25) << "s -> sheep";
+    std::cout << std::left << std::setw(25) << "f -> fox";
+    std::cout << std::left << "t -> turtle\n";
     
-    for (int j = 0; j < times; j++)
-    {
-        while (board[random_row][random_column] != ' ')
-        {
-            random_row = rand() % height;
-            random_column = rand() % width;
-        }
-        if (is_animal)
-            data.push_back(new Animal(name, random_row, random_column));
-        else
-            data.push_back(new Plant(name, random_row, random_column));
-        board[random_row][random_column] = name[0];
-    }
+    std::cout << std::left << std::setw(25) << "a -> antelope";
+    std::cout << std::left << std::setw(25) << "c -> cyber_sheep";
+    std::cout << std::left << std::setw(25) << "g -> grass";
+    std::cout << std::left << "s -> sow_thistle\n";
+    
+    std::cout << std::left << std::setw(25) << "g -> guarana";
+    std::cout << std::left << std::setw(25) << "b -> belladonna";
+    std::cout << std::left << std::setw(25) << "S -> Sosnowsky_hogweed";
+    std::cout << std::left << "H -> human\n\n";
 }
