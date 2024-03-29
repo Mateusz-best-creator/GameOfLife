@@ -1,7 +1,8 @@
 #include "animal.h"
 #include "organism_info.h"
 
-Animal::Animal(std::string n)
+Animal::Animal(std::string n, int row, int column)
+    : Organism(row, column)
 {
     name = n;
     AnimalInfo obj = animalsInfo[n];

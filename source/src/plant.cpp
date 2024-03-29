@@ -1,7 +1,8 @@
 #include "plant.h"
 #include "organism_info.h"
 
-Plant::Plant(std::string n)
+Plant::Plant(std::string n, int row, int column)
+    : Organism(row, column)
 {
     name = n;
     PlantInfo obj = plantsInfo[n];

@@ -13,7 +13,7 @@ private:
     const int initiative = 0;
 
 public:
-    Plant(std::string n);
+    Plant(std::string n, int, int);
     ~Plant();
 
     virtual void action() override;

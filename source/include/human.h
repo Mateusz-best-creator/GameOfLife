@@ -8,7 +8,7 @@ private:
     const int human_strength = 5, human_initiative = 4;
     
 public:
-    Human(std::string);
+    Human(std::string, int, int);
     ~Human();
 
     virtual void action() override;

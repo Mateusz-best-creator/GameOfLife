@@ -12,7 +12,7 @@ private:
     
 
 public:
-    Animal(std::string);
+    Animal(std::string, int, int);
     ~Animal();
 
     virtual void action() override;

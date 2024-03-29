@@ -6,24 +6,16 @@
 #include "animal.h"
 #include "plant.h"
 
-void add(std::vector<Organism*>& data, const std::string& name, int times, bool is_animal = true)
-{
-    if (is_animal)
-    {
-        for (int j = 0; j < times; j++)
-            data.push_back(new Animal(name));
-    }
-    else
-    {
-        for (int j = 0; j < times; j++)
-            data.push_back(new Plant(name));
-    }
-    
-}
-
 World::World(int h, int w)
     : height(h), width(w), max_organisms(h * w), number_of_organisms(0)
 {
+    board = new char*[height];
+    for (int i = 0; i < height; i++)
+        board[i] = new char[width];
+    for (int i = 0; i < height; i++) 
+        for (int j = 0; j < width; j++)
+            board[i][j] = ' ';
+
     srand(time(nullptr));
 
     // Get random number to decide how many kinds of this thing we want to initially have in our simulation
@@ -80,8 +72,14 @@ World::World(int h, int w)
 
 World::~World()
 {
+    // Deallocate organism memory
     for (auto organism: organisms)
         delete organism;
+
+    // Deallocate board memory
+    for (int i = 0; i < height; i++)
+        delete[] board[i];
+    delete[] board;
 }
 
 void World::drawWorld() const
@@ -97,10 +95,34 @@ void World::drawWorld() const
             else if (j == 0 || j == temp_width - 1)
                 std::cout << "|";
             else
-                std::cout << " ";
+            {
+                if (board[i - 1][j - 1] != ' ')
+                    std::cout << board[i - 1][j - 1];
+                else
+                    std::cout << " ";
+            }
         }
         std::cout << std::endl;
     }
     std::cout << "\n\n";
 }
 
+
+void World::add(std::vector<Organism*>& data, const std::string& name, int times, bool is_animal)
+{
+    int random_row = rand() % height, random_column = rand() % width;
+    
+    for (int j = 0; j < times; j++)
+    {
+        while (board[random_row][random_column] != ' ')
+        {
+            random_row = rand() % height;
+            random_column = rand() % width;
+        }
+        if (is_animal)
+            data.push_back(new Animal(name, random_row, random_column));
+        else
+            data.push_back(new Plant(name, random_row, random_column));
+        board[random_row][random_column] = name[0];
+    }
+}
