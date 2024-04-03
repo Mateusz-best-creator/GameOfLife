@@ -3,13 +3,13 @@
 #include "organism.h"
 #include <string>
 
+enum class AnimalTypes { WOLF, SHEEP, FOX, TURTLE, ANTELOPE, CYBER_SHEEP };
+
 class Animal : public Organism
 {
 private:
     std::string name;
-    char character;
     int strength, initiative;
-    
 
 public:
     Animal(std::string, int, int);
@@ -19,9 +19,5 @@ public:
     virtual void collision() override;
     virtual char draw() const override;
 
-    char& get_character();
-    const char& get_character() const;
-    int& get_initiative();
-    const int& get_initiative() const;
-
+    const int& get_initiative() const override { return initiative; }
 };

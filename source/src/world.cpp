@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <iomanip>
+#include <algorithm>
 
 #include "world.h"
 #include "animal.h"
@@ -17,14 +18,14 @@ World::World(int h, int w)
     for (int i = 0; i < height; i++) 
         for (int j = 0; j < width; j++)
             board[i][j] = ' ';
-
+    
     srand(time(nullptr));
 
     // Get random number to decide how many kinds of this thing we want to initially have in our simulation
     int n_species;
-    if (height * width < 15)
+    if (height * width <= 16)
         n_species = 1;
-    else if (height * width < 25)
+    else if (height * width <= 25)
         n_species = 2;
     else 
         n_species = 3;
@@ -70,12 +71,18 @@ World::World(int h, int w)
             break;
         case 12:
             // We always want one human at our board
-            add(organisms, "Human", 1, false);
+            add(organisms, "Human", 1, false, true);
             break;
         default:
             break;
         }
     }
+
+    // Sort organisms based on their initiative, from highest to lowest
+    std::sort(organisms.begin(), organisms.end(), [](const Organism* first, const Organism* second)
+    {
+        return first->get_initiative() > second->get_initiative();
+    });
 }
 
 void World::add(std::vector<Organism*>& data, const std::string& name, int times, bool is_animal, bool is_human)
@@ -111,6 +118,21 @@ World::~World()
     delete[] board;
 }
 
+void World::update_world()
+{
+    for (size_t i = 0; i < height; i++)
+        for (size_t j = 0; j < width; j++)
+            board[i][j] = ' ';
+    
+    for (const auto& organism : organisms)
+    {
+        int row = organism->get_position_row();
+        int column = organism->get_position_column();
+        board[row][column] = organism->get_character();
+        //std::cout << "row = " << row << " column = " << column << " char = " << organism->get_character() << std::endl;
+    }
+}
+
 void World::drawWorld() const
 {
     std::cout << "\n\n";
@@ -124,38 +146,91 @@ void World::drawWorld() const
             else if (j == 0 || j == temp_width - 1)
                 std::cout << "|";
             else
-            {
-                if (board[i - 1][j - 1] != ' ')
-                    std::cout << board[i - 1][j - 1];
-                else
-                    std::cout << " ";
-            }
+                std::cout << board[i - 1][j - 1];
         }
         std::cout << std::endl;
     }
     std::cout << "\n\n";
 }
 
-void World::makeTurn()
-{
-
-}
-
 void World::legend() 
 {
-    std::cout << "\nLegend of symbols:\n";
-    std::cout << std::left << std::setw(25) << "w -> wolf";
-    std::cout << std::left << std::setw(25) << "s -> sheep";
-    std::cout << std::left << std::setw(25) << "f -> fox";
-    std::cout << std::left << "t -> turtle\n";
+    using std::cout;
+    using std::setw;
+    using std::left;
+
+    cout << "\nOptions that are available:\n"
+         << "q -> quit game\n"
+         << "p -> go to the next turn\n"
+         << "n -> start new game\n"
+         << "s -> save game\n"
+         << "o -> open game file\n\n";
+
+    cout << "If you hit p you have the following options as a human:\n"
+         << "arrows -> move\n"
+         << "s -> stay at current position\n"
+         << "a -> activate special ability\n\n";
+
+    cout << "Legend of symbols:\n"
+         << left << setw(25) << "w -> wolf"
+         << left << setw(25) << "s -> sheep"
+         << left << setw(25) << "f -> fox"
+         << left << "t -> turtle\n"
+         
+         << left << setw(25) << "a -> antelope"
+         << left << setw(25) << "c -> cyber_sheep"
+         << left << setw(25) << "g -> grass"
+         << left << "s -> sow_thistle\n"
+         
+         << left << setw(25) << "g -> guarana"
+         << left << setw(25) << "b -> belladonna"
+         << left << setw(25) << "S -> Sosnowsky_hogweed"
+         << left << "H -> human\n\n";
+}
+
+#define UPPER_ARROW 65
+#define BOTTOM_ARROW 66
+#define LEFT_ARROW 68
+#define RIGHT_ARROW 67
+
+// performs one turn
+bool World::makeTurn()
+{
+    using namespace std;
+    char key;
+    std::cin >> key;
+    if (key == 'Q' || key == 'q')
+        return false;
+
+    if (key == 'p')
+    {
+        char move;
+        std::cout << "Enter human move: ";
+        std::cin >> move;
+
+        switch (move)
+        {
+        case '1': // left arrow
+            for (auto& organism : organisms)
+            {
+                if (organism->get_character() == 'H')
+                {
+                    break;
+                }
+            }
+            break;
+        }
+        /*
+        // Performs simulation
+        for (auto& organism : organisms)
+        {
+            organism->action();
+            organism->collision();
+        }
+        */
+    }
+    while (cin.get() != '\n')
+        continue;
     
-    std::cout << std::left << std::setw(25) << "a -> antelope";
-    std::cout << std::left << std::setw(25) << "c -> cyber_sheep";
-    std::cout << std::left << std::setw(25) << "g -> grass";
-    std::cout << std::left << "s -> sow_thistle\n";
-    
-    std::cout << std::left << std::setw(25) << "g -> guarana";
-    std::cout << std::left << std::setw(25) << "b -> belladonna";
-    std::cout << std::left << std::setw(25) << "S -> Sosnowsky_hogweed";
-    std::cout << std::left << "H -> human\n\n";
+    return true;
 }

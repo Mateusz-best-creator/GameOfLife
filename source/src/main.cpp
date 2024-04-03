@@ -13,13 +13,16 @@ int main()
 
     World world(n, m);
     world.legend();
-    int turn = 1;
+    int turn = 0;
+    std::cout << "\nTurn " << turn++ << ":\n";
+    world.drawWorld();
+
     while (true)
     {
         std::cout << "\nTurn " << turn++ << ":\n";
+        if (!world.makeTurn())
+            break;
+        //world.update_world();
         world.drawWorld();
-        world.makeTurn();
-        std::cin >> n;
     }
-
 }

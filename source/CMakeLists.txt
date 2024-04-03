@@ -11,8 +11,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(src)
 
+# Find SDL2 library
+find_package(SDL2 REQUIRED)
+# Include SDL2 headers
+include_directories(${SDL2_INCLUDE_DIRS})
+
 add_executable(GameOfLife src/main.cpp )
-target_link_libraries(GameOfLife PRIVATE world)
+target_link_libraries(GameOfLife PRIVATE world ${SDL2_LIBRARIES})
 
 # Add compiler flags
 target_compile_options(GameOfLife PRIVATE -Wall -Wextra)

@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "organism.h"
+#include <map>
 
 const int KINDS_OF_ORGANISMS = 12;
 
@@ -13,14 +14,17 @@ private:
     const int max_organisms;
     char** board;
 
+    enum class AnimalTypes {WOLF};
+
 public:
     World(int, int);
     ~World();
 
-    void makeTurn();
+    bool makeTurn();
     void legend();
+    void update_world();
     void drawWorld() const;
     bool is_human_on_map() const;
 
-    void add(std::vector<Organism*>& data, const std::string& name, int times, bool is_animal = true, bool is_human = false);
+    void add(std::vector<Organism*>& data, const std::string&, int times, bool is_animal = true, bool is_human = false);
 };

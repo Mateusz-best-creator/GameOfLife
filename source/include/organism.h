@@ -8,12 +8,13 @@ private:
     char character;
 
 public:
-    Organism(int, int);
+    Organism(int, int, char);
     ~Organism();
     
     virtual void action() = 0;
     virtual void collision() = 0;
     virtual char draw() const = 0;
+    virtual const int& get_initiative() const = 0;
 
     // Getters and setters
     int& get_position_row() { return position_row; }
@@ -22,5 +23,4 @@ public:
     const int& get_position_column() const { return position_column; }
     char& get_character() { return character; }
     const char& get_character() const { return character; }
-    
 };

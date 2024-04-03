@@ -1,13 +1,19 @@
 #include "plant.h"
-#include "organism_info.h"
 
-Plant::Plant(std::string n, int row, int column)
-    : Organism(row, column)
+Plant::Plant(const std::string& n, int row, int column)
+    : Organism(row, column, n[0])
 {
     name = n;
-    PlantInfo obj = plantsInfo[n];
-    character = obj.character;
-    strength = obj.strength;
+    if (name == "grass")
+        strength = 0;
+    else if (name == "sow_thistle")
+        strength = 0;
+    else if (name == "guarana")
+        strength = 0;
+    else if (name == "belladonna")
+        strength = 99;
+    else
+        strength = 10;
 }
 
 Plant::~Plant()
@@ -27,5 +33,5 @@ void Plant::collision()
 
 char Plant::draw() const
 {
-    return character;
+    return get_character();
 }
