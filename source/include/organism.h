@@ -11,7 +11,7 @@ public:
     Organism(int, int, char);
     ~Organism();
     
-    virtual void action() = 0;
+    virtual void action(int, int) = 0;
     virtual void collision() = 0;
     virtual char draw() const = 0;
     virtual const int& get_initiative() const = 0;

@@ -2,7 +2,6 @@
 
 #include <vector>
 #include "organism.h"
-#include <map>
 
 const int KINDS_OF_ORGANISMS = 12;
 

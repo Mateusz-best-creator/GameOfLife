@@ -15,7 +15,7 @@ public:
     Animal(std::string, int, int);
     ~Animal();
 
-    virtual void action() override;
+    virtual void action(int, int) override;
     virtual void collision() override;
     virtual char draw() const override;
 

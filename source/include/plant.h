@@ -16,7 +16,7 @@ public:
     Plant(const std::string&, int, int);
     ~Plant();
 
-    virtual void action() override;
+    virtual void action(int, int) override;
     virtual void collision() override;
     virtual char draw() const override;
     const int& get_initiative() const override { return initiative; }

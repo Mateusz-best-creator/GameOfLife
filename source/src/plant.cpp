@@ -21,7 +21,7 @@ Plant::~Plant()
 
 }
 
-void Plant::action()
+void Plant::action(int height, int width)
 {
 
 }

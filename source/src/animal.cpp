@@ -34,6 +34,11 @@ Animal::Animal(std::string n, int row, int column)
         strength = 11;
         initiative = 4;
     }
+    else // human
+    {
+        strength = 5;
+        initiative = 4;
+    }
 }
 
 Animal::~Animal()
@@ -41,7 +46,7 @@ Animal::~Animal()
 
 }
 
-void Animal::action()
+void Animal::action(int height, int width)
 {
 
 }

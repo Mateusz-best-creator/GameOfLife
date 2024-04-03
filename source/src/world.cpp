@@ -204,26 +204,22 @@ bool World::makeTurn()
 
     if (key == 'p')
     {
-        char move;
-        std::cout << "Enter human move: ";
-        std::cin >> move;
-
-        switch (move)
+        for (auto& organism : organisms)
         {
-        case '1': // left arrow
-            for (auto& organism : organisms)
+            if (Human* derivedPtr = dynamic_cast<Human*>(organism))
             {
-                if (organism->get_character() == 'H')
-                {
-                    break;
-                }
+                std::cout << "Human is here: " << organism->get_position_row() << " " << organism->get_position_column() << std::endl;
+                organism->action(height, width);
+                break;
             }
-            break;
         }
         /*
         // Performs simulation
         for (auto& organism : organisms)
         {
+            // Human moves at the begginning of the turn
+            if (Human* derivedPtr = dynamic_cast<Human*>(organism))
+                continue;
             organism->action();
             organism->collision();
         }
@@ -232,5 +228,15 @@ bool World::makeTurn()
     while (cin.get() != '\n')
         continue;
     
+    for (int i = 0; i < height; i++) 
+    {
+        for (int j = 0; j < width; j++)
+        {
+            board[i][j] = ' ';
+        }
+    }
+    for (const auto& organism : organisms)
+        board[organism->get_position_row()][organism->get_position_column()] = organism->get_character();
+
     return true;
 }
