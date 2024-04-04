@@ -70,17 +70,28 @@ void Human::action(int height, int width)
                 cout << "Can't move human player one square to the bottom\n";
             break;
         case 's':
-            cout << "Special human ability activated!\n";
-            ability_activated = true;
-            counter = 5;
+            if (counter == -1 || counter == 5)
+            {
+                cout << "Special human ability activated!\n";
+                ability_activated = true;
+                counter = 5;
+            }
+            else
+            {
+                cout << "Cant activate special ability now\n";
+            }
             break;
         default:
             cout << "Invalid move\n";
             break;
 
-        counter--;
+        if (ability_activated) counter--;
+        else counter++;
         if (!counter)
+        {
             ability_activated = false;
+            cout << "Human special activity deactivated\n";
+        }
     }
     // Show the position after moving
     cout << "New human position: (" << current_row << ", " << current_column << ")" << endl;
@@ -100,6 +111,7 @@ void Human::collision(char** board, std::vector<Organism*>& organisms)
         {
             if (ability_activated)
             {
+                std::cout << "Human special activity is activated, human WINS!\n";
                 delete organisms[i];
                 organisms.erase(organisms.begin() + i);
             }
@@ -113,7 +125,7 @@ void Human::collision(char** board, std::vector<Organism*>& organisms)
                         {
                             get_position_row() = i;
                             get_position_column() = j;
-                            std::cout << "Turtle defends from human attack! Human is going back to " << i << ", " << j << std::endl;
+                            std::cout << "Turtle defends from human attack! Human is going back to (" << i << ", " << j << ")" << std::endl;
                             return;
                         }
                     }
@@ -121,7 +133,7 @@ void Human::collision(char** board, std::vector<Organism*>& organisms)
             }
             else
             {
-                std::cout << "Fight against Human and " << organisms[i]->get_name() << std::endl;
+                std::cout << "Fight against Human and " << organisms[i]->get_name() << "..." << std::endl;
                 // In case of equal strengths attacker wins
                 if (human_strength >= organisms[i]->get_strength())
                 {
@@ -132,12 +144,12 @@ void Human::collision(char** board, std::vector<Organism*>& organisms)
                 }
                 
                 std::cout << organisms[i]->get_name() << " win!\n";
-                for (size_t i = 0; i < organisms.size(); i++)
+                for (size_t j = 0; j < organisms.size(); j++)
                 {
-                    if (organisms[i]->get_name() == "Human")
+                    if (organisms[j]->get_name() == "Human")
                     {
                         delete organisms[i];
-                        organisms.erase(organisms.begin() + i);
+                        organisms.erase(organisms.begin() + j);
                     }
                 }
                 return;
