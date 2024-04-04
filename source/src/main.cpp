@@ -22,7 +22,7 @@ int main()
         std::cout << "\nTurn " << turn++ << ":\n";
         if (!world.makeTurn())
             break;
-        //world.update_world();
+        world.update_world();
         world.drawWorld();
     }
 }

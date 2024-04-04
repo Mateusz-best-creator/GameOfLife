@@ -55,16 +55,16 @@ World::World(int h, int w)
             add(organisms, "cyber_sheep", randomNumber);
             break;
         case 7:
-            add(organisms, "grass", randomNumber, false);
+            add(organisms, "Grass", randomNumber, false);
             break;
         case 8:
-            add(organisms, "sow_thistle", randomNumber, false);
+            add(organisms, "Sow_thistle", randomNumber, false);
             break;
         case 9:
-            add(organisms, "guarana", randomNumber, false);
+            add(organisms, "Guarana", randomNumber, false);
             break;
         case 10:
-            add(organisms, "belladonna", randomNumber, false);
+            add(organisms, "Belladonna", randomNumber, false);
             break;
         case 11:
             add(organisms, "Sosnowsky_hogweed", randomNumber, false);
@@ -102,7 +102,7 @@ void World::add(std::vector<Organism*>& data, const std::string& name, int times
             data.push_back(new Animal(name, random_row, random_column));
         else
             data.push_back(new Plant(name, random_row, random_column));
-        board[random_row][random_column] = name[0];
+        board[random_row][random_column] = data[data.size() - 1]->get_character();
     }
 }
 
@@ -129,7 +129,6 @@ void World::update_world()
         int row = organism->get_position_row();
         int column = organism->get_position_column();
         board[row][column] = organism->get_character();
-        //std::cout << "row = " << row << " column = " << column << " char = " << organism->get_character() << std::endl;
     }
 }
 
@@ -179,19 +178,14 @@ void World::legend()
          
          << left << setw(25) << "a -> antelope"
          << left << setw(25) << "c -> cyber_sheep"
-         << left << setw(25) << "g -> grass"
-         << left << "s -> sow_thistle\n"
+         << left << setw(25) << "G -> grass"
+         << left << "S -> sow_thistle\n"
          
-         << left << setw(25) << "g -> guarana"
-         << left << setw(25) << "b -> belladonna"
-         << left << setw(25) << "S -> Sosnowsky_hogweed"
+         << left << setw(25) << "U -> guarana"
+         << left << setw(25) << "B -> belladonna"
+         << left << setw(25) << "O -> Sosnowsky_hogweed"
          << left << "H -> human\n\n";
 }
-
-#define UPPER_ARROW 65
-#define BOTTOM_ARROW 66
-#define LEFT_ARROW 68
-#define RIGHT_ARROW 67
 
 // performs one turn
 bool World::makeTurn()
@@ -208,35 +202,23 @@ bool World::makeTurn()
         {
             if (Human* derivedPtr = dynamic_cast<Human*>(organism))
             {
-                std::cout << "Human is here: " << organism->get_position_row() << " " << organism->get_position_column() << std::endl;
                 organism->action(height, width);
                 break;
             }
         }
-        /*
+        
         // Performs simulation
         for (auto& organism : organisms)
         {
             // Human moves at the begginning of the turn
             if (Human* derivedPtr = dynamic_cast<Human*>(organism))
                 continue;
-            organism->action();
-            organism->collision();
+            organism->action(height, width);
+            // organism->collision();
         }
-        */
     }
     while (cin.get() != '\n')
         continue;
     
-    for (int i = 0; i < height; i++) 
-    {
-        for (int j = 0; j < width; j++)
-        {
-            board[i][j] = ' ';
-        }
-    }
-    for (const auto& organism : organisms)
-        board[organism->get_position_row()][organism->get_position_column()] = organism->get_character();
-
     return true;
 }

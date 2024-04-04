@@ -1,9 +1,9 @@
 #include "plant.h"
 
 Plant::Plant(const std::string& n, int row, int column)
-    : Organism(row, column, n[0])
+    : Organism(row, column, n)
 {
-    name = n;
+    std::string name = get_name();
     if (name == "grass")
         strength = 0;
     else if (name == "sow_thistle")
@@ -26,7 +26,7 @@ void Plant::action(int height, int width)
 
 }
 
-void Plant::collision()
+void Plant::collision(char** board, std::vector<Organism*>& organisms)
 {
 
 }
