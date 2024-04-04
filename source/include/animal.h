@@ -4,12 +4,11 @@
 #include <string>
 #include <vector>
 
-enum class AnimalTypes { WOLF, SHEEP, FOX, TURTLE, ANTELOPE, CYBER_SHEEP };
 
 class Animal : public Organism
 {
 private:
-    int strength, initiative;
+    int initiative, strength;
 
 public:
     Animal(std::string, int, int);
@@ -19,6 +18,10 @@ public:
     virtual void collision(char**, std::vector<Organism*>&) override;
     virtual char draw() const override;
 
-    const int& get_initiative() const override { return initiative; }
+    int& get_initiative() { return initiative; }
+    const int& get_initiative() const { return initiative; }
+    int& get_strength() { return strength; }
+    const int& get_strength() const { return strength; }
+
     void default_action(int, int, char**);
 };

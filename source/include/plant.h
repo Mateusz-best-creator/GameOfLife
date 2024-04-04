@@ -4,8 +4,6 @@
 #include <string>
 #include <vector>
 
-enum class PlantTypes { GRASS, SOW_THISTLE, GUARANA, BELLADONNA, SOSNOWSKY_HOGWEED };
-
 class Plant : public Organism
 {
 private:
@@ -19,5 +17,8 @@ public:
     virtual void action(int, int) override;
     virtual void collision(char**, std::vector<Organism*>&) override;
     virtual char draw() const override;
-    const int& get_initiative() const override { return initiative; }
+    
+    const int& get_initiative() const { return initiative; }
+    int& get_strength() { return strength; }
+    const int& get_strength() const { return strength; }
 };

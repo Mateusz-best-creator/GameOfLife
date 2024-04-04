@@ -203,6 +203,7 @@ bool World::makeTurn()
             if (Human* derivedPtr = dynamic_cast<Human*>(organism))
             {
                 organism->action(height, width);
+                organism->collision(board, organisms);
                 break;
             }
         }

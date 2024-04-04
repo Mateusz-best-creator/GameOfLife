@@ -19,6 +19,7 @@ public:
     virtual void collision(char**, std::vector<Organism*>&) = 0;
     virtual char draw() const = 0;
     virtual const int& get_initiative() const = 0;
+    virtual const int& get_strength() const = 0;
 
     // Getters and setters
     int& get_position_row() { return position_row; }

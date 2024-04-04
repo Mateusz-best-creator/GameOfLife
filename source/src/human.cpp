@@ -89,13 +89,14 @@ void Human::action(int height, int width)
 void Human::collision(char** board, std::vector<Organism*>& organisms)
 {
     int human_row = get_position_row(), human_column = get_position_column();
+    // Board is not updated yet
     if (board[human_row][human_column] == ' ')
         return;
     
     for (size_t i = 0; i < organisms.size(); i++)
     {   
         // Colision with other organism
-        if (organisms[i]->get_position_row() == human_row && organisms[i]->get_position_column() == human_column)
+        if (organisms[i]->get_position_row() == human_row && organisms[i]->get_position_column() == human_column && organisms[i]->get_name() != "Human")
         {
             if (ability_activated)
             {
@@ -120,7 +121,26 @@ void Human::collision(char** board, std::vector<Organism*>& organisms)
             }
             else
             {
-                std::cout << "Fight against Human and " << organisms[i]->get_name() << std::endl; 
+                std::cout << "Fight against Human and " << organisms[i]->get_name() << std::endl;
+                // In case of equal strengths attacker wins
+                if (human_strength >= organisms[i]->get_strength())
+                {
+                    std::cout << "Human win!\n";
+                    delete organisms[i];
+                    organisms.erase(organisms.begin() + i);
+                    return;
+                }
+                
+                std::cout << organisms[i]->get_name() << " win!\n";
+                for (size_t i = 0; i < organisms.size(); i++)
+                {
+                    if (organisms[i]->get_name() == "Human")
+                    {
+                        delete organisms[i];
+                        organisms.erase(organisms.begin() + i);
+                    }
+                }
+                return;
             }
         } 
     }
