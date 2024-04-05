@@ -9,6 +9,7 @@ class Animal : public Organism
 {
 private:
     int initiative, strength;
+    int previous_move = -1;
 
 public:
     Animal(std::string, int, int);
@@ -23,5 +24,17 @@ public:
     int& get_strength() { return strength; }
     const int& get_strength() const { return strength; }
 
-    void default_action(int, int, char**);
+    /*
+    All actions performed by different animal species
+    */
+    // For wolf and sheep
+    void default_action(std::string, int, int);
+    // for fox
+    void fox_action(std::string, int, int);
+    // for turtle
+    void turtle_action(std::string, int, int);
+    // for antelope
+    void antelope_action(std::string, int, int);
+    // for cyber_sheep
+    void cyber_sheel_action(std::string, int, int);
 };

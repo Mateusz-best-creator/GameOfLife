@@ -24,9 +24,9 @@ World::World(int h, int w)
     // Get random number to decide how many kinds of this thing we want to initially have in our simulation
     int n_species;
     if (height * width <= 16)
-        n_species = 1;
+        n_species = 3;
     else if (height * width <= 25)
-        n_species = 2;
+        n_species = 3;
     else 
         n_species = 3;
     
@@ -42,6 +42,7 @@ World::World(int h, int w)
         case 2:
             add(organisms, "sheep", randomNumber);
             break;
+        /*
         case 3:
             add(organisms, "fox", randomNumber);
             break;
@@ -69,6 +70,7 @@ World::World(int h, int w)
         case 11:
             add(organisms, "Sosnowsky_hogweed", randomNumber, false);
             break;
+            */
         case 12:
             // We always want one human at our board
             add(organisms, "Human", 1, false, true);
@@ -215,7 +217,8 @@ bool World::makeTurn()
             if (Human* derivedPtr = dynamic_cast<Human*>(organism))
                 continue;
             organism->action(height, width);
-            // organism->collision();
+            organism->collision(board, organisms);
+            update_world();
         }
     }
     while (cin.get() != '\n')

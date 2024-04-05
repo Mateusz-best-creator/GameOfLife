@@ -8,7 +8,7 @@ class Human : public Animal
 private:
     const int human_strength = 5, human_initiative = 4;
     char direction;
-    int counter = 0;
+    int counter = -1;
     bool ability_activated = false;
     
 public:
