@@ -1,0 +1,22 @@
+10 20
+Animal fox 3 7 7 12
+Animal wolf 9 5 7 6
+Animal wolf 9 5 3 19
+Human Human 5 4 4 11
+Animal cyber_sheep 11 4 1 4
+Animal antelope 4 4 3 11
+Animal antelope 4 4 4 16
+Animal antelope 4 4 2 17
+Animal sheep 4 4 5 13
+Animal sheep 4 4 2 12
+Animal sheep 4 4 8 19
+Animal turtle 2 1 2 14
+Plant Grass 0 0 9 12
+Plant Grass 0 0 1 13
+Plant Grass 0 0 3 18
+Plant Sow_thistle 0 0 1 19
+Plant Guarana 0 0 6 11
+Plant Belladonna 99 0 9 1
+Plant Belladonna 99 0 4 13
+Plant Belladonna 99 0 5 8
+Plant Sosnowsky_hogweed 10 0 8 3
