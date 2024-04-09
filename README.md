@@ -35,3 +35,5 @@ Before running the C++ project, you need to create a build directory for CMake. 
     ```
 
 Enjoy exploring the C++ implementation of the Game of Life!
+
+![Simulation](Screenshots/Game_Of_Life_Cpp.png)
