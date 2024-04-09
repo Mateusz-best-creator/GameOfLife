@@ -340,8 +340,8 @@ void World::save_game()
     cout << "Saving organisms to " << organisms_filename << endl;
     
     // Combine directory path and filename
-    string board_file_path = "/home/mateusz/Game_Of_Life/filenames/" + board_filename;
-    string organisms_file_path = "/home/mateusz/Game_Of_Life/filenames/" + organisms_filename;
+    string board_file_path = "./filenames/" + board_filename;
+    string organisms_file_path = "./filenames/" + organisms_filename;
 
     // Open board file
     ofstream board_file(board_file_path);
@@ -392,7 +392,7 @@ void World::load_game()
     cout << "Give filename from where you want to load your game: ";
     cin >> filename;
 
-    ifstream file("/home/mateusz/Game_Of_Life/filenames/" + filename);
+    ifstream file("./filenames/" + filename);
     if (!file.is_open()) 
     {
         cerr << "Error opening file: " << filename << endl;
@@ -409,7 +409,6 @@ void World::load_game()
     string line;
     file >> height >> width;
     
-    cout << "height = " << height << " width = " << width << endl;
     board = new char*[height];
     for (size_t i = 0; i < height; i++)
         board[i] = new char[width];
