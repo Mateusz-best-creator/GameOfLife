@@ -17,7 +17,7 @@ struct PlaceToAddOrganism
 class Organism
 {
 private:
-    int position_row, position_column;
+    int position_row, position_column, age;
     char character;
     std::string name;
     int index;
@@ -41,6 +41,8 @@ public:
     const int& get_position_column() const { return position_column; }
     char& get_character() { return character; }
     const char& get_character() const { return character; }
+    int& get_age() { return age; }
+    const int& get_age() const { return age; }
 
     std::string& get_name() { return name; }
     const std::string& get_name() const { return name; }

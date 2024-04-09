@@ -20,10 +20,12 @@ protected:
 public:
     World(int, int);
     ~World();
+    void clear_resources();
 
     void initialize_game();
     bool makeTurn();
     void play();
+    void remove_killed_organisms(std::vector<int>& indexes_to_remove);
 
     void legend();
     void update_world();

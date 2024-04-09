@@ -94,7 +94,10 @@ void World::sort_organisms()
 {
     std::sort(organisms.begin(), organisms.end(), [](const Organism* first, const Organism* second)
     {
-        return first->get_initiative() > second->get_initiative();
+        int one = first->get_initiative(), two = second->get_initiative();
+        if (one == two)
+            return first->get_age() > second->get_age();
+        return one > two;
     });
 }
 
@@ -121,15 +124,22 @@ void World::add(const std::string& name, int times, bool is_animal, bool is_huma
 
 World::~World()
 {
+    clear_resources();
+}
+
+void World::clear_resources()
+{
     // Deallocate organism memory
     for (auto organism: organisms)
         delete organism;
+    organisms.clear();
 
     // Deallocate board memory
     for (int i = 0; i < height; i++)
         delete[] board[i];
     delete[] board;
 }
+
 void World::update_world()
 {
     sort_organisms();
@@ -239,6 +249,21 @@ bool World::makeTurn()
     return true;
 }
 
+void World::remove_killed_organisms(std::vector<int>& indexes_to_remove)
+{
+    // Remove and deallocate objects from the organisms vector
+    for (int index : indexes_to_remove) 
+    {
+        if (index >= 0 && index < organisms.size()) 
+        {
+            delete organisms[index];
+            organisms.erase(organisms.begin() + index);
+            update_world();
+        }
+    }
+    indexes_to_remove.clear();
+}
+
 void World::play()
 {
     bool selected = false;
@@ -265,9 +290,12 @@ void World::play()
     else
         std::cout << "\nJournal:\n\n";
     
+    remove_killed_organisms(indexes_to_remove);
+
     int counter = 0;
     for (auto& organism : organisms)
     {
+        organism->get_age()++;
         auto it = std::find(indexes_to_remove.begin(), indexes_to_remove.end(), counter++);
 
         // human arleady moved, we added new organism from multiplication, or we arleady deleted organism (it was killed in this turn)
@@ -280,17 +308,7 @@ void World::play()
         update_world();
     }
 
-    // Remove and deallocate objects from the organisms vector
-    for (int index : indexes_to_remove) 
-    {
-        if (index >= 0 && index < organisms.size()) 
-        {
-            delete organisms[index];
-            organisms.erase(organisms.begin() + index);
-            update_world();
-        }
-    }
-    indexes_to_remove.clear();
+    remove_killed_organisms(indexes_to_remove);
     
     // Add objects from multiplication to the organisms vector
     for (const auto& object : organisms_to_add)
@@ -373,7 +391,7 @@ void World::save_game()
         std::cerr << "Error opening file: " << organisms_filename << std::endl;
         return;
     }
-    organisms_file << height << " " << width << "\n";
+    organisms_file << turn << " " << height << " " << width << "\n";
     for (const auto& organism : organisms)
     {
         string type = (organism->get_type() == OrganismType::Animal) ? "Animal" : (organism->get_type() == OrganismType::Plant) ? "Plant" : "Human";
@@ -399,15 +417,10 @@ void World::load_game()
         return;
     }
 
-    for (int i = 0; i < height; i++)
-        delete[] board[i];
-    delete[] board;
-    for (auto& o : organisms)
-        delete o;
-    organisms.clear();
+    clear_resources();
     
     string line;
-    file >> height >> width;
+    file >> turn >> height >> width;
     
     board = new char*[height];
     for (size_t i = 0; i < height; i++)
@@ -431,8 +444,7 @@ void World::load_game()
             organisms.push_back(new_org);
     }
     update_world();
-    turn = 1;
     system("clear");
-    cout << "We start a new Game!!!\n";
+    cout << "We load a game from file!!!\n";
     file.close();
 }
