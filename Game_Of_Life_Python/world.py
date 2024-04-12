@@ -38,8 +38,8 @@ class World:
         self.font_title = pygame.font.SysFont("chalkduster.ttf", 72)
         self.title = self.font_title.render("World Simulation", True, "#333333")
         self.title_width = self.title.get_width()
-        self.title_x = (self.screen_width - self.title_width) / 2
-        self.title_height = self.screen_height * 0.1
+        self.title_left = (self.screen_width - self.title_width) / 2
+        self.title_top = self.screen_height * 0.1
 
         # Organisms stuff
         self.ORGANISMS_TYPES = 12
@@ -116,7 +116,7 @@ class World:
 
     def draw_starting_screen(self):
         self.screen.fill("#ffffff")
-        self.screen.blit(self.title, (self.title_x, self.title_height))
+        self.screen.blit(self.title, (self.title_left, self.title_top))
         # Draw all 3 option rectangles and all 3 text options
         for i in range(3):
             pygame.draw.rect(self.screen, 
