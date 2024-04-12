@@ -38,3 +38,39 @@ Enjoy exploring the C++ implementation of the Game of Life!
 
 <img src="Screenshots/Game_Of_Life_Cpp.png" alt="Simulation" width="650">
 <img src="Screenshots/Game_Of_Life_Cpp_2.png" alt="Simulation" width="650">
+
+## Running the Python Project
+
+This is a Python GameOfLife project. To run it, you need to have Python installed along with the Pygame framework on your computer. You can check your Python version by typing:
+
+```
+python --version
+```
+or
+```
+python3 --version
+```
+
+To check if Pygame is installed, run:
+
+```
+pip show pygame
+```
+
+To get started, clone this repository using SSH or HTTP:
+```
+git clone <url>
+```
+
+And then execute:
+
+```
+python main.py
+```
+or
+```
+python3 main.py
+```
+
+The entire project should launch, and you should be able to play!
+
