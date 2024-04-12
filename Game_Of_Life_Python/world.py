@@ -19,6 +19,12 @@ class OrganismType(Enum):
     SOSNOWSKY_HOGWEED = 11
     HUMAN = 12
 
+class OptionType(Enum):
+    NONE = 0
+    PLAY_SIMULATION = 1
+    LOAD_SIMULATION = 2
+    QUIT_SIMULATION = 3
+
 class World:
     def __init__(self, screen_height = 600, screen_width = 600):
         # Screen stuff
@@ -53,6 +59,9 @@ class World:
         self.option_rectangle_top = self.screen_height * 0.7
         for i in range(1, 3+1):
             self.option_rectangle_left.append(self.option_rectangle_offset * i + (i - 1) * self.option_rectangle_width)
+
+        # Option chosen by user
+        self.chosen_option = OptionType.NONE
 
         # Option font
         self.font_option = pygame.font.SysFont("chalkduster.ttf", 24)
@@ -106,6 +115,23 @@ class World:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    pos = pygame.mouse.get_pos()
+
+                    click_x, click_y = pos
+                    print("(x, y) = ", click_x, click_y)
+                    if click_y >= self.option_rectangle_top and click_y <= self.option_rectangle_top + self.option_rectangle_height:
+                        for index, option_left_distance in enumerate(self.option_rectangle_left):
+                            if click_x >= option_left_distance and click_x <= option_left_distance + self.option_rectangle_width:
+                                self.chosen_option = OptionType(index + 1)
+                                print("Chosen option = ", self.chosen_option.name)
+                                if self.chosen_option == OptionType.QUIT_SIMULATION:
+                                    self.running = False
+                                elif self.chosen_option == OptionType.PLAY_SIMULATION:
+                                    pass
+                                elif self.chosen_option == OptionType.LOAD_SIMULATION:
+                                    pass
+
 
             pygame.display.flip()
             self.clock.tick(60)
