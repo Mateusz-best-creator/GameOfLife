@@ -1,4 +1,4 @@
-from animal import Animal
+from Organisms.animal import Animal
 from organism import OrganismInitialData
 
 class Wolf(Animal):

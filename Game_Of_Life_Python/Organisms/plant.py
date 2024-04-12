@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from organism import Organism
+from Organisms.organism import Organism
 
 class Plant(Organism, ABC):
     def __init__(self):

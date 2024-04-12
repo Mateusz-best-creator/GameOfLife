@@ -1,5 +1,5 @@
-from ..organism import OrganismInitialData
-from animal import Animal
+from Organisms.organism import OrganismInitialData
+from Organisms.animal import Animal
 
 class Human(Animal):
     def __init__(self, name, row, column):
