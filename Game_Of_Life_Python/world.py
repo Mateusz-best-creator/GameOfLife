@@ -38,8 +38,6 @@ class World:
         self.clock = pygame.time.Clock()
         self.running = True
 
-        # Font stuff
-
         # Title font
         self.font_title = pygame.font.SysFont("chalkduster.ttf", 72)
         self.title = self.font_title.render("World Simulation", True, "#333333")
