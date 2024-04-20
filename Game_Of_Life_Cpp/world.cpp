@@ -95,11 +95,10 @@ void World::initialize_game()
             break;
         case 10:
             add("Belladonna", randomNumber, false);
-            break;/*
+            break;
         case 11:
             add("Sosnowsky_hogweed", randomNumber, false);
             break;
-            */
         case 12:
             // We always want one human at our board
             add("Human", 1, false, true);
@@ -109,7 +108,6 @@ void World::initialize_game()
             break;
         }
     }
-
     sort_organisms();
 }
 
@@ -146,6 +144,7 @@ void World::add(const std::string& name, int times, bool is_animal, bool is_huma
         else if (name == "Sow_thistle") organisms.push_back(new SowThistle(random_row, random_column));
         else if (name == "Guarana") organisms.push_back(new Guarana(random_row, random_column));
         else if (name == "Belladonna") organisms.push_back(new Belladonna(random_row, random_column));
+        else if (name == "Sosnowsky_hogweed") organisms.push_back(new SosnowskyHogweed(random_row, random_column));
         else if (name == "Human") organisms.push_back(new Human(random_row, random_column));
         
         board[random_row][random_column] = organisms[organisms.size() - 1]->get_character();
@@ -518,4 +517,5 @@ void World::load_game()
         system("clear");
     cout << "We load a game from ./filenames/" << filename << endl;
     file.close();
+    turn = 1;
 }
