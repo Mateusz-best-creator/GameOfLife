@@ -72,7 +72,7 @@ void Plant::collision(char** board, std::vector<Organism*>& organisms, std::vect
     int row = this->get_position_row(), column = this->get_position_column();
 
     // Special case for sosnowsky plant
-    if (this->get_name() == "Sosnowsky_hogweed")
+    if (this->get_type() == OrganismType::SosnowskyHogweed)
     {
         sosnowsky_collision(row, column, height, width, organisms, indexes_to_remove);
         return;
