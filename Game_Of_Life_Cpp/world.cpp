@@ -517,5 +517,4 @@ void World::load_game()
         system("clear");
     cout << "We load a game from ./filenames/" << filename << endl;
     file.close();
-    turn = 1;
 }
