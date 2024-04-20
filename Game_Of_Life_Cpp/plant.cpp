@@ -88,7 +88,7 @@ void Plant::collision(char** board, std::vector<Organism*>& organisms, std::vect
                 counter++;
         if (counter > 5)
             cout << "We cant add more " << this->get_name() << " beacuse we arleady have " << counter << " of them!\n";
-        else;
+        else
             added_plants.push_back({ this->get_type(), this->get_name(), this->get_position_row(), this->get_position_column()});
     }
     else
