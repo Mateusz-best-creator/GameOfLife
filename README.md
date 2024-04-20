@@ -23,6 +23,8 @@ Before running the C++ project, ensure you have Microsoft Visual Studio installe
 
 4. Once the project is loaded in Visual Studio, press F5 or click on the green "Start" button to build and run the project.
 
+5. If you want to save the state of your game your files will be in `./filenames` folder.
+
 Enjoy exploring the C++ implementation of the Game of Life in Microsoft Visual Studio!
 
 <img src="Screenshots/Game_Of_Life_Cpp.png" alt="Simulation" width="650">
