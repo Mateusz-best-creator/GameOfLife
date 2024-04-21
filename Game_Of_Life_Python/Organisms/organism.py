@@ -40,7 +40,7 @@ class Organism(ABC):
         image_height = abs(top_coor - bottom_coor)
         image_width = abs(left_coor - right_coor)
         img = pygame.transform.scale(pygame.image.load(
-            "sheep.png"), (image_height, image_width))
+            "human.png"), (image_height, image_width))
         screen.blit(img, (left_coor, top_coor))
     
     # Some getters and setters
