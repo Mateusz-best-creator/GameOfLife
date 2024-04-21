@@ -127,18 +127,18 @@ class World:
             elif type == OrganismType.SOSNOWSKY_HOGWEED:
                 pass
             elif type == OrganismType.HUMAN:
-                self.add_organisms(3, "Human", Human)
+                self.add_organisms(random_amount, "Human", Human)
 
     def add_organisms(self, times, name, object_type):
         print("Object type = ", object_type)
-        random_row = random.randint(0, self.grid_height - 1)
-        random_column = random.randint(0, self.grid_width - 1)
-        while self.grid_board[random_row][random_column] == 'e':
+        for _ in range(times):
             random_row = random.randint(0, self.grid_height - 1)
             random_column = random.randint(0, self.grid_width - 1)
-        self.organisms.append(object_type(name, random_row, random_column))
-        self.grid_board[random_row][random_column] = self.organisms[len(
-            self.organisms) - 1].get_character()
+            while self.grid_board[random_row][random_column] != 'e':
+                random_row = random.randint(0, self.grid_height - 1)
+                random_column = random.randint(0, self.grid_width - 1)
+            self.organisms.append(object_type(name, random_row, random_column))
+            self.grid_board[random_row][random_column] = self.organisms[len(self.organisms) - 1].get_character()
 
     def run(self):
         self.initialize_organisms()
@@ -164,6 +164,8 @@ class World:
             if self.chosen_option == OptionType.PLAY_SIMULATION:
                 self.play_simulation()
                 self.draw_starting_screen()
+                self.organisms = []
+                self.initialize_organisms()
             elif self.chosen_option == OptionType.LOAD_SIMULATION:
                 self.load_simulation()
                 self.draw_starting_screen()
@@ -217,15 +219,12 @@ class World:
     def play_simulation(self):
         game_running = True
         self.screen.fill("#ffffff")
+        print("running game!")
         self.draw_simulation_board()
         while game_running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     game_running = False
-                elif event.type == pygame.MOUSEBUTTONUP:
-                    pos = pygame.mouse.get_pos()
-                    click_x, click_y = pos
-                    print(f"(x,y) = ({click_x},{click_y})")
 
             pygame.display.flip()
             self.clock.tick(60)
@@ -260,7 +259,7 @@ class World:
                     vertical_line_left + (j+1) * board_line_width - 1)
             pygame.draw.line(self.screen, color_line, (vertical_line_left + i * board_line_width, 0),
                              (vertical_line_left + i * board_line_width, self.screen_height*0.8))
-
+            
         # Display all our organisms inside grid
         for organism in self.organisms:
             organism_row = organism.get_position_row()
