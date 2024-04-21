@@ -30,7 +30,7 @@ class OptionType(Enum):
 
 
 class World:
-    def __init__(self, screen_height=600, screen_width=600):
+    def __init__(self, screen_height=800, screen_width=800):
         # Screen stuff
         self.screen_height = screen_height
         self.screen_width = screen_width
@@ -73,14 +73,20 @@ class World:
                              self.font_option.render(
                                  "Load Simulation", True, self.option_font_color),
                              self.font_option.render("Quit Simulation", True, self.option_font_color)]
-        self.options_font_left = [self.option_rectangle_left[i] +
-                                  self.option_rectangle_width * 0.1 for i in range(3)]
+        options_font_widths = [self.options_font[i].get_width()
+                               for i in range(len(self.options_font))]
+        self.options_font_left = [self.option_rectangle_left[i] + (
+            (self.option_rectangle_width - options_font_widths[i]) / 2) for i in range(len(self.options_font))]
         self.options_font_top = self.option_rectangle_top + \
             self.option_rectangle_height * 0.4
 
         # Organisms stuff
         self.ORGANISMS_TYPES = 12
         self.organisms = []
+
+        # Grid dimensions
+        self.grid_height = 10
+        self.grid_width = 10
 
     def initialize_organisms(self):
         for index in range(1, self.ORGANISMS_TYPES + 1):
@@ -114,7 +120,14 @@ class World:
             elif type == OrganismType.SOSNOWSKY_HOGWEED:
                 pass
             elif type == OrganismType.HUMAN:
-                self.organisms.append(Human("Human", 1, 1))
+                self.add_organisms(random_amount, "Human", Human)
+
+    def add_organisms(self, times, name, object_type):
+        print("Object type = ", object_type)
+        random_row = random.randint(0, self.grid_height - 1)
+        random_column = random.randint(0, self.grid_width - 1)
+        print(f"Random: {random_row}, {random_column}")
+        self.organisms.append(object_type(name, random_row, random_column))
 
     def run(self):
         self.initialize_organisms()
@@ -127,9 +140,7 @@ class World:
                     self.running = False
                 elif event.type == pygame.MOUSEBUTTONUP:
                     pos = pygame.mouse.get_pos()
-
                     click_x, click_y = pos
-                    # print("(x, y) = ", click_x, click_y)
                     if click_y >= self.option_rectangle_top and click_y <= self.option_rectangle_top + self.option_rectangle_height:
                         for index, option_left_distance in enumerate(self.option_rectangle_left):
                             if click_x >= option_left_distance and click_x <= option_left_distance + self.option_rectangle_width:
@@ -149,9 +160,6 @@ class World:
                 self.running = False
             self.chosen_option = OptionType.NONE
 
-    def add_organisms(self, times, name, object_type):
-        pass
-
     def draw_starting_screen(self):
         self.screen.fill("#ffffff")
         self.screen.blit(self.title, (self.title_left, self.title_top))
@@ -161,21 +169,21 @@ class World:
                              "human is alive you will be asked to press one of, the",
                              "arrow keys to move. If human is not alive the game will",
                              "play and the journal will be shown on the left side."]
-        instruction_font = pygame.font.SysFont("chalkduster.ttf", 24)
+        instruction_font = pygame.font.SysFont(None, 24)
         instruction_font_color = "#333333"
         instruction_font_text = [instruction_font.render(
             instruction_lines[i], True, instruction_font_color) for i in range(len(instruction_lines))]
-        instruction_width = instruction_font_text[len(
-            instruction_lines) - 1].get_width()
-        instruction_font_left = (self.screen_width - instruction_width) / 2
+        instruction_widths = [instruction_font_text[i].get_width()
+                              for i in range(len(instruction_lines))]
+        instruction_font_left = [
+            (self.screen_width - instruction_widths[i]) / 2 for i in range(len(instruction_lines))]
         INSTRUCTION_FONT_GAP = 18
-        instruction_font_top = [self.screen_height * 0.4 +
+        INSTRUCTION_FONT_TOP = 0.4
+        instruction_font_top = [self.screen_height * INSTRUCTION_FONT_TOP +
                                 INSTRUCTION_FONT_GAP * i for i in range(len(instruction_lines))]
-        instruction_width = instruction_font_text[len(
-            instruction_lines) - 1].get_width()
 
         # Draw all 3 option rectangles and all 3 text options
-        for i in range(3):
+        for i in range(len(self.options_font)):
             pygame.draw.rect(self.screen,
                              "#000000",
                              pygame.Rect(self.option_rectangle_left[i], self.option_rectangle_top, self.option_rectangle_width, self.option_rectangle_height), 2)
@@ -193,12 +201,13 @@ class World:
                 self.options_font[i], (self.options_font_left[i], self.options_font_top))
         for i in range(len(instruction_lines)):
             self.screen.blit(
-                instruction_font_text[i], (instruction_font_left, instruction_font_top[i]))
+                instruction_font_text[i], (instruction_font_left[i], instruction_font_top[i]))
 
     def play_simulation(self):
         game_running = True
-        self.screen.fill("#111141")
+        self.screen.fill("#ffffff")
         print("running game!")
+        self.draw_simulation_board()
         while game_running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -208,5 +217,14 @@ class World:
             self.clock.tick(60)
             pygame.display.update()
 
+    def draw_simulation_board(self):
+        color_line = "#000000"
+        vertical_line_left = self.screen_width*0.25
+        line_thickness = 5
+        pygame.draw.line(self.screen, color_line, (vertical_line_left, 0),
+                         (vertical_line_left, self.screen_height), line_thickness)
+        pygame.draw.line(self.screen, color_line, (vertical_line_left, self.screen_height * 0.8),
+                         (self.screen_width, self.screen_height * 0.8), line_thickness)
+
     def load_simulation(self):
-        pass
+        print("Loading simulation from ./filenames/organisms.txt")
