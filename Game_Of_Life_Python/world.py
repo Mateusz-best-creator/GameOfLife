@@ -87,6 +87,13 @@ class World:
         # Grid dimensions
         self.grid_height = 10
         self.grid_width = 10
+        self.grid_board = [
+            ['e' for _ in range(self.grid_width)] for _ in range(self.grid_height)]
+        # Dimensions for all squares in game simulation
+        self.squares_top = []
+        self.squares_bottom = []
+        self.squares_left = []
+        self.squares_right = []
 
     def initialize_organisms(self):
         for index in range(1, self.ORGANISMS_TYPES + 1):
@@ -120,14 +127,18 @@ class World:
             elif type == OrganismType.SOSNOWSKY_HOGWEED:
                 pass
             elif type == OrganismType.HUMAN:
-                self.add_organisms(random_amount, "Human", Human)
+                self.add_organisms(3, "Human", Human)
 
     def add_organisms(self, times, name, object_type):
         print("Object type = ", object_type)
         random_row = random.randint(0, self.grid_height - 1)
         random_column = random.randint(0, self.grid_width - 1)
-        print(f"Random: {random_row}, {random_column}")
+        while self.grid_board[random_row][random_column] == 'e':
+            random_row = random.randint(0, self.grid_height - 1)
+            random_column = random.randint(0, self.grid_width - 1)
         self.organisms.append(object_type(name, random_row, random_column))
+        self.grid_board[random_row][random_column] = self.organisms[len(
+            self.organisms) - 1].get_character()
 
     def run(self):
         self.initialize_organisms()
@@ -206,12 +217,15 @@ class World:
     def play_simulation(self):
         game_running = True
         self.screen.fill("#ffffff")
-        print("running game!")
         self.draw_simulation_board()
         while game_running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     game_running = False
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    pos = pygame.mouse.get_pos()
+                    click_x, click_y = pos
+                    print(f"(x,y) = ({click_x},{click_y})")
 
             pygame.display.flip()
             self.clock.tick(60)
@@ -220,11 +234,39 @@ class World:
     def draw_simulation_board(self):
         color_line = "#000000"
         vertical_line_left = self.screen_width*0.25
-        line_thickness = 5
+        separating_line_thickness = 5
         pygame.draw.line(self.screen, color_line, (vertical_line_left, 0),
-                         (vertical_line_left, self.screen_height), line_thickness)
+                         (vertical_line_left, self.screen_height), separating_line_thickness)
         pygame.draw.line(self.screen, color_line, (vertical_line_left, self.screen_height * 0.8),
-                         (self.screen_width, self.screen_height * 0.8), line_thickness)
+                         (self.screen_width, self.screen_height * 0.8), separating_line_thickness)
+        playing_board_height = self.screen_height*0.8
+        board_line_thickness = 2
+        board_line_height = playing_board_height / self.grid_height
+        playing_board_width = self.screen_width - vertical_line_left
+        board_line_width = playing_board_width / self.grid_width
+
+        # Display playing board
+        for i in range(self.grid_height):
+            for j in range(self.grid_height):
+                self.squares_top.append(j*board_line_height)
+                self.squares_bottom.append((j+1)*board_line_height - 1)
+            pygame.draw.line(self.screen, color_line, (vertical_line_left, i * board_line_height),
+                             (self.screen_width, i * board_line_height), board_line_thickness)
+        for i in range(self.grid_width):
+            for j in range(self.grid_width):
+                self.squares_left.append(
+                    vertical_line_left + j * board_line_width)
+                self.squares_right.append(
+                    vertical_line_left + (j+1) * board_line_width - 1)
+            pygame.draw.line(self.screen, color_line, (vertical_line_left + i * board_line_width, 0),
+                             (vertical_line_left + i * board_line_width, self.screen_height*0.8))
+
+        # Display all our organisms inside grid
+        for organism in self.organisms:
+            organism_row = organism.get_position_row()
+            organism_column = organism.get_position_column()
+            organism.print(self.screen, self.squares_top[organism_row], self.squares_bottom[organism_row],
+                           self.squares_left[organism_column], self.squares_right[organism_column])
 
     def load_simulation(self):
         print("Loading simulation from ./filenames/organisms.txt")
