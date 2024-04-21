@@ -10,6 +10,12 @@ from Organisms.Animals.fox import Fox
 from Organisms.Animals.antelope import Antelope
 from Organisms.Animals.cyber_sheep import CyberSheep
 
+from Organisms.Plants.grass import Grass
+from Organisms.Plants.belladonna import Belladonna
+from Organisms.Plants.sosnowsky_hogweed import SosnowskyHogweed
+from Organisms.Plants.sow_thistle import SowThistle
+from Organisms.Plants.guarana import Guarana
+
 # Enum type for types of organisms
 
 
@@ -121,15 +127,16 @@ class World:
             elif type == OrganismType.CYBER_SHEEP:
                 self.add_organisms(random_amount, "cyber_sheep", CyberSheep)
             elif type == OrganismType.GRASS:
-                pass
+                self.add_organisms(random_amount, "Grass", Grass)
             elif type == OrganismType.SOW_THISTLE:
-                pass
+                self.add_organisms(random_amount, "SowThistle", SowThistle)
             elif type == OrganismType.GUARANA:
-                pass
+                self.add_organisms(random_amount, "Guarana", Guarana)
             elif type == OrganismType.BELLADONNA:
-                pass
+                self.add_organisms(random_amount, "Belladonna", Belladonna)
             elif type == OrganismType.SOSNOWSKY_HOGWEED:
-                pass
+                self.add_organisms(
+                    random_amount, "SosnowskyHogweed", SosnowskyHogweed)
             elif type == OrganismType.HUMAN:
                 # We always want 1 human at the board
                 self.add_organisms(1, "Human", Human)
