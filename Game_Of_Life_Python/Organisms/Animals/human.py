@@ -7,7 +7,7 @@ class Human(Animal):
         strength = OrganismInitialData[name]["strength"]
         initiative = OrganismInitialData[name]["initiative"]
         character = OrganismInitialData[name]["character"]
-        super().__init__(strength, initiative, name, character, row, column)
+        super().__init__(strength, initiative, name, character, row, column, "human.png")
 
     def action():
         pass

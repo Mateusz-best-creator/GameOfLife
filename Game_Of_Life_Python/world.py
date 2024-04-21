@@ -3,6 +3,12 @@ from enum import Enum
 import random
 
 from Organisms.Animals.human import Human
+from Organisms.Animals.wolf import Wolf
+from Organisms.Animals.sheep import Sheep
+from Organisms.Animals.turtle import Turtle
+from Organisms.Animals.fox import Fox
+from Organisms.Animals.antelope import Antelope
+from Organisms.Animals.cyber_sheep import CyberSheep
 
 # Enum type for types of organisms
 
@@ -103,19 +109,17 @@ class World:
             # Map index to a type name
             type = OrganismType(index)
             if type == OrganismType.WOLF:
-                pass
-            elif type == OrganismType.WOLF:
-                pass
+                self.add_organisms(random_amount, "wolf", Wolf)
             elif type == OrganismType.SHEEP:
-                pass
+                self.add_organisms(random_amount, "sheep", Sheep)
             elif type == OrganismType.FOX:
-                pass
+                self.add_organisms(random_amount, "fox", Fox)
             elif type == OrganismType.TURTLE:
-                pass
+                self.add_organisms(random_amount, "turtle", Turtle)
             elif type == OrganismType.ANTELOPE:
-                pass
+                self.add_organisms(random_amount, "antelope", Antelope)
             elif type == OrganismType.CYBER_SHEEP:
-                pass
+                self.add_organisms(random_amount, "cyber_sheep", CyberSheep)
             elif type == OrganismType.GRASS:
                 pass
             elif type == OrganismType.SOW_THISTLE:
@@ -127,7 +131,8 @@ class World:
             elif type == OrganismType.SOSNOWSKY_HOGWEED:
                 pass
             elif type == OrganismType.HUMAN:
-                self.add_organisms(random_amount, "Human", Human)
+                # We always want 1 human at the board
+                self.add_organisms(1, "Human", Human)
 
     def add_organisms(self, times, name, object_type):
         print("Object type = ", object_type)
@@ -138,7 +143,8 @@ class World:
                 random_row = random.randint(0, self.grid_height - 1)
                 random_column = random.randint(0, self.grid_width - 1)
             self.organisms.append(object_type(name, random_row, random_column))
-            self.grid_board[random_row][random_column] = self.organisms[len(self.organisms) - 1].get_character()
+            self.grid_board[random_row][random_column] = self.organisms[len(
+                self.organisms) - 1].get_character()
 
     def run(self):
         self.initialize_organisms()
@@ -259,7 +265,7 @@ class World:
                     vertical_line_left + (j+1) * board_line_width - 1)
             pygame.draw.line(self.screen, color_line, (vertical_line_left + i * board_line_width, 0),
                              (vertical_line_left + i * board_line_width, self.screen_height*0.8))
-            
+
         # Display all our organisms inside grid
         for organism in self.organisms:
             organism_row = organism.get_position_row()
