@@ -69,3 +69,15 @@ class Organism(ABC):
 
     def get_position_column(self):
         return self.column
+
+    def organism_go_left(self):
+        self.column -= 1
+
+    def organism_go_top(self):
+        self.row -= 1
+
+    def organism_go_right(self):
+        self.column += 1
+
+    def organism_go_bottom(self):
+        self.row += 1

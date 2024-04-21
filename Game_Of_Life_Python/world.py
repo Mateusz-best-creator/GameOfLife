@@ -142,7 +142,6 @@ class World:
                 self.add_organisms(1, "Human", Human)
 
     def add_organisms(self, times, name, object_type):
-        print("Object type = ", object_type)
         for _ in range(times):
             random_row = random.randint(0, self.grid_height - 1)
             random_column = random.randint(0, self.grid_width - 1)
@@ -230,20 +229,56 @@ class World:
                 instruction_font_text[i], (instruction_font_left[i], instruction_font_top[i]))
 
     def play_simulation(self):
+        pressed_play_key = False
         game_running = True
-        self.screen.fill("#ffffff")
-        print("running game!")
         self.draw_simulation_board()
+
+        # Find human object
+        human_object = None
+        human_index = -1
+        for index, organism in enumerate(self.organisms):
+            if type(organism) == Human:
+                human_object = organism
+                human_index = index
+                print(f"""Find human: {human_object.get_position_row()}, {
+                      human_object.get_position_column()}""")
+                break
+        print(f"Index = {index}")
         while game_running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     game_running = False
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_p:
+                        pressed_play_key = True
+                        print("Pressing P key")
+
+            keys = pygame.key.get_pressed()
+            if pressed_play_key:
+                if keys[pygame.K_LEFT]:
+                    human_object.organism_go_left()
+                    pressed_play_key = False
+                if keys[pygame.K_RIGHT]:
+                    human_object.organism_go_right()
+                    pressed_play_key = False
+                if keys[pygame.K_UP]:
+                    human_object.organism_go_top()
+                    pressed_play_key = False
+                if keys[pygame.K_DOWN]:
+                    human_object.organism_go_bottom()
+                    pressed_play_key = False
+                if human_object:
+                    self.organisms[human_index] = human_object
+
+                if not pressed_play_key:
+                    self.draw_simulation_board()
 
             pygame.display.flip()
             self.clock.tick(60)
             pygame.display.update()
 
     def draw_simulation_board(self):
+        self.screen.fill("#ffffff")
         color_line = "#000000"
         vertical_line_left = self.screen_width*0.25
         separating_line_thickness = 5
