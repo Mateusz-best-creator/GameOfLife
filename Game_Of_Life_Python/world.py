@@ -147,7 +147,8 @@ class World:
             self.grid_board[random_row][random_column] = self.organisms[len(self.organisms) - 1].get_character()
 
     def sort_organisms(self):
-        self.organisms = sorted(self.organisms)
+        # self.organisms = sorted(self.organisms)
+        pass
 
     def run(self):
         self.initialize_organisms()
