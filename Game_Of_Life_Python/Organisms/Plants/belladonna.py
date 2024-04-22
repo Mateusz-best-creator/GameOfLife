@@ -10,8 +10,8 @@ class Belladonna(Plant):
         super().__init__(strength, initiative, name,
                          character, row, column, "belladonna.png")
 
-    def action():
+    def action(self):
         pass
 
-    def collision():
+    def collision(self):
         pass

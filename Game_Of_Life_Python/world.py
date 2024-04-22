@@ -57,7 +57,7 @@ class World:
         self.running = True
 
         # Title font
-        self.font_title = pygame.font.SysFont("chalkduster.ttf", 72)
+        self.font_title = pygame.font.SysFont("chalkduster.ttf", int(self.screen_height * 0.085))
         self.title = self.font_title.render(
             "World Simulation", True, "#333333")
         self.title_width = self.title.get_width()
@@ -72,25 +72,21 @@ class World:
         self.option_rectangle_left = []
         self.option_rectangle_top = self.screen_height * 0.7
         for i in range(1, 3+1):
-            self.option_rectangle_left.append(
-                self.option_rectangle_offset * i + (i - 1) * self.option_rectangle_width)
+            self.option_rectangle_left.append(self.option_rectangle_offset * i + (i - 1) * self.option_rectangle_width)
 
         # Option chosen by user
         self.chosen_option = OptionType.NONE
 
         # Option font
-        self.font_option = pygame.font.SysFont("chalkduster.ttf", 24)
+        self.font_option = pygame.font.SysFont("chalkduster.ttf", int(self.screen_height * 0.085 * 0.45))
         self.option_font_color = "#333333"
         self.options_font = [self.font_option.render("Start Simulation", True, self.option_font_color),
-                             self.font_option.render(
-                                 "Load Simulation", True, self.option_font_color),
+                             self.font_option.render("Load Simulation", True, self.option_font_color),
                              self.font_option.render("Quit Simulation", True, self.option_font_color)]
-        options_font_widths = [self.options_font[i].get_width()
-                               for i in range(len(self.options_font))]
+        options_font_widths = [self.options_font[i].get_width() for i in range(len(self.options_font))]
         self.options_font_left = [self.option_rectangle_left[i] + (
             (self.option_rectangle_width - options_font_widths[i]) / 2) for i in range(len(self.options_font))]
-        self.options_font_top = self.option_rectangle_top + \
-            self.option_rectangle_height * 0.4
+        self.options_font_top = self.option_rectangle_top + self.option_rectangle_height * 0.4
 
         # Organisms stuff
         self.ORGANISMS_TYPES = 12
@@ -99,8 +95,7 @@ class World:
         # Grid dimensions
         self.grid_height = 10
         self.grid_width = 10
-        self.grid_board = [
-            ['e' for _ in range(self.grid_width)] for _ in range(self.grid_height)]
+        self.grid_board = [['e' for _ in range(self.grid_width)] for _ in range(self.grid_height)]
         # Dimensions for all squares in game simulation
         self.squares_top = []
         self.squares_bottom = []
@@ -149,8 +144,7 @@ class World:
                 random_row = random.randint(0, self.grid_height - 1)
                 random_column = random.randint(0, self.grid_width - 1)
             self.organisms.append(object_type(name, random_row, random_column))
-            self.grid_board[random_row][random_column] = self.organisms[len(
-                self.organisms) - 1].get_character()
+            self.grid_board[random_row][random_column] = self.organisms[len(self.organisms) - 1].get_character()
 
     def run(self):
         self.initialize_organisms()
@@ -196,16 +190,12 @@ class World:
                              "play and the journal will be shown on the left side."]
         instruction_font = pygame.font.SysFont(None, 24)
         instruction_font_color = "#333333"
-        instruction_font_text = [instruction_font.render(
-            instruction_lines[i], True, instruction_font_color) for i in range(len(instruction_lines))]
-        instruction_widths = [instruction_font_text[i].get_width()
-                              for i in range(len(instruction_lines))]
-        instruction_font_left = [
-            (self.screen_width - instruction_widths[i]) / 2 for i in range(len(instruction_lines))]
+        instruction_font_text = [instruction_font.render(instruction_lines[i], True, instruction_font_color) for i in range(len(instruction_lines))]
+        instruction_widths = [instruction_font_text[i].get_width() for i in range(len(instruction_lines))]
+        instruction_font_left = [(self.screen_width - instruction_widths[i]) / 2 for i in range(len(instruction_lines))]
         INSTRUCTION_FONT_GAP = 18
         INSTRUCTION_FONT_TOP = 0.4
-        instruction_font_top = [self.screen_height * INSTRUCTION_FONT_TOP +
-                                INSTRUCTION_FONT_GAP * i for i in range(len(instruction_lines))]
+        instruction_font_top = [self.screen_height * INSTRUCTION_FONT_TOP + INSTRUCTION_FONT_GAP * i for i in range(len(instruction_lines))]
 
         # Draw all 3 option rectangles and all 3 text options
         for i in range(len(self.options_font)):
@@ -225,8 +215,7 @@ class World:
             self.screen.blit(
                 self.options_font[i], (self.options_font_left[i], self.options_font_top))
         for i in range(len(instruction_lines)):
-            self.screen.blit(
-                instruction_font_text[i], (instruction_font_left[i], instruction_font_top[i]))
+            self.screen.blit(instruction_font_text[i], (instruction_font_left[i], instruction_font_top[i]))
 
     def play_simulation(self):
         pressed_play_key = False
@@ -243,7 +232,7 @@ class World:
                 print(f"""Find human: {human_object.get_position_row()}, {
                       human_object.get_position_column()}""")
                 break
-        print(f"Index = {index}")
+
         while game_running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -251,27 +240,19 @@ class World:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:
                         pressed_play_key = True
-                        print("Pressing P key")
+                        if human_object:
+                            human_object.action()
+                            human_object.collision()
+                            self.organisms[human_index] = human_object
 
             keys = pygame.key.get_pressed()
             if pressed_play_key:
-                if keys[pygame.K_LEFT]:
-                    human_object.organism_go_left()
-                    pressed_play_key = False
-                if keys[pygame.K_RIGHT]:
-                    human_object.organism_go_right()
-                    pressed_play_key = False
-                if keys[pygame.K_UP]:
-                    human_object.organism_go_top()
-                    pressed_play_key = False
-                if keys[pygame.K_DOWN]:
-                    human_object.organism_go_bottom()
-                    pressed_play_key = False
-                if human_object:
-                    self.organisms[human_index] = human_object
+                for organism in self.organisms:
+                    if type(organism) != Human:
+                        organism.action()
+                        organism.collision()
 
-                if not pressed_play_key:
-                    self.draw_simulation_board()
+                self.draw_simulation_board()
 
             pygame.display.flip()
             self.clock.tick(60)
@@ -301,10 +282,8 @@ class World:
                              (self.screen_width, i * board_line_height), board_line_thickness)
         for i in range(self.grid_width):
             for j in range(self.grid_width):
-                self.squares_left.append(
-                    vertical_line_left + j * board_line_width)
-                self.squares_right.append(
-                    vertical_line_left + (j+1) * board_line_width - 1)
+                self.squares_left.append(vertical_line_left + j * board_line_width)
+                self.squares_right.append(vertical_line_left + (j+1) * board_line_width - 1)
             pygame.draw.line(self.screen, color_line, (vertical_line_left + i * board_line_width, 0),
                              (vertical_line_left + i * board_line_width, self.screen_height*0.8))
 
@@ -317,3 +296,12 @@ class World:
 
     def load_simulation(self):
         print("Loading simulation from ./filenames/organisms.txt")
+
+
+
+
+
+
+
+
+

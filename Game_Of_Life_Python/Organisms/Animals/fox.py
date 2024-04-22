@@ -9,8 +9,8 @@ class Fox(Animal):
         character = OrganismInitialData[name]["character"]
         super().__init__(strength, initiative, name, character, row, column, "fox.png")
 
-    def action():
+    def action(self):
         pass
 
-    def collision():
+    def collision(self):
         pass

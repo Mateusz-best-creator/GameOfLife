@@ -7,9 +7,9 @@ class Plant(Organism, ABC):
         super().__init__(strength, initiative, name, character, row, column, image_path)
 
     @abstractmethod
-    def action():
+    def action(self):
         pass
 
     @abstractmethod
-    def collision():
+    def collision(self):
         pass

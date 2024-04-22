@@ -9,8 +9,8 @@ class Turtle(Animal):
         character = OrganismInitialData[name]["character"]
         super().__init__(strength, initiative, name, character, row, column, "turtle.png")
 
-    def action():
+    def action(self):
         pass
 
-    def collision():
+    def collision(self):
         pass

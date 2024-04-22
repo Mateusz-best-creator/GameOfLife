@@ -10,8 +10,8 @@ class CyberSheep(Animal):
         super().__init__(strength, initiative, name,
                          character, row, column, "cyber_sheep.png")
 
-    def action():
+    def action(self):
         pass
 
-    def collision():
+    def collision(self):
         pass
