@@ -46,8 +46,8 @@ class World:
         # Screen stuff
         self.screen_height = screen_height
         self.screen_width = screen_width
-        pygame.display.set_caption(
-            "Mateusz Wieczorek s197743, World Simluation")
+        pygame.display.set_caption("Mateusz Wieczorek s197743, World Simluation")
+        self.JOURNAL_FILENAME = "journal.txt"
 
         # Pygame stuff
         pygame.init()
@@ -146,6 +146,9 @@ class World:
             self.organisms.append(object_type(name, random_row, random_column))
             self.grid_board[random_row][random_column] = self.organisms[len(self.organisms) - 1].get_character()
 
+    def sort_organisms(self):
+        self.organisms = sorted(self.organisms)
+
     def run(self):
         self.initialize_organisms()
         self.draw_starting_screen()
@@ -222,6 +225,9 @@ class World:
         game_running = True
         self.draw_simulation_board()
 
+        # Clear journal.txt file
+        self.clear_journal()
+
         # Find human object
         human_object = None
         human_index = -1
@@ -229,8 +235,6 @@ class World:
             if type(organism) == Human:
                 human_object = organism
                 human_index = index
-                print(f"""Find human: {human_object.get_position_row()}, {
-                      human_object.get_position_column()}""")
                 break
 
         while game_running:
@@ -245,14 +249,15 @@ class World:
                             human_object.collision()
                             self.organisms[human_index] = human_object
 
-            keys = pygame.key.get_pressed()
             if pressed_play_key:
                 for organism in self.organisms:
                     if type(organism) != Human:
                         organism.action()
                         organism.collision()
+                pressed_play_key = False
 
                 self.draw_simulation_board()
+                self.sort_organisms()
 
             pygame.display.flip()
             self.clock.tick(60)
@@ -297,8 +302,9 @@ class World:
     def load_simulation(self):
         print("Loading simulation from ./filenames/organisms.txt")
 
-
-
+    def clear_journal(self):
+        with open(self.JOURNAL_FILENAME, 'w') as f:
+            pass
 
 
 

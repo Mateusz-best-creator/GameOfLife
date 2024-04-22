@@ -27,6 +27,8 @@ class Organism(ABC):
         self.row = row
         self.column = column
         self.image_path = image_path
+        self.JOURNAL_FILENAME = "journal.txt"
+        self.age = 1
 
     @abstractmethod
     def action(self):
@@ -81,3 +83,8 @@ class Organism(ABC):
 
     def organism_go_bottom(self):
         self.row += 1
+
+    def print_to_journal(self, message):
+        with open(self.JOURNAL_FILENAME, 'a') as f:
+            f.write(message)
+            f.write("\n")

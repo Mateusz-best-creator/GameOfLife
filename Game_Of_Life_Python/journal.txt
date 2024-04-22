@@ -1,0 +1,2 @@
+turtle stays at (5, 7)
+turtle stays at (6, 7)
