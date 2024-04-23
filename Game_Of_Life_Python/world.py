@@ -42,7 +42,7 @@ class OptionType(Enum):
 
 
 class World:
-    def __init__(self, screen_height=600, screen_width=600):
+    def __init__(self, screen_height=800, screen_width=800):
         # Screen stuff
         self.screen_height = screen_height
         self.screen_width = screen_width
@@ -256,21 +256,30 @@ class World:
                 human_index = index
                 break
 
+        displayed_message = False
+
         while game_running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     game_running = False
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:
+                        # Clear journal every turn
                         self.clear_journal()
                         self.turn_number += 1
                         pressed_play_key = True
                         if human_object:
+                            if (displayed_message):
+                                displayed_message = False
+                                self.draw_simulation_board()
+                            self.display_message("Press one of arrow keys to move", self.screen_height * 0.93, self.screen_width * 0.5)
+                            pygame.display.update()
                             human_object.action()
                             human_object.collision()
                             self.organisms[human_index] = human_object
                     elif event.key == pygame.K_s:
                         self.display_message("Saving State Of The Simulation...", self.screen_height * 0.93, self.screen_width * 0.5)
+                        displayed_message = True
                         self.save_state_of_simulation()
                     elif event.key == pygame.K_q:
                         return
