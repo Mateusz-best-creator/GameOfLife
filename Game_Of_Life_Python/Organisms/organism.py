@@ -11,10 +11,10 @@ OrganismInitialData = {
     "cyber_sheep": {"strength": 11, "initiative": 4, "character": 'c'},
     "Human": {"strength": 5, "initiative": 4, "character": 'H'},
     "Grass": {"strength": 0, "initiative": 0, "character": 'G'},
-    "SowThistle": {"strength": 0, "initiative": 0, "character": 'S'},
+    "Sow_thistle": {"strength": 0, "initiative": 0, "character": 'S'},
     "Guarana": {"strength": 0, "initiative": 0, "character": 'U'},
     "Belladonna": {"strength": 99, "initiative": 0, "character": 'B'},
-    "SosnowskyHogweed": {"strength": 10, "initiative": 0, "character": 'O'},
+    "Sosnowsky_hogweed": {"strength": 10, "initiative": 0, "character": 'O'},
 }
 
 
@@ -60,8 +60,8 @@ class Organism(ABC):
     def get_initiative(self):
         return self.initiative
 
-    def get_name(self):
-        return self.name
+    def get_strength(self):
+        return self.strength
 
     def get_character(self):
         return self.character
@@ -87,4 +87,3 @@ class Organism(ABC):
     def print_to_journal(self, message):
         with open(self.JOURNAL_FILENAME, 'a') as f:
             f.write(message)
-            f.write("\n")

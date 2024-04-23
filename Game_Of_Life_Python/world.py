@@ -48,6 +48,7 @@ class World:
         self.screen_width = screen_width
         pygame.display.set_caption("Mateusz Wieczorek s197743, World Simluation")
         self.JOURNAL_FILENAME = "journal.txt"
+        self.SAVED_STATE_FILENAME = "organisms.txt"
 
         # Pygame stuff
         pygame.init()
@@ -124,14 +125,14 @@ class World:
             elif type == OrganismType.GRASS:
                 self.add_organisms(random_amount, "Grass", Grass)
             elif type == OrganismType.SOW_THISTLE:
-                self.add_organisms(random_amount, "SowThistle", SowThistle)
+                self.add_organisms(random_amount, "Sow_thistle", SowThistle)
             elif type == OrganismType.GUARANA:
                 self.add_organisms(random_amount, "Guarana", Guarana)
             elif type == OrganismType.BELLADONNA:
                 self.add_organisms(random_amount, "Belladonna", Belladonna)
             elif type == OrganismType.SOSNOWSKY_HOGWEED:
                 self.add_organisms(
-                    random_amount, "SosnowskyHogweed", SosnowskyHogweed)
+                    random_amount, "Sosnowsky_hogweed", SosnowskyHogweed)
             elif type == OrganismType.HUMAN:
                 # We always want 1 human at the board
                 self.add_organisms(1, "Human", Human)
@@ -192,12 +193,13 @@ class World:
                              "human is alive you will be asked to press one of, the",
                              "arrow keys to move. If human is not alive the game will",
                              "play and the journal will be shown on the left side."]
-        instruction_font = pygame.font.SysFont(None, 24)
+        instruction_font_size = int(self.screen_width * 0.03)
+        instruction_font = pygame.font.SysFont(None, instruction_font_size)
         instruction_font_color = "#333333"
         instruction_font_text = [instruction_font.render(instruction_lines[i], True, instruction_font_color) for i in range(len(instruction_lines))]
         instruction_widths = [instruction_font_text[i].get_width() for i in range(len(instruction_lines))]
         instruction_font_left = [(self.screen_width - instruction_widths[i]) / 2 for i in range(len(instruction_lines))]
-        INSTRUCTION_FONT_GAP = 18
+        INSTRUCTION_FONT_GAP = int(self.screen_height * 0.03)
         INSTRUCTION_FONT_TOP = 0.4
         instruction_font_top = [self.screen_height * INSTRUCTION_FONT_TOP + INSTRUCTION_FONT_GAP * i for i in range(len(instruction_lines))]
 
@@ -222,6 +224,7 @@ class World:
             self.screen.blit(instruction_font_text[i], (instruction_font_left[i], instruction_font_top[i]))
 
     def play_simulation(self):
+        self.clear_journal()
         pressed_play_key = False
         game_running = True
         self.draw_simulation_board()
@@ -249,6 +252,9 @@ class World:
                             human_object.action()
                             human_object.collision()
                             self.organisms[human_index] = human_object
+                            self.clear_journal()
+                    if event.key == pygame.K_s:
+                        self.save_state_of_simulation()
 
             if pressed_play_key:
                 for organism in self.organisms:
@@ -299,9 +305,51 @@ class World:
             organism_column = organism.get_position_column()
             organism.print(self.screen, self.squares_top[organism_row], self.squares_bottom[organism_row],
                            self.squares_left[organism_column], self.squares_right[organism_column])
+        
+        journal_font = pygame.font.SysFont(None, int(self.screen_height * 0.085 * 0.25))
+        journal_font_left = self.screen_width * 0.02
+        journal_vertical_offset = self.screen_height * 0.03
+        # Display journal
+        with open(self.JOURNAL_FILENAME) as f:
+            counter = 1
+            for line in f:
+                # Remove last ? character
+                line = line[:-1]
+                # Make sure we wont go beyong the screem
+                if journal_vertical_offset * counter >= self.screen_height:
+                    return
+                self.screen.blit(journal_font.render(line, True, self.option_font_color), (journal_font_left, counter * journal_vertical_offset))
+                counter += 1
+
+    def save_state_of_simulation(self):
+        # Display text message in bottom rectangle
+        pass
 
     def load_simulation(self):
+        self.clear_journal()
         print("Loading simulation from ./filenames/organisms.txt")
+        self.organisms.clear()
+        with open(self.SAVED_STATE_FILENAME, 'r') as f:
+            for line in f:
+                name, strength, initiative, row, column = line.split(" ")
+                strength = int(strength)
+                initiative = int(initiative)
+                row = int(row)
+                column = int(column)
+                if name == "Human": self.organisms.append(Human(name, row, column, strength, initiative))
+                elif name == "wolf": self.organisms.append(Wolf(name, row, column, strength, initiative))
+                elif name == "sheep": self.organisms.append(Sheep(name, row, column, strength, initiative))
+                elif name == "antelope": self.organisms.append(Antelope(name, row, column, strength, initiative))
+                elif name == "fox": self.organisms.append(Fox(name, row, column, strength, initiative))
+                elif name == "turtle": self.organisms.append(Turtle(name, row, column, strength, initiative))
+                elif name == "cyber_sheep": self.organisms.append(CyberSheep(name, row, column, strength, initiative))
+                elif name == "Grass": self.organisms.append(Grass(name, row, column, strength, initiative))
+                elif name == "Guarana": self.organisms.append(Guarana(name, row, column, strength, initiative))
+                elif name == "Belladonna": self.organisms.append(Belladonna(name, row, column, strength, initiative))
+                elif name == "Sow_thistle": self.organisms.append(SowThistle(name, row, column, strength, initiative))
+                elif name == "Sosnowsky_hogweed": self.organisms.append(SosnowskyHogweed(name, row, column, strength, initiative))
+
+        self.play_simulation()
 
     def clear_journal(self):
         with open(self.JOURNAL_FILENAME, 'w') as f:

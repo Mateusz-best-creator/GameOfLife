@@ -35,6 +35,8 @@ class Animal(Organism, ABC):
         elif self.get_position_column() == 9 and direction == MoveDirection.RIGHT:
             direction = MoveDirection(random.choice([MoveDirection.TOP, MoveDirection.LEFT, MoveDirection.BOTTOM]))
 
+        self.print_to_journal(f"{self.get_name()} from ({self.get_position_row()}, {self.get_position_column()}) to ")
+
         # Perform movement based on the selected direction
         if direction == MoveDirection.LEFT:
             self.organism_go_left()
@@ -44,3 +46,5 @@ class Animal(Organism, ABC):
             self.organism_go_right()
         elif direction == MoveDirection.BOTTOM:
             self.organism_go_bottom()
+
+        self.print_to_journal(f"to ({self.get_position_row()}, {self.get_position_column()})\n")

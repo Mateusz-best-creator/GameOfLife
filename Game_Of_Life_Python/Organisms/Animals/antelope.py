@@ -4,10 +4,12 @@ import random
 from Organisms.animal import MoveDirection
 
 class Antelope(Animal):
-    def __init__(self, name, row, column):
+    def __init__(self, name, row, column, given_strength = -1, given_initiative = -1):
         strength = OrganismInitialData[name]["strength"]
         initiative = OrganismInitialData[name]["initiative"]
         character = OrganismInitialData[name]["character"]
+        if given_strength != -1: strength = given_strength
+        if given_initiative != -1: initiative = given_initiative
         super().__init__(strength, initiative, name, character, row, column, "antelope.png")
 
     def action(self):
@@ -27,7 +29,7 @@ class Antelope(Animal):
             direction = MoveDirection(random.randint(1, 4))
 
         multiplier = random.randint(1, 2)
-        print(f"{self.get_name()} moves from ({self.row}, {self.column}) to:", end=" ")
+        self.print_to_journal(f"{self.get_name()} from ({self.row}, {self.column}) to ")
 
         # Update position based on direction
         if direction == MoveDirection.TOP:
@@ -39,7 +41,7 @@ class Antelope(Animal):
         elif direction == MoveDirection.RIGHT:
             self.column = min(width - 1, self.column + multiplier)
 
-        print(f"({self.row}, {self.column})")
+        self.print_to_journal(f"({self.row}, {self.column})\n")
 
     def collision(self):
         pass
