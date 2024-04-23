@@ -13,3 +13,6 @@ class Plant(Organism, ABC):
     @abstractmethod
     def collision(self):
         pass
+
+    def default_plant_action(self):
+        self.age += 1

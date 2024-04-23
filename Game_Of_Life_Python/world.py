@@ -42,13 +42,14 @@ class OptionType(Enum):
 
 
 class World:
-    def __init__(self, screen_height=800, screen_width=800):
+    def __init__(self, screen_height=600, screen_width=600):
         # Screen stuff
         self.screen_height = screen_height
         self.screen_width = screen_width
         pygame.display.set_caption("Mateusz Wieczorek s197743, World Simluation")
         self.JOURNAL_FILENAME = "journal.txt"
         self.SAVED_STATE_FILENAME = "organisms.txt"
+        self.turn_number = 0
 
         # Pygame stuff
         pygame.init()
@@ -147,9 +148,21 @@ class World:
             self.organisms.append(object_type(name, random_row, random_column))
             self.grid_board[random_row][random_column] = self.organisms[len(self.organisms) - 1].get_character()
 
+    def update_grid_board(self):
+        self.grid_board = [['e' for _ in range(self.grid_width)] for _ in range(self.grid_height)]
+        for organism in self.organisms:
+            row = organism.get_position_row()
+            column = organism.get_position_column()
+            self.grid_board[row][column] = organism.get_character()
+
+    def custom_sort(self, organism):
+        if isinstance(organism, Human):
+            return (0, 0, 0)  # Human always comes first
+        return (-organism.initiative, -organism.age)
+
+
     def sort_organisms(self):
-        # self.organisms = sorted(self.organisms)
-        pass
+        self.organisms = sorted(self.organisms, key=self.custom_sort)
 
     def run(self):
         self.initialize_organisms()
@@ -179,6 +192,7 @@ class World:
                 self.initialize_organisms()
             elif self.chosen_option == OptionType.LOAD_SIMULATION:
                 self.load_simulation()
+                self.play_simulation()
                 self.draw_starting_screen()
             elif self.chosen_option == OptionType.QUIT_SIMULATION:
                 self.running = False
@@ -224,6 +238,7 @@ class World:
             self.screen.blit(instruction_font_text[i], (instruction_font_left[i], instruction_font_top[i]))
 
     def play_simulation(self):
+        self.update_grid_board()
         self.clear_journal()
         pressed_play_key = False
         game_running = True
@@ -247,14 +262,18 @@ class World:
                     game_running = False
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:
+                        self.clear_journal()
+                        self.turn_number += 1
                         pressed_play_key = True
                         if human_object:
                             human_object.action()
                             human_object.collision()
                             self.organisms[human_index] = human_object
-                            self.clear_journal()
-                    if event.key == pygame.K_s:
+                    elif event.key == pygame.K_s:
+                        self.display_message("Saving State Of The Simulation...", self.screen_height * 0.93, self.screen_width * 0.5)
                         self.save_state_of_simulation()
+                    elif event.key == pygame.K_q:
+                        return
 
             if pressed_play_key:
                 for organism in self.organisms:
@@ -269,6 +288,7 @@ class World:
             pygame.display.flip()
             self.clock.tick(60)
             pygame.display.update()
+        self.turn_number = 0
 
     def draw_simulation_board(self):
         self.screen.fill("#ffffff")
@@ -306,7 +326,7 @@ class World:
             organism.print(self.screen, self.squares_top[organism_row], self.squares_bottom[organism_row],
                            self.squares_left[organism_column], self.squares_right[organism_column])
         
-        journal_font = pygame.font.SysFont(None, int(self.screen_height * 0.085 * 0.25))
+        journal_font = pygame.font.SysFont(None, int(self.screen_height * 0.085 * 0.275))
         journal_font_left = self.screen_width * 0.02
         journal_vertical_offset = self.screen_height * 0.03
         # Display journal
@@ -320,14 +340,25 @@ class World:
                     return
                 self.screen.blit(journal_font.render(line, True, self.option_font_color), (journal_font_left, counter * journal_vertical_offset))
                 counter += 1
+        # Display available options for user
+        self.display_message("Press p to go to the next turn", self.screen_height * 0.825, self.screen_width * 0.27)
+        self.display_message("Press s to save current state of the game", self.screen_height * 0.86, self.screen_width * 0.27)
+        self.display_message("Press q to quit", self.screen_height * 0.895, self.screen_width * 0.27)
+
 
     def save_state_of_simulation(self):
+        with open(self.SAVED_STATE_FILENAME, 'w') as f:
+            for organism in self.organisms:
+                f.write(f"""{organism.get_name()} {organism.get_strength()} {organism.get_initiative()} {organism.get_position_row()} {organism.get_position_column()}\n""")
+
+    def display_message(self, message, top_coor, left_coor):
         # Display text message in bottom rectangle
-        pass
+        chosen_option_font = pygame.font.SysFont(None, int(self.screen_height * 0.04))
+        self.screen.blit(chosen_option_font.render(message, True, self.option_font_color), 
+                         (left_coor, top_coor))
 
     def load_simulation(self):
         self.clear_journal()
-        print("Loading simulation from ./filenames/organisms.txt")
         self.organisms.clear()
         with open(self.SAVED_STATE_FILENAME, 'r') as f:
             for line in f:
@@ -348,8 +379,6 @@ class World:
                 elif name == "Belladonna": self.organisms.append(Belladonna(name, row, column, strength, initiative))
                 elif name == "Sow_thistle": self.organisms.append(SowThistle(name, row, column, strength, initiative))
                 elif name == "Sosnowsky_hogweed": self.organisms.append(SosnowskyHogweed(name, row, column, strength, initiative))
-
-        self.play_simulation()
 
     def clear_journal(self):
         with open(self.JOURNAL_FILENAME, 'w') as f:
