@@ -31,7 +31,7 @@ class Organism(ABC):
         self.age = 1
 
     @abstractmethod
-    def action(self):
+    def action(self, grid_board):
         pass
 
     @abstractmethod

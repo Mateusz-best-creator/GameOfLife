@@ -12,7 +12,7 @@ class SowThistle(Plant):
         super().__init__(strength, initiative, name,
                          character, row, column, "sow_thistle.png")
 
-    def action(self):
+    def action(self, grid_board):
         pass
 
     def collision(self):

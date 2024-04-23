@@ -11,7 +11,7 @@ class Turtle(Animal):
         if given_initiative != -1: initiative = given_initiative
         super().__init__(strength, initiative, name, character, row, column, "turtle.png")
 
-    def action(self):
+    def action(self, grid_board):
         rand = random.randint(1, 4)
         if (rand == 4): # Means turtle move
             self.default_action_animal()

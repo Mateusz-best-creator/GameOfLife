@@ -12,7 +12,7 @@ class Belladonna(Plant):
         super().__init__(strength, initiative, name,
                          character, row, column, "belladonna.png")
 
-    def action(self):
+    def action(self, grid_board):
         pass
 
     def collision(self):

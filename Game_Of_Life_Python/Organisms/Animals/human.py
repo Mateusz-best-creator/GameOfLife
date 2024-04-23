@@ -11,7 +11,7 @@ class Human(Animal):
         if given_initiative != -1: initiative = given_initiative
         super().__init__(strength, initiative, name, character, row, column, "human.png")
 
-    def action(self):
+    def action(self, grid_board):
         self.print_to_journal(f"{self.get_name()} from ({self.get_position_row()}, {self.get_position_column()}) to ")
         running = True
         while running:

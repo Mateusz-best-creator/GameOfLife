@@ -11,7 +11,7 @@ class Grass(Plant):
         if given_initiative != -1: initiative = given_initiative
         super().__init__(strength, initiative, name, character, row, column, "grass.png")
 
-    def action(self):
+    def action(self, grid_board):
         pass
 
     def collision(self):

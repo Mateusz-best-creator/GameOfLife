@@ -15,7 +15,7 @@ class Animal(Organism, ABC):
         super().__init__(strength, initiative, name, character, row, column, image_path)
 
     @abstractmethod
-    def action(self):
+    def action(self, grid_board):
         pass
 
     @abstractmethod

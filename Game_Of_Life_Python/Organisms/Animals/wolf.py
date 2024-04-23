@@ -11,7 +11,7 @@ class Wolf(Animal):
         if given_initiative != -1: initiative = given_initiative
         super().__init__(strength, initiative, name, character, row, column, "wolf.png")
 
-    def action(self):
+    def action(self, grid_board):
         self.default_action_animal()
 
     def collision(self):

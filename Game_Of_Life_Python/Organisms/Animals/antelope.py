@@ -12,7 +12,7 @@ class Antelope(Animal):
         if given_initiative != -1: initiative = given_initiative
         super().__init__(strength, initiative, name, character, row, column, "antelope.png")
 
-    def action(self):
+    def action(self, grid_board):
         self.age += 1
         direction = MoveDirection(random.randint(1, 4))
         height = width = 10

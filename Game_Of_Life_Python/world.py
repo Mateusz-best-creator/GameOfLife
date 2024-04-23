@@ -180,6 +180,9 @@ class World:
                         for index, option_left_distance in enumerate(self.option_rectangle_left):
                             if click_x >= option_left_distance and click_x <= option_left_distance + self.option_rectangle_width:
                                 self.chosen_option = OptionType(index + 1)
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_q:
+                        self.running = False
 
             pygame.display.flip()
             self.clock.tick(60)
@@ -274,7 +277,7 @@ class World:
                                 self.draw_simulation_board()
                             self.display_message("Press one of arrow keys to move", self.screen_height * 0.93, self.screen_width * 0.5)
                             pygame.display.update()
-                            human_object.action()
+                            human_object.action(self.grid_board)
                             human_object.collision()
                             self.organisms[human_index] = human_object
                     elif event.key == pygame.K_s:
@@ -282,12 +285,13 @@ class World:
                         displayed_message = True
                         self.save_state_of_simulation()
                     elif event.key == pygame.K_q:
+                        self.turn_number = 0
                         return
 
             if pressed_play_key:
                 for organism in self.organisms:
                     if type(organism) != Human:
-                        organism.action()
+                        organism.action(self.grid_board)
                         organism.collision()
                 pressed_play_key = False
 
@@ -341,7 +345,15 @@ class World:
         # Display journal
         with open(self.JOURNAL_FILENAME) as f:
             counter = 1
-            for line in f:
+            for index, line in enumerate(f):
+                
+                if index == 0:
+                    self.screen.blit(journal_font.render
+                                     (f"Turn {self.turn_number}", True, self.option_font_color), 
+                                     (journal_font_left, counter * journal_vertical_offset))
+                    counter += 1
+                    continue
+
                 # Remove last ? character
                 line = line[:-1]
                 # Make sure we wont go beyong the screem
@@ -357,6 +369,7 @@ class World:
 
     def save_state_of_simulation(self):
         with open(self.SAVED_STATE_FILENAME, 'w') as f:
+            f.write(f"{self.turn_number}\n")
             for organism in self.organisms:
                 f.write(f"""{organism.get_name()} {organism.get_strength()} {organism.get_initiative()} {organism.get_position_row()} {organism.get_position_column()}\n""")
 
@@ -370,7 +383,10 @@ class World:
         self.clear_journal()
         self.organisms.clear()
         with open(self.SAVED_STATE_FILENAME, 'r') as f:
-            for line in f:
+            for index, line in enumerate(f):
+                if index == 0:
+                    self.turn_number = int(line)
+                    continue
                 name, strength, initiative, row, column = line.split(" ")
                 strength = int(strength)
                 initiative = int(initiative)
