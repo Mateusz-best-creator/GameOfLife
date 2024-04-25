@@ -1,6 +1,6 @@
 from Organisms.organism import OrganismInitialData
 from Organisms.plant import Plant
-
+import random
 
 class SowThistle(Plant):
 
@@ -16,7 +16,11 @@ class SowThistle(Plant):
         SowThistle.static_counter += 1
 
     def action(self, grid_board):
-        pass
+        for _ in range(3):
+            result = self.default_plant_action(grid_board, SowThistle, "Sow_thistle")
+            if result:
+                return result
+        return None
 
     def collision(self):
         pass

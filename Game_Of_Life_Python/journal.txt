@@ -1,3 +1,4 @@
-Human from (6, 2) to (5, 2)
-wolf from (9, 6) to to (8, 6)
-wolf from (7, 2) to to (8, 2)
+Human from (7, 0) to (6, 0)
+wolf from (1, 7) to to (1, 6)
+wolf from (7, 2) to to (7, 1)
+Sosnowsky killing at (7, 1)

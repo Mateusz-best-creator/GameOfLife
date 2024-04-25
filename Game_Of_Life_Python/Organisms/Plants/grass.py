@@ -1,5 +1,6 @@
 from Organisms.organism import OrganismInitialData
 from Organisms.plant import Plant
+import random
 
 class Grass(Plant):
 
@@ -15,12 +16,7 @@ class Grass(Plant):
         Grass.static_counter += 1
 
     def action(self, grid_board):
-        coords = self.default_plant_action(grid_board)
-        if coords:
-            row, col = coords
-            return Grass("Grass", row, col)
-        return None
-
+        return self.default_plant_action(grid_board, Grass, "Grass")
 
     def collision(self):
         pass

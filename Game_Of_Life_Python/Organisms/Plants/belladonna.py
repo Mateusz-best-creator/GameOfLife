@@ -16,7 +16,7 @@ class Belladonna(Plant):
         Belladonna.static_counter += 1
 
     def action(self, grid_board):
-        pass
+        return self.default_plant_action(grid_board, Belladonna, "Belladonna")
 
     def collision(self):
         pass

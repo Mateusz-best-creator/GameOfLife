@@ -112,7 +112,10 @@ class World:
 
             # Map index to a type name
             type = OrganismType(index)
-            if type == OrganismType.WOLF:
+            if type == OrganismType.HUMAN:
+                # We always want 1 human at the board
+                self.add_organisms(1, "Human", Human)
+            elif type == OrganismType.WOLF:
                 self.add_organisms(random_amount, "wolf", Wolf)
             # elif type == OrganismType.SHEEP:
             #     self.add_organisms(random_amount, "sheep", Sheep)
@@ -124,19 +127,16 @@ class World:
             #     self.add_organisms(random_amount, "antelope", Antelope)
             # elif type == OrganismType.CYBER_SHEEP:
             #     self.add_organisms(random_amount, "cyber_sheep", CyberSheep)
-            elif type == OrganismType.GRASS:
-                self.add_organisms(random_amount, "Grass", Grass)
+            # elif type == OrganismType.GRASS:
+            #     self.add_organisms(random_amount, "Grass", Grass)
             # elif type == OrganismType.SOW_THISTLE:
             #     self.add_organisms(random_amount, "Sow_thistle", SowThistle)
             # elif type == OrganismType.GUARANA:
             #     self.add_organisms(random_amount, "Guarana", Guarana)
             # elif type == OrganismType.BELLADONNA:
             #     self.add_organisms(random_amount, "Belladonna", Belladonna)
-            # elif type == OrganismType.SOSNOWSKY_HOGWEED:
-            #     self.add_organisms(random_amount, "Sosnowsky_hogweed", SosnowskyHogweed)
-            elif type == OrganismType.HUMAN:
-                # We always want 1 human at the board
-                self.add_organisms(1, "Human", Human)
+            elif type == OrganismType.SOSNOWSKY_HOGWEED:
+                self.add_organisms(random_amount, "Sosnowsky_hogweed", SosnowskyHogweed)
 
     def add_organisms(self, times, name, object_type):
         for _ in range(times):
@@ -283,15 +283,22 @@ class World:
             
             if pressed_play_key:
                 organisms_to_add = []
+                rows_cols_organisms_to_remove = []
                 for organism in self.organisms:
-                    if type(organism) != Human:
+                    if type(organism) == SosnowskyHogweed:
+                        result = organism.action(self.grid_board)
+                        if result: rows_cols_organisms_to_remove = result
+                        organism.collision()
+                    elif type(organism) != Human:
                         new_organism = organism.action(self.grid_board)
                         if new_organism and organism.get_static_counter() < ORGANISM_NUM_LIMIT:
                             organisms_to_add.append(new_organism)
                         organism.collision()
+                    self.update_grid_board()
                 pressed_play_key = False
                 for o in organisms_to_add:
                     self.organisms.append(o)
+                human_index = self.remove_organisms(rows_cols_organisms_to_remove)
 
                 self.sort_organisms()
                 self.update_grid_board()
@@ -404,6 +411,22 @@ class World:
         with open(self.JOURNAL_FILENAME, 'w') as f:
             pass
 
+    def remove_organisms(self, coordinates):
+        indexes_to_remove = []
+        for row, column in coordinates:
+            for index, organism in enumerate(self.organisms):
+                if organism.get_position_row() == row and organism.get_position_column() == column:
+                    indexes_to_remove.append(index)
+                    print("to remove", index)
+
+        # Remove organisms from the list
+        for index in indexes_to_remove:
+            del self.organisms[index]
+
+        # Adjust human_index after all removals
+        human_index = next((i for i, organism in enumerate(self.organisms) if isinstance(organism, Human)), -1)
+        print(f"Len = {len(self.organisms)}")
+        return human_index
 
 
 

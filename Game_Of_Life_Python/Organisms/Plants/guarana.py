@@ -16,7 +16,7 @@ class Guarana(Plant):
         Guarana.static_counter += 1
 
     def action(self, grid_board):
-        pass
+        return self.default_plant_action(grid_board, Guarana, "Guarana")
 
     def collision(self):
         pass
