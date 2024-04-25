@@ -4,6 +4,9 @@ import random
 from Organisms.animal import MoveDirection
 
 class Antelope(Animal):
+
+    static_counter = 0
+
     def __init__(self, name, row, column, given_strength = -1, given_initiative = -1):
         strength = OrganismInitialData[name]["strength"]
         initiative = OrganismInitialData[name]["initiative"]
@@ -11,6 +14,7 @@ class Antelope(Animal):
         if given_strength != -1: strength = given_strength
         if given_initiative != -1: initiative = given_initiative
         super().__init__(strength, initiative, name, character, row, column, "antelope.png")
+        Antelope.static_counter += 1
 
     def action(self, grid_board):
         self.age += 1
@@ -45,3 +49,6 @@ class Antelope(Animal):
 
     def collision(self):
         pass
+
+    def get_static_counter(self):
+        return Antelope.static_counter

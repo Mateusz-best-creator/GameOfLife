@@ -38,6 +38,10 @@ class Organism(ABC):
     def collision(self):
         pass
 
+    @abstractmethod
+    def get_static_counter(self):
+        pass
+
     def draw(self):
         return self.character
 
@@ -83,6 +87,9 @@ class Organism(ABC):
 
     def organism_go_bottom(self):
         self.row += 1
+
+    def get_age(self):
+        return self.age
 
     def print_to_journal(self, message):
         with open(self.JOURNAL_FILENAME, 'a') as f:

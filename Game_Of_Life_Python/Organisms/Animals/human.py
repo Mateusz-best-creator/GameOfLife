@@ -37,3 +37,6 @@ class Human(Animal):
 
     def collision(self):
         pass
+
+    def get_static_counter(self):
+        return 1

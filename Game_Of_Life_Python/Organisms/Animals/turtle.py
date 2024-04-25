@@ -3,6 +3,9 @@ from Organisms.animal import Animal
 import random
 
 class Turtle(Animal):
+
+    static_counter = 0
+
     def __init__(self, name, row, column, given_strength = -1, given_initiative = -1):
         strength = OrganismInitialData[name]["strength"]
         initiative = OrganismInitialData[name]["initiative"]
@@ -10,6 +13,7 @@ class Turtle(Animal):
         if given_strength != -1: strength = given_strength
         if given_initiative != -1: initiative = given_initiative
         super().__init__(strength, initiative, name, character, row, column, "turtle.png")
+        Turtle.static_counter += 1
 
     def action(self, grid_board):
         rand = random.randint(1, 4)
@@ -20,3 +24,6 @@ class Turtle(Animal):
 
     def collision(self):
         pass
+
+    def get_static_counter(self):
+        return Turtle.static_counter

@@ -4,6 +4,9 @@ import random
 from Organisms.animal import MoveDirection
 
 class Fox(Animal):
+
+    static_counter = 0
+
     def __init__(self, name, row, column, given_strength = -1, given_initiative = -1):
         strength = OrganismInitialData[name]["strength"]
         initiative = OrganismInitialData[name]["initiative"]
@@ -11,6 +14,7 @@ class Fox(Animal):
         if given_strength != -1: strength = given_strength
         if given_initiative != -1: initiative = given_initiative
         super().__init__(strength, initiative, name, character, row, column, "fox.png")
+        Fox.static_counter += 1
 
     def fox_can_go(self, character):
         return character == 't' or character == 'G' or character == 'U' or character == 'S' or character == 'e'
@@ -21,8 +25,9 @@ class Fox(Animal):
         indexes = [i % 4 + 1 for i in range(rand, rand + 4)]
         moved = False
         for index in indexes:
+
             dir = MoveDirection(index)
-            print(f"Dir= ", dir)
+            
             if dir == MoveDirection.LEFT and column > 0:
                 if self.fox_can_go(grid_board[row][column - 1]):
                     self.organism_go_left()
@@ -49,3 +54,6 @@ class Fox(Animal):
 
     def collision(self):
         pass
+
+    def get_static_counter(self):
+        return Fox.static_counter

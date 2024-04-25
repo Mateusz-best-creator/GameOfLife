@@ -1,6 +1,7 @@
 import pygame
 from enum import Enum
 import random
+from helper import merge_sort
 
 from Organisms.Animals.human import Human
 from Organisms.Animals.wolf import Wolf
@@ -40,6 +41,7 @@ class OptionType(Enum):
     LOAD_SIMULATION = 2
     QUIT_SIMULATION = 3
 
+ORGANISM_NUM_LIMIT = 7
 
 class World:
     def __init__(self, screen_height=800, screen_width=800):
@@ -53,8 +55,7 @@ class World:
 
         # Pygame stuff
         pygame.init()
-        self.screen = pygame.display.set_mode(
-            (screen_height, screen_width))  # screen is our main surface
+        self.screen = pygame.display.set_mode((screen_height, screen_width))  # screen is our main surface
         self.clock = pygame.time.Clock()
         self.running = True
 
@@ -113,27 +114,26 @@ class World:
             type = OrganismType(index)
             if type == OrganismType.WOLF:
                 self.add_organisms(random_amount, "wolf", Wolf)
-            elif type == OrganismType.SHEEP:
-                self.add_organisms(random_amount, "sheep", Sheep)
-            elif type == OrganismType.FOX:
-                self.add_organisms(random_amount, "fox", Fox)
-            elif type == OrganismType.TURTLE:
-                self.add_organisms(random_amount, "turtle", Turtle)
-            elif type == OrganismType.ANTELOPE:
-                self.add_organisms(random_amount, "antelope", Antelope)
-            elif type == OrganismType.CYBER_SHEEP:
-                self.add_organisms(random_amount, "cyber_sheep", CyberSheep)
+            # elif type == OrganismType.SHEEP:
+            #     self.add_organisms(random_amount, "sheep", Sheep)
+            # elif type == OrganismType.FOX:
+            #     self.add_organisms(random_amount, "fox", Fox)
+            # elif type == OrganismType.TURTLE:
+            #     self.add_organisms(random_amount, "turtle", Turtle)
+            # elif type == OrganismType.ANTELOPE:
+            #     self.add_organisms(random_amount, "antelope", Antelope)
+            # elif type == OrganismType.CYBER_SHEEP:
+            #     self.add_organisms(random_amount, "cyber_sheep", CyberSheep)
             elif type == OrganismType.GRASS:
                 self.add_organisms(random_amount, "Grass", Grass)
-            elif type == OrganismType.SOW_THISTLE:
-                self.add_organisms(random_amount, "Sow_thistle", SowThistle)
-            elif type == OrganismType.GUARANA:
-                self.add_organisms(random_amount, "Guarana", Guarana)
-            elif type == OrganismType.BELLADONNA:
-                self.add_organisms(random_amount, "Belladonna", Belladonna)
-            elif type == OrganismType.SOSNOWSKY_HOGWEED:
-                self.add_organisms(
-                    random_amount, "Sosnowsky_hogweed", SosnowskyHogweed)
+            # elif type == OrganismType.SOW_THISTLE:
+            #     self.add_organisms(random_amount, "Sow_thistle", SowThistle)
+            # elif type == OrganismType.GUARANA:
+            #     self.add_organisms(random_amount, "Guarana", Guarana)
+            # elif type == OrganismType.BELLADONNA:
+            #     self.add_organisms(random_amount, "Belladonna", Belladonna)
+            # elif type == OrganismType.SOSNOWSKY_HOGWEED:
+            #     self.add_organisms(random_amount, "Sosnowsky_hogweed", SosnowskyHogweed)
             elif type == OrganismType.HUMAN:
                 # We always want 1 human at the board
                 self.add_organisms(1, "Human", Human)
@@ -155,22 +155,15 @@ class World:
             column = organism.get_position_column()
             self.grid_board[row][column] = organism.get_character()
 
-    def custom_sort(self, organism):
-        if isinstance(organism, Human):
-            return (0, 0, 0)  # Human always comes first
-        return (-organism.initiative, -organism.age)
-
-
     def sort_organisms(self):
-        self.organisms = sorted(self.organisms, key=self.custom_sort)
+        # merge_sort(self.organisms)
+        pass
 
     def run(self):
         self.initialize_organisms()
         self.draw_starting_screen()
         while self.running:
-            # poll for events
             for event in pygame.event.get():
-                # pygame.QUIT event means the user clicked X to close your window
                 if event.type == pygame.QUIT:
                     self.running = False
                 elif event.type == pygame.MOUSEBUTTONUP:
@@ -272,7 +265,7 @@ class World:
                         self.turn_number += 1
                         pressed_play_key = True
                         if human_object:
-                            if (displayed_message):
+                            if displayed_message:
                                 displayed_message = False
                                 self.draw_simulation_board()
                             self.display_message("Press one of arrow keys to move", self.screen_height * 0.93, self.screen_width * 0.5)
@@ -287,17 +280,23 @@ class World:
                     elif event.key == pygame.K_q:
                         self.turn_number = 0
                         return
-
+            
             if pressed_play_key:
+                organisms_to_add = []
                 for organism in self.organisms:
                     if type(organism) != Human:
-                        organism.action(self.grid_board)
+                        new_organism = organism.action(self.grid_board)
+                        if new_organism and organism.get_static_counter() < ORGANISM_NUM_LIMIT:
+                            organisms_to_add.append(new_organism)
                         organism.collision()
                 pressed_play_key = False
+                for o in organisms_to_add:
+                    self.organisms.append(o)
 
-                self.draw_simulation_board()
                 self.sort_organisms()
-
+                self.update_grid_board()
+                self.draw_simulation_board()
+                        
             pygame.display.flip()
             self.clock.tick(60)
             pygame.display.update()
@@ -343,17 +342,13 @@ class World:
         journal_font_left = self.screen_width * 0.02
         journal_vertical_offset = self.screen_height * 0.03
         # Display journal
-        with open(self.JOURNAL_FILENAME) as f:
-            counter = 1
-            for index, line in enumerate(f):
-                
-                if index == 0:
-                    self.screen.blit(journal_font.render
+        counter = 1
+        self.screen.blit(journal_font.render
                                      (f"Turn {self.turn_number}", True, self.option_font_color), 
                                      (journal_font_left, counter * journal_vertical_offset))
-                    counter += 1
-                    continue
-
+        counter += 1
+        with open(self.JOURNAL_FILENAME) as f:
+            for line in f:
                 # Remove last ? character
                 line = line[:-1]
                 # Make sure we wont go beyong the screem

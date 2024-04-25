@@ -22,6 +22,10 @@ class Animal(Organism, ABC):
     def collision(self):
         pass
 
+    @abstractmethod
+    def get_static_counter(self):
+        pass
+
     def default_action_animal(self):
         self.age += 1
         direction = MoveDirection(random.randint(1, 4))
