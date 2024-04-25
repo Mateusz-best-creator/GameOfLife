@@ -1,0 +1,26 @@
+16 15 30
+fox 3 7 1 23
+fox 3 7 1 10
+fox 3 7 5 1
+sheep 4 4 0 5
+antelope 4 4 10 19
+cyber_sheep 11 4 10 25
+cyber_sheep 11 4 8 7
+cyber_sheep 11 4 13 8
+Human 5 4 7 25
+turtle 2 1 10 12
+turtle 2 1 7 10
+turtle 2 1 6 15
+Grass 0 0 11 18
+Sow_thistle 0 0 13 21
+Sow_thistle 0 0 8 28
+Guarana 0 0 10 15
+Belladonna 99 0 7 26
+Belladonna 99 0 14 15
+Sow_thistle 0 0 12 20
+Sow_thistle 0 0 7 27
+Sow_thistle 0 0 7 28
+Sow_thistle 0 0 11 19
+Grass 0 0 10 17
+Grass 0 0 9 16
+Guarana 0 0 9 14
