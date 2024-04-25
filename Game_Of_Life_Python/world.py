@@ -298,7 +298,7 @@ class World:
                 pressed_play_key = False
                 for o in organisms_to_add:
                     self.organisms.append(o)
-                human_index = self.remove_organisms(rows_cols_organisms_to_remove)
+                # human_index = self.remove_organisms(rows_cols_organisms_to_remove)
 
                 self.sort_organisms()
                 self.update_grid_board()
