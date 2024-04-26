@@ -18,8 +18,6 @@ from Organisms.Plants.sow_thistle import SowThistle
 from Organisms.Plants.guarana import Guarana
 
 # Enum type for types of organisms
-
-
 class OrganismType(Enum):
     WOLF = 1
     SHEEP = 2
