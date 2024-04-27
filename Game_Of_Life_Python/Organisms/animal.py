@@ -27,25 +27,38 @@ class Animal(Organism, ABC):
     def get_static_counter(self):
         pass
 
-    def default_action_animal(self):
-        self.age += 1
-        row, column = self.get_position_row(), self.get_position_column()
-        direction = MoveDirection(random.randint(1, 4))
-        # Check if the movement in the selected direction will keep the organism within the board bounds
-        if row == 0 and direction == MoveDirection.TOP:
-            direction = MoveDirection(random.choice(
-                [MoveDirection.LEFT, MoveDirection.RIGHT, MoveDirection.BOTTOM]))
-        elif row == 9 and direction == MoveDirection.BOTTOM:
-            direction = MoveDirection(random.choice(
-                [MoveDirection.LEFT, MoveDirection.RIGHT, MoveDirection.TOP]))
-        elif self.column == 0 and direction == MoveDirection.LEFT:
-            direction = MoveDirection(random.choice(
-                [MoveDirection.TOP, MoveDirection.RIGHT, MoveDirection.BOTTOM]))
-        elif self.column == 9 and direction == MoveDirection.RIGHT:
-            direction = MoveDirection(random.choice(
-                [MoveDirection.TOP, MoveDirection.LEFT, MoveDirection.BOTTOM]))
+    def default_action_animal(self, grid_board):
 
-        self.print_to_journal(f"{self.get_name()} from ({row}, {column}) to ")
+        self.age += 1
+
+        self.previous_row = self.row
+        self.previous_column = self.column
+
+        direction = MoveDirection(random.randint(1, 4))
+
+        # Check if the movement in the selected direction will keep the organism within the board bounds
+        while True:
+            if self.row == 0 and direction == MoveDirection.TOP:
+                direction = MoveDirection(random.choice(
+                    [MoveDirection.LEFT, MoveDirection.RIGHT, MoveDirection.BOTTOM]))
+            elif self.row == 9 and direction == MoveDirection.BOTTOM:
+                direction = MoveDirection(random.choice(
+                    [MoveDirection.LEFT, MoveDirection.RIGHT, MoveDirection.TOP]))
+            elif self.column == 0 and direction == MoveDirection.LEFT:
+                direction = MoveDirection(random.choice(
+                    [MoveDirection.TOP, MoveDirection.RIGHT, MoveDirection.BOTTOM]))
+            elif self.column == 9 and direction == MoveDirection.RIGHT:
+                direction = MoveDirection(random.choice(
+                    [MoveDirection.TOP, MoveDirection.LEFT, MoveDirection.BOTTOM]))
+            else:
+                break
+
+        grid_board[self.row][self.column] = 'e'
+        name = self.name
+        if name == "cyber_sheep":
+            name = "cyber"
+        self.print_to_journal(
+            f"{name} from ({self.row}, {self.column}) to ")
 
         # Perform movement based on the selected direction
         if direction == MoveDirection.LEFT:
@@ -57,5 +70,5 @@ class Animal(Organism, ABC):
         elif direction == MoveDirection.BOTTOM:
             self.organism_go_bottom()
 
-        row, column = self.get_position_row(), self.get_position_column()
-        self.print_to_journal(f"to ({row}, {column})\n")
+        grid_board[self.row][self.column] = self.character
+        self.print_to_journal(f"to ({self.row}, {self.column})\n")

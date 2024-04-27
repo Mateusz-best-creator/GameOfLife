@@ -29,19 +29,22 @@ class SosnowskyHogweed(Plant):
     # Kill avery animal except cyber_sheep in it's neighbourhood
     def action(self, grid_board):
         self.age += 1
-        row = self.get_position_row()
-        column = self.get_position_column()
         rows_columns_to_remove = []
         for i in range(-1, 2):
             for j in range(-1, 2):
-                r, c = row + i, column + j
-                if (i != 0 or j != 0) and r >= 0 and r < len(grid_board) and c >= 0 and c < len(grid_board[r]) and self.can_kill(grid_board, r, c):
+
+                if i == 0 and j == 0:
+                    continue
+                r, c = self.row + i, self.column + j
+
+                if r >= 0 and r < len(grid_board) and c >= 0 and c < len(grid_board[r]) and self.can_kill(grid_board, r, c):
                     rows_columns_to_remove.append((r, c))
                     self.print_to_journal(f"Sosnowsky killing at ({r}, {c})\n")
+
         if len(rows_columns_to_remove):
             return rows_columns_to_remove
         self.print_to_journal(
-            f"Sosnowsky at ({row}, {column}) will not kill\n")
+            f"Sosnowsky at ({self.row}, {self.column}) will not kill\n")
         return None
 
     def collision(self):

@@ -30,6 +30,9 @@ class Organism(ABC):
         self.JOURNAL_FILENAME = "journal.txt"
         self.age = 1
 
+        self.previous_row = -1
+        self.previous_column = -1
+
     @abstractmethod
     def action(self, grid_board):
         pass
@@ -90,6 +93,12 @@ class Organism(ABC):
 
     def get_age(self):
         return self.age
+
+    def get_previous_row(self):
+        return self.previous_row
+
+    def get_previous_column(self):
+        return self.previous_column
 
     def print_to_journal(self, message):
         with open(self.JOURNAL_FILENAME, 'a') as f:

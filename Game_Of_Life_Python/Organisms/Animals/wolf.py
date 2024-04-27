@@ -16,7 +16,7 @@ class Wolf(Animal):
         Wolf.static_counter += 1
 
     def action(self, grid_board):
-        self.default_action_animal()
+        self.default_action_animal(grid_board)
 
     def collision(self):
         pass

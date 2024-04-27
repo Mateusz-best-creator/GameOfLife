@@ -317,6 +317,7 @@ class World:
                 for organism in self.organisms:
                     if type(organism) == SosnowskyHogweed:
                         result = organism.action(self.grid_board)
+                        self.update_grid_board()
                         if result:
                             rows_cols_organisms_to_remove = result
                         organism.collision()
@@ -325,7 +326,6 @@ class World:
                         if new_organism and organism.get_static_counter() < ORGANISM_NUM_LIMIT:
                             organisms_to_add.append(new_organism)
                         organism.collision()
-                    self.update_grid_board()
 
                 pressed_play_key = False
 
@@ -487,7 +487,8 @@ class World:
                 if organism.get_position_row() == row and organism.get_position_column() == column:
                     indexes_to_remove.append(index)
 
-        # Remove organisms from the list
+        # Sort indices in descending order to prevent issues with changing indices
+        indexes_to_remove.sort(reverse=True)
         for index in indexes_to_remove:
             del self.organisms[index]
 
