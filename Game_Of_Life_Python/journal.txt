@@ -1,4 +1,0 @@
-Human from (7, 0) to (6, 0)
-wolf from (1, 7) to to (1, 6)
-wolf from (7, 2) to to (7, 1)
-Sosnowsky killing at (7, 1)

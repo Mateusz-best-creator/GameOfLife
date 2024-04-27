@@ -1,5 +1,3 @@
-
-
 def merge_sort(arr):
     if len(arr) > 1:
         mid = len(arr) // 2  # Find the middle index
@@ -16,10 +14,10 @@ def merge_sort(arr):
         i = j = k = 0
 
         while i < len(left_half) and j < len(right_half):
-            if left_half[i].get_strength() < right_half[j].get_strength():
+            if left_half[i].get_initiative() > right_half[j].get_initiative():
                 arr[k] = left_half[i]
                 i += 1
-            elif left_half[i].get_strength() > right_half[j].get_strength():
+            elif left_half[i].get_initiative() < right_half[j].get_initiative():
                 arr[k] = right_half[j]
                 j += 1
             else:
@@ -41,3 +39,5 @@ def merge_sort(arr):
             arr[k] = right_half[j]
             j += 1
             k += 1
+
+    return arr

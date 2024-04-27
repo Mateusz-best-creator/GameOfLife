@@ -18,6 +18,8 @@ from Organisms.Plants.sow_thistle import SowThistle
 from Organisms.Plants.guarana import Guarana
 
 # Enum type for types of organisms
+
+
 class OrganismType(Enum):
     WOLF = 1
     SHEEP = 2
@@ -39,26 +41,31 @@ class OptionType(Enum):
     LOAD_SIMULATION = 2
     QUIT_SIMULATION = 3
 
+
 ORGANISM_NUM_LIMIT = 7
+
 
 class World:
     def __init__(self, screen_height=800, screen_width=800):
         # Screen stuff
         self.screen_height = screen_height
         self.screen_width = screen_width
-        pygame.display.set_caption("Mateusz Wieczorek s197743, World Simluation")
+        pygame.display.set_caption(
+            "Mateusz Wieczorek s197743, World Simluation")
         self.JOURNAL_FILENAME = "journal.txt"
         self.SAVED_STATE_FILENAME = "organisms.txt"
         self.turn_number = 0
 
         # Pygame stuff
         pygame.init()
-        self.screen = pygame.display.set_mode((screen_height, screen_width))  # screen is our main surface
+        self.screen = pygame.display.set_mode(
+            (screen_height, screen_width))  # screen is our main surface
         self.clock = pygame.time.Clock()
         self.running = True
 
         # Title font
-        self.font_title = pygame.font.SysFont("chalkduster.ttf", int(self.screen_height * 0.085))
+        self.font_title = pygame.font.SysFont(
+            "chalkduster.ttf", int(self.screen_height * 0.085))
         self.title = self.font_title.render(
             "World Simulation", True, "#333333")
         self.title_width = self.title.get_width()
@@ -73,21 +80,26 @@ class World:
         self.option_rectangle_left = []
         self.option_rectangle_top = self.screen_height * 0.7
         for i in range(1, 3+1):
-            self.option_rectangle_left.append(self.option_rectangle_offset * i + (i - 1) * self.option_rectangle_width)
+            self.option_rectangle_left.append(
+                self.option_rectangle_offset * i + (i - 1) * self.option_rectangle_width)
 
         # Option chosen by user
         self.chosen_option = OptionType.NONE
 
         # Option font
-        self.font_option = pygame.font.SysFont("chalkduster.ttf", int(self.screen_height * 0.085 * 0.45))
+        self.font_option = pygame.font.SysFont(
+            "chalkduster.ttf", int(self.screen_height * 0.085 * 0.45))
         self.option_font_color = "#333333"
         self.options_font = [self.font_option.render("Start Simulation", True, self.option_font_color),
-                             self.font_option.render("Load Simulation", True, self.option_font_color),
+                             self.font_option.render(
+                                 "Load Simulation", True, self.option_font_color),
                              self.font_option.render("Quit Simulation", True, self.option_font_color)]
-        options_font_widths = [self.options_font[i].get_width() for i in range(len(self.options_font))]
+        options_font_widths = [self.options_font[i].get_width()
+                               for i in range(len(self.options_font))]
         self.options_font_left = [self.option_rectangle_left[i] + (
             (self.option_rectangle_width - options_font_widths[i]) / 2) for i in range(len(self.options_font))]
-        self.options_font_top = self.option_rectangle_top + self.option_rectangle_height * 0.4
+        self.options_font_top = self.option_rectangle_top + \
+            self.option_rectangle_height * 0.4
 
         # Organisms stuff
         self.ORGANISMS_TYPES = 12
@@ -96,7 +108,8 @@ class World:
         # Grid dimensions
         self.grid_height = 10
         self.grid_width = 10
-        self.grid_board = [['e' for _ in range(self.grid_width)] for _ in range(self.grid_height)]
+        self.grid_board = [
+            ['e' for _ in range(self.grid_width)] for _ in range(self.grid_height)]
         # Dimensions for all squares in game simulation
         self.squares_top = []
         self.squares_bottom = []
@@ -134,7 +147,8 @@ class World:
             # elif type == OrganismType.BELLADONNA:
             #     self.add_organisms(random_amount, "Belladonna", Belladonna)
             elif type == OrganismType.SOSNOWSKY_HOGWEED:
-                self.add_organisms(random_amount, "Sosnowsky_hogweed", SosnowskyHogweed)
+                self.add_organisms(
+                    random_amount, "Sosnowsky_hogweed", SosnowskyHogweed)
 
     def add_organisms(self, times, name, object_type):
         for _ in range(times):
@@ -144,17 +158,23 @@ class World:
                 random_row = random.randint(0, self.grid_height - 1)
                 random_column = random.randint(0, self.grid_width - 1)
             self.organisms.append(object_type(name, random_row, random_column))
-            self.grid_board[random_row][random_column] = self.organisms[len(self.organisms) - 1].get_character()
+            self.grid_board[random_row][random_column] = self.organisms[len(
+                self.organisms) - 1].get_character()
 
     def update_grid_board(self):
-        self.grid_board = [['e' for _ in range(self.grid_width)] for _ in range(self.grid_height)]
+        self.grid_board = [
+            ['e' for _ in range(self.grid_width)] for _ in range(self.grid_height)]
         for organism in self.organisms:
             row = organism.get_position_row()
             column = organism.get_position_column()
             self.grid_board[row][column] = organism.get_character()
 
     def sort_organisms(self):
-        # merge_sort(self.organisms)
+        # self.organisms = merge_sort(self.organisms)
+        # print("Organisms = ")
+        # for o in self.organisms:
+        #     print(o.get_name(), o.get_position_row(),
+        #           o.get_position_column(), o.get_initiative())
         pass
 
     def run(self):
@@ -204,12 +224,16 @@ class World:
         instruction_font_size = int(self.screen_width * 0.03)
         instruction_font = pygame.font.SysFont(None, instruction_font_size)
         instruction_font_color = "#333333"
-        instruction_font_text = [instruction_font.render(instruction_lines[i], True, instruction_font_color) for i in range(len(instruction_lines))]
-        instruction_widths = [instruction_font_text[i].get_width() for i in range(len(instruction_lines))]
-        instruction_font_left = [(self.screen_width - instruction_widths[i]) / 2 for i in range(len(instruction_lines))]
+        instruction_font_text = [instruction_font.render(
+            instruction_lines[i], True, instruction_font_color) for i in range(len(instruction_lines))]
+        instruction_widths = [instruction_font_text[i].get_width()
+                              for i in range(len(instruction_lines))]
+        instruction_font_left = [
+            (self.screen_width - instruction_widths[i]) / 2 for i in range(len(instruction_lines))]
         INSTRUCTION_FONT_GAP = int(self.screen_height * 0.03)
         INSTRUCTION_FONT_TOP = 0.4
-        instruction_font_top = [self.screen_height * INSTRUCTION_FONT_TOP + INSTRUCTION_FONT_GAP * i for i in range(len(instruction_lines))]
+        instruction_font_top = [self.screen_height * INSTRUCTION_FONT_TOP +
+                                INSTRUCTION_FONT_GAP * i for i in range(len(instruction_lines))]
 
         # Draw all 3 option rectangles and all 3 text options
         for i in range(len(self.options_font)):
@@ -229,7 +253,8 @@ class World:
             self.screen.blit(
                 self.options_font[i], (self.options_font_left[i], self.options_font_top))
         for i in range(len(instruction_lines)):
-            self.screen.blit(instruction_font_text[i], (instruction_font_left[i], instruction_font_top[i]))
+            self.screen.blit(
+                instruction_font_text[i], (instruction_font_left[i], instruction_font_top[i]))
 
     def play_simulation(self):
         self.update_grid_board()
@@ -241,15 +266,6 @@ class World:
         # Clear journal.txt file
         self.clear_journal()
 
-        # Find human object
-        human_object = None
-        human_index = -1
-        for index, organism in enumerate(self.organisms):
-            if type(organism) == Human:
-                human_object = organism
-                human_index = index
-                break
-
         displayed_message = False
 
         while game_running:
@@ -258,6 +274,17 @@ class World:
                     game_running = False
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:
+
+                        # Find human object
+                        human_object = None
+                        human_index = -1
+
+                        for index, organism in enumerate(self.organisms):
+                            if type(organism) == Human:
+                                human_object = organism
+                                human_index = index
+                                break
+
                         # Clear journal every turn
                         self.clear_journal()
                         self.turn_number += 1
@@ -266,26 +293,32 @@ class World:
                             if displayed_message:
                                 displayed_message = False
                                 self.draw_simulation_board()
-                            self.display_message("Press one of arrow keys to move", self.screen_height * 0.93, self.screen_width * 0.5)
+                            self.display_message(
+                                "Press one of arrow keys to move", self.screen_height * 0.93, self.screen_width * 0.5)
                             pygame.display.update()
                             human_object.action(self.grid_board)
                             human_object.collision()
                             self.organisms[human_index] = human_object
+
                     elif event.key == pygame.K_s:
-                        self.display_message("Saving State Of The Simulation...", self.screen_height * 0.93, self.screen_width * 0.5)
+                        self.display_message(
+                            "Saving State Of The Simulation...", self.screen_height * 0.93, self.screen_width * 0.5)
                         displayed_message = True
                         self.save_state_of_simulation()
+                        self.clear_journal()
                     elif event.key == pygame.K_q:
                         self.turn_number = 0
+                        self.clear_journal()
                         return
-            
+
             if pressed_play_key:
                 organisms_to_add = []
                 rows_cols_organisms_to_remove = []
                 for organism in self.organisms:
                     if type(organism) == SosnowskyHogweed:
                         result = organism.action(self.grid_board)
-                        if result: rows_cols_organisms_to_remove = result
+                        if result:
+                            rows_cols_organisms_to_remove = result
                         organism.collision()
                     elif type(organism) != Human:
                         new_organism = organism.action(self.grid_board)
@@ -293,15 +326,20 @@ class World:
                             organisms_to_add.append(new_organism)
                         organism.collision()
                     self.update_grid_board()
+
                 pressed_play_key = False
+
                 for o in organisms_to_add:
                     self.organisms.append(o)
-                # human_index = self.remove_organisms(rows_cols_organisms_to_remove)
+
+                if len(rows_cols_organisms_to_remove):
+                    human_index = self.remove_organisms(
+                        rows_cols_organisms_to_remove)
 
                 self.sort_organisms()
                 self.update_grid_board()
                 self.draw_simulation_board()
-                        
+
             pygame.display.flip()
             self.clock.tick(60)
             pygame.display.update()
@@ -331,8 +369,10 @@ class World:
                              (self.screen_width, i * board_line_height), board_line_thickness)
         for i in range(self.grid_width):
             for j in range(self.grid_width):
-                self.squares_left.append(vertical_line_left + j * board_line_width)
-                self.squares_right.append(vertical_line_left + (j+1) * board_line_width - 1)
+                self.squares_left.append(
+                    vertical_line_left + j * board_line_width)
+                self.squares_right.append(
+                    vertical_line_left + (j+1) * board_line_width - 1)
             pygame.draw.line(self.screen, color_line, (vertical_line_left + i * board_line_width, 0),
                              (vertical_line_left + i * board_line_width, self.screen_height*0.8))
 
@@ -342,15 +382,17 @@ class World:
             organism_column = organism.get_position_column()
             organism.print(self.screen, self.squares_top[organism_row], self.squares_bottom[organism_row],
                            self.squares_left[organism_column], self.squares_right[organism_column])
-        
-        journal_font = pygame.font.SysFont(None, int(self.screen_height * 0.085 * 0.275))
+
+        journal_font = pygame.font.SysFont(
+            None, int(self.screen_height * 0.085 * 0.275))
         journal_font_left = self.screen_width * 0.02
         journal_vertical_offset = self.screen_height * 0.03
         # Display journal
         counter = 1
         self.screen.blit(journal_font.render
-                                     (f"Turn {self.turn_number}", True, self.option_font_color), 
-                                     (journal_font_left, counter * journal_vertical_offset))
+                         (f"Turn {self.turn_number}",
+                          True, self.option_font_color),
+                         (journal_font_left, counter * journal_vertical_offset))
         counter += 1
         with open(self.JOURNAL_FILENAME) as f:
             for line in f:
@@ -359,24 +401,29 @@ class World:
                 # Make sure we wont go beyong the screem
                 if journal_vertical_offset * counter >= self.screen_height:
                     return
-                self.screen.blit(journal_font.render(line, True, self.option_font_color), (journal_font_left, counter * journal_vertical_offset))
+                self.screen.blit(journal_font.render(line, True, self.option_font_color),
+                                 (journal_font_left, counter * journal_vertical_offset))
                 counter += 1
         # Display available options for user
-        self.display_message("Press p to go to the next turn", self.screen_height * 0.825, self.screen_width * 0.27)
-        self.display_message("Press s to save current state of the game", self.screen_height * 0.86, self.screen_width * 0.27)
-        self.display_message("Press q to quit", self.screen_height * 0.895, self.screen_width * 0.27)
-
+        self.display_message("Press p to go to the next turn",
+                             self.screen_height * 0.825, self.screen_width * 0.27)
+        self.display_message("Press s to save current state of the game",
+                             self.screen_height * 0.86, self.screen_width * 0.27)
+        self.display_message(
+            "Press q to quit", self.screen_height * 0.895, self.screen_width * 0.27)
 
     def save_state_of_simulation(self):
         with open(self.SAVED_STATE_FILENAME, 'w') as f:
             f.write(f"{self.turn_number}\n")
             for organism in self.organisms:
-                f.write(f"""{organism.get_name()} {organism.get_strength()} {organism.get_initiative()} {organism.get_position_row()} {organism.get_position_column()}\n""")
+                f.write(f"""{organism.get_name()} {organism.get_strength()} {organism.get_initiative()} {
+                        organism.get_position_row()} {organism.get_position_column()}\n""")
 
     def display_message(self, message, top_coor, left_coor):
         # Display text message in bottom rectangle
-        chosen_option_font = pygame.font.SysFont(None, int(self.screen_height * 0.04))
-        self.screen.blit(chosen_option_font.render(message, True, self.option_font_color), 
+        chosen_option_font = pygame.font.SysFont(
+            None, int(self.screen_height * 0.04))
+        self.screen.blit(chosen_option_font.render(message, True, self.option_font_color),
                          (left_coor, top_coor))
 
     def load_simulation(self):
@@ -392,18 +439,42 @@ class World:
                 initiative = int(initiative)
                 row = int(row)
                 column = int(column)
-                if name == "Human": self.organisms.append(Human(name, row, column, strength, initiative))
-                elif name == "wolf": self.organisms.append(Wolf(name, row, column, strength, initiative))
-                elif name == "sheep": self.organisms.append(Sheep(name, row, column, strength, initiative))
-                elif name == "antelope": self.organisms.append(Antelope(name, row, column, strength, initiative))
-                elif name == "fox": self.organisms.append(Fox(name, row, column, strength, initiative))
-                elif name == "turtle": self.organisms.append(Turtle(name, row, column, strength, initiative))
-                elif name == "cyber_sheep": self.organisms.append(CyberSheep(name, row, column, strength, initiative))
-                elif name == "Grass": self.organisms.append(Grass(name, row, column, strength, initiative))
-                elif name == "Guarana": self.organisms.append(Guarana(name, row, column, strength, initiative))
-                elif name == "Belladonna": self.organisms.append(Belladonna(name, row, column, strength, initiative))
-                elif name == "Sow_thistle": self.organisms.append(SowThistle(name, row, column, strength, initiative))
-                elif name == "Sosnowsky_hogweed": self.organisms.append(SosnowskyHogweed(name, row, column, strength, initiative))
+                if name == "Human":
+                    self.organisms.append(
+                        Human(name, row, column, strength, initiative))
+                elif name == "wolf":
+                    self.organisms.append(
+                        Wolf(name, row, column, strength, initiative))
+                elif name == "sheep":
+                    self.organisms.append(
+                        Sheep(name, row, column, strength, initiative))
+                elif name == "antelope":
+                    self.organisms.append(
+                        Antelope(name, row, column, strength, initiative))
+                elif name == "fox":
+                    self.organisms.append(
+                        Fox(name, row, column, strength, initiative))
+                elif name == "turtle":
+                    self.organisms.append(
+                        Turtle(name, row, column, strength, initiative))
+                elif name == "cyber_sheep":
+                    self.organisms.append(CyberSheep(
+                        name, row, column, strength, initiative))
+                elif name == "Grass":
+                    self.organisms.append(
+                        Grass(name, row, column, strength, initiative))
+                elif name == "Guarana":
+                    self.organisms.append(
+                        Guarana(name, row, column, strength, initiative))
+                elif name == "Belladonna":
+                    self.organisms.append(Belladonna(
+                        name, row, column, strength, initiative))
+                elif name == "Sow_thistle":
+                    self.organisms.append(SowThistle(
+                        name, row, column, strength, initiative))
+                elif name == "Sosnowsky_hogweed":
+                    self.organisms.append(SosnowskyHogweed(
+                        name, row, column, strength, initiative))
 
     def clear_journal(self):
         with open(self.JOURNAL_FILENAME, 'w') as f:
@@ -412,6 +483,7 @@ class World:
     def remove_organisms(self, coordinates):
         indexes_to_remove = []
         for row, column in coordinates:
+            print("Row, Col =", row, column)
             for index, organism in enumerate(self.organisms):
                 if organism.get_position_row() == row and organism.get_position_column() == column:
                     indexes_to_remove.append(index)
@@ -422,11 +494,6 @@ class World:
             del self.organisms[index]
 
         # Adjust human_index after all removals
-        human_index = next((i for i, organism in enumerate(self.organisms) if isinstance(organism, Human)), -1)
-        print(f"Len = {len(self.organisms)}")
+        human_index = next((i for i, organism in enumerate(
+            self.organisms) if isinstance(organism, Human)), -1)
         return human_index
-
-
-
-
-
