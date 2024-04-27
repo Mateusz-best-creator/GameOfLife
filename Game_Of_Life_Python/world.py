@@ -128,24 +128,24 @@ class World:
                 self.add_organisms(1, "Human", Human)
             elif type == OrganismType.WOLF:
                 self.add_organisms(random_amount, "wolf", Wolf)
-            # elif type == OrganismType.SHEEP:
-            #     self.add_organisms(random_amount, "sheep", Sheep)
-            # elif type == OrganismType.FOX:
-            #     self.add_organisms(random_amount, "fox", Fox)
-            # elif type == OrganismType.TURTLE:
-            #     self.add_organisms(random_amount, "turtle", Turtle)
-            # elif type == OrganismType.ANTELOPE:
-            #     self.add_organisms(random_amount, "antelope", Antelope)
-            # elif type == OrganismType.CYBER_SHEEP:
-            #     self.add_organisms(random_amount, "cyber_sheep", CyberSheep)
-            # elif type == OrganismType.GRASS:
-            #     self.add_organisms(random_amount, "Grass", Grass)
-            # elif type == OrganismType.SOW_THISTLE:
-            #     self.add_organisms(random_amount, "Sow_thistle", SowThistle)
-            # elif type == OrganismType.GUARANA:
-            #     self.add_organisms(random_amount, "Guarana", Guarana)
-            # elif type == OrganismType.BELLADONNA:
-            #     self.add_organisms(random_amount, "Belladonna", Belladonna)
+            elif type == OrganismType.SHEEP:
+                self.add_organisms(random_amount, "sheep", Sheep)
+            elif type == OrganismType.FOX:
+                self.add_organisms(random_amount, "fox", Fox)
+            elif type == OrganismType.TURTLE:
+                self.add_organisms(random_amount, "turtle", Turtle)
+            elif type == OrganismType.ANTELOPE:
+                self.add_organisms(random_amount, "antelope", Antelope)
+            elif type == OrganismType.CYBER_SHEEP:
+                self.add_organisms(random_amount, "cyber_sheep", CyberSheep)
+            elif type == OrganismType.GRASS:
+                self.add_organisms(random_amount, "Grass", Grass)
+            elif type == OrganismType.SOW_THISTLE:
+                self.add_organisms(random_amount, "Sow_thistle", SowThistle)
+            elif type == OrganismType.GUARANA:
+                self.add_organisms(random_amount, "Guarana", Guarana)
+            elif type == OrganismType.BELLADONNA:
+                self.add_organisms(random_amount, "Belladonna", Belladonna)
             elif type == OrganismType.SOSNOWSKY_HOGWEED:
                 self.add_organisms(
                     random_amount, "Sosnowsky_hogweed", SosnowskyHogweed)
@@ -483,11 +483,9 @@ class World:
     def remove_organisms(self, coordinates):
         indexes_to_remove = []
         for row, column in coordinates:
-            print("Row, Col =", row, column)
             for index, organism in enumerate(self.organisms):
                 if organism.get_position_row() == row and organism.get_position_column() == column:
                     indexes_to_remove.append(index)
-                    print("to remove", index)
 
         # Remove organisms from the list
         for index in indexes_to_remove:
