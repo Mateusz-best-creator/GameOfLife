@@ -1,5 +1,6 @@
 from Organisms.organism import OrganismInitialData
 from Organisms.plant import Plant
+from Organisms.animal import CollisionTypes
 
 
 class SosnowskyHogweed(Plant):
@@ -49,7 +50,8 @@ class SosnowskyHogweed(Plant):
         return None
 
     def collision(self, grid_board, organisms, current_index):
-        return "None", None
+        return CollisionTypes("None"), None
+
 
     def get_static_counter(self):
         return SosnowskyHogweed.static_counter

@@ -1,6 +1,6 @@
 from Organisms.organism import OrganismInitialData
 from Organisms.plant import Plant
-
+from Organisms.animal import CollisionTypes
 
 class Belladonna(Plant):
 
@@ -20,7 +20,8 @@ class Belladonna(Plant):
         return self.default_plant_action(grid_board, Belladonna, "Belladonna")
 
     def collision(self, grid_board, organisms, current_index):
-        pass
+        return CollisionTypes("None"), None
+
 
     def get_static_counter(self):
         return Belladonna.static_counter

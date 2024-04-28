@@ -5,7 +5,7 @@ import random
 
 class Plant(Organism, ABC):
 
-    MAX_PLANT_AMOUNT = 7
+    MAX_PLANT_AMOUNT = 5
 
     def __init__(self, strength, initiative, name, character, row, column, image_path):
         super().__init__(strength, initiative, name, character, row, column, image_path)

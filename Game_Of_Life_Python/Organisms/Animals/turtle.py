@@ -1,5 +1,5 @@
 from Organisms.organism import OrganismInitialData
-from Organisms.animal import Animal
+from Organisms.animal import Animal, CollisionTypes
 import random
 
 
@@ -28,7 +28,7 @@ class Turtle(Animal):
                 f"{self.name} stays at ({self.row}, {self.column})\n")
 
     def collision(self, grid_board, organisms, current_index):
-        return "None", None
+        return CollisionTypes("None"), None
 
     def get_static_counter(self):
         return Turtle.static_counter

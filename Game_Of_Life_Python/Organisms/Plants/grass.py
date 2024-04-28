@@ -1,6 +1,7 @@
 from Organisms.organism import OrganismInitialData
 from Organisms.plant import Plant
 import random
+from Organisms.animal import CollisionTypes
 
 class Grass(Plant):
 
@@ -20,7 +21,8 @@ class Grass(Plant):
         return self.default_plant_action(grid_board, Grass, "Grass")
 
     def collision(self, grid_board, organisms, current_index):
-        pass
+        return CollisionTypes("None"), None
+
 
     def get_static_counter(self):
         return Grass.static_counter

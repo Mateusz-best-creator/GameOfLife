@@ -1,6 +1,8 @@
 from Organisms.organism import OrganismInitialData
 from Organisms.plant import Plant
 import random
+from Organisms.animal import CollisionTypes
+
 
 class SowThistle(Plant):
 
@@ -24,7 +26,7 @@ class SowThistle(Plant):
         return None
 
     def collision(self, grid_board, organisms, current_index):
-        pass
+        return CollisionTypes("None"), None
 
     def get_static_counter(self):
         return SowThistle.static_counter

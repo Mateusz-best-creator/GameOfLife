@@ -42,6 +42,9 @@ class OptionType(Enum):
     QUIT_SIMULATION = 3
 
 class World:
+
+    ORGANISM_NUM_LIMIT = 5
+
     def __init__(self, screen_height=800, screen_width=800):
         # Screen stuff
         self.screen_height = screen_height
@@ -126,28 +129,27 @@ class World:
                 # We always want 1 human at the board
                 self.add_organisms(1, "Human", Human)
             elif type == OrganismType.WOLF:
-                self.add_organisms(6, "wolf", Wolf)
-            # elif type == OrganismType.SHEEP:
-            #     self.add_organisms(random_amount, "sheep", Sheep)
-            # elif type == OrganismType.FOX:
-            #     self.add_organisms(random_amount, "fox", Fox)
-            # elif type == OrganismType.TURTLE:
-            #     self.add_organisms(random_amount, "turtle", Turtle)
-            # elif type == OrganismType.ANTELOPE:
-            #     self.add_organisms(random_amount, "antelope", Antelope)
-            # elif type == OrganismType.CYBER_SHEEP:
-            #     self.add_organisms(random_amount, "cyber_sheep", CyberSheep)
-            # elif type == OrganismType.GRASS:
-            #     self.add_organisms(random_amount, "Grass", Grass)
-            # elif type == OrganismType.SOW_THISTLE:
-            #     self.add_organisms(random_amount, "Sow_thistle", SowThistle)
-            # elif type == OrganismType.GUARANA:
-            #     self.add_organisms(random_amount, "Guarana", Guarana)
-            # elif type == OrganismType.BELLADONNA:
-            #     self.add_organisms(random_amount, "Belladonna", Belladonna)
-            # elif type == OrganismType.SOSNOWSKY_HOGWEED:
-            #     self.add_organisms(
-            #         random_amount, "Sosnowsky_hogweed", SosnowskyHogweed)
+                self.add_organisms(random_amount, "wolf", Wolf)
+            elif type == OrganismType.SHEEP:
+                self.add_organisms(random_amount, "sheep", Sheep)
+            elif type == OrganismType.FOX:
+                self.add_organisms(random_amount, "fox", Fox)
+            elif type == OrganismType.TURTLE:
+                self.add_organisms(random_amount, "turtle", Turtle)
+            elif type == OrganismType.ANTELOPE:
+                self.add_organisms(random_amount, "antelope", Antelope)
+            elif type == OrganismType.CYBER_SHEEP:
+                self.add_organisms(random_amount, "cyber_sheep", CyberSheep)
+            elif type == OrganismType.GRASS:
+                self.add_organisms(random_amount, "Grass", Grass)
+            elif type == OrganismType.SOW_THISTLE:
+                self.add_organisms(random_amount, "Sow_thistle", SowThistle)
+            elif type == OrganismType.GUARANA:
+                self.add_organisms(random_amount, "Guarana", Guarana)
+            elif type == OrganismType.BELLADONNA:
+                self.add_organisms(random_amount, "Belladonna", Belladonna)
+            elif type == OrganismType.SOSNOWSKY_HOGWEED:
+                self.add_organisms(random_amount, "Sosnowsky_hogweed", SosnowskyHogweed)
 
     def add_organisms(self, times, name, object_type):
         for _ in range(times):
@@ -226,14 +228,11 @@ class World:
         instruction_font_color = "#333333"
         instruction_font_text = [instruction_font.render(
             instruction_lines[i], True, instruction_font_color) for i in range(len(instruction_lines))]
-        instruction_widths = [instruction_font_text[i].get_width()
-                              for i in range(len(instruction_lines))]
-        instruction_font_left = [
-            (self.screen_width - instruction_widths[i]) / 2 for i in range(len(instruction_lines))]
+        instruction_widths = [instruction_font_text[i].get_width() for i in range(len(instruction_lines))]
+        instruction_font_left = [(self.screen_width - instruction_widths[i]) / 2 for i in range(len(instruction_lines))]
         INSTRUCTION_FONT_GAP = int(self.screen_height * 0.03)
         INSTRUCTION_FONT_TOP = 0.4
-        instruction_font_top = [self.screen_height * INSTRUCTION_FONT_TOP +
-                                INSTRUCTION_FONT_GAP * i for i in range(len(instruction_lines))]
+        instruction_font_top = [self.screen_height * INSTRUCTION_FONT_TOP + INSTRUCTION_FONT_GAP * i for i in range(len(instruction_lines))]
 
         # Draw all 3 option rectangles and all 3 text options
         for i in range(len(self.options_font)):
@@ -293,18 +292,16 @@ class World:
                             if displayed_message:
                                 displayed_message = False
                                 self.draw_simulation_board()
-                            self.display_message(
-                                "Press one of arrow keys to move", self.screen_height * 0.93, self.screen_width * 0.5)
+                            self.display_message("Press one of arrow keys to move", self.screen_height * 0.93, self.screen_width * 0.5)
                             pygame.display.update()
                             human_object.action(self.grid_board)
                             
                             CollisionType, data = human_object.collision(self.grid_board, self.organisms, human_index)
                             self.organisms[human_index] = human_object
-                            self.handle_collision(CollisionType, data)
+                            self.handle_human_collision(CollisionType, data)
 
                     elif event.key == pygame.K_s:
-                        self.display_message(
-                            "Saving State Of The Simulation...", self.screen_height * 0.93, self.screen_width * 0.5)
+                        self.display_message("Saving State Of The Simulation...", self.screen_height * 0.93, self.screen_width * 0.5)
                         displayed_message = True
                         self.save_state_of_simulation()
                         self.clear_journal()
@@ -318,6 +315,9 @@ class World:
                 rows_cols_organisms_to_remove = []
                 indexes_organisms_to_remove = []
                 for index, organism in enumerate(self.organisms):
+
+                    if index in indexes_organisms_to_remove:
+                        continue
 
                     if type(organism) == SosnowskyHogweed:
 
@@ -334,7 +334,7 @@ class World:
                     elif type(organism) != Human:
 
                         new_organism = organism.action(self.grid_board)
-                        if new_organism and organism.get_static_counter() < ORGANISM_NUM_LIMIT:
+                        if new_organism and organism.get_static_counter() < World.ORGANISM_NUM_LIMIT:
                             organisms_to_add.append(new_organism)
                         CollisionType, data = organism.collision(self.grid_board, self.organisms, index)
                         if CollisionType == CollisionTypes.MULTIPLICATION:
@@ -515,7 +515,7 @@ class World:
         for index in indexes:
             del self.organisms[index]
 
-    def handle_collision(self, CollisionType, data):
+    def handle_human_collision(self, CollisionType, data):
         
         if CollisionType == CollisionTypes.NONE:
             return

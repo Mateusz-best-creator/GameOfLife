@@ -1,5 +1,6 @@
 from Organisms.organism import OrganismInitialData
 from Organisms.plant import Plant
+from Organisms.animal import CollisionTypes
 
 
 class Guarana(Plant):
@@ -20,7 +21,8 @@ class Guarana(Plant):
         return self.default_plant_action(grid_board, Guarana, "Guarana")
 
     def collision(self, grid_board, organisms, current_index):
-        pass
+        return CollisionTypes("None"), None
+
 
     def get_static_counter(self):
         return Guarana.static_counter

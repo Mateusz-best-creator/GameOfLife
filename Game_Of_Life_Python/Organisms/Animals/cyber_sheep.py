@@ -1,5 +1,5 @@
 from Organisms.organism import OrganismInitialData
-from Organisms.animal import Animal
+from Organisms.animal import Animal, CollisionTypes
 
 
 class CyberSheep(Animal):
@@ -71,7 +71,7 @@ class CyberSheep(Animal):
         self.print_to_journal(f"({self.row}, {self.column})\n")
 
     def collision(self, grid_board, organisms, current_index):
-        return "None", None
+        return CollisionTypes("None"), None
 
     def get_static_counter(self):
         return CyberSheep.static_counter

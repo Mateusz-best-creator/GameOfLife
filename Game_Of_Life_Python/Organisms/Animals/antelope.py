@@ -3,7 +3,6 @@ from Organisms.animal import Animal
 import random
 from Organisms.animal import MoveDirection
 
-
 class Antelope(Animal):
 
     static_counter = 0
@@ -39,8 +38,7 @@ class Antelope(Animal):
 
         multiplier = random.randint(1, 2)
         grid_board[self.row][self.column] = 'e'
-        self.print_to_journal(
-            f"{self.name} from ({self.row}, {self.column}) to ")
+        self.print_to_journal(f"{self.name} from ({self.row}, {self.column}) to ")
 
         self.previous_row = self.row
         self.previous_column = self.column
@@ -58,8 +56,19 @@ class Antelope(Animal):
         self.print_to_journal(f"({self.row}, {self.column})\n")
         grid_board[self.row][self.column] = self.character
 
+
     def collision(self, grid_board, organisms, current_index):
-        return "None", None
+        print("Antelope prevoius move: ", self.previous_row, self.previous_column)
+        CollisionType, data = self.default_collision_animal(grid_board, organisms, current_index)
+        if CollisionType.name == "FIGHT":
+            rand = random.random()
+            if rand < 1:
+                self.row = self.previous_row
+                self.column = self.previous_column
+                self.print_to_journal(f"{self.name} escapes to ({self.row}, {self.column})\n")
+                grid_board[self.row][self.column] = self.character
+                return "None", None
+        return CollisionType, data
 
 
     def get_static_counter(self):
