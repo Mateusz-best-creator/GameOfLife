@@ -21,7 +21,7 @@ class Grass(Plant):
         return self.default_plant_action(grid_board, Grass, "Grass")
 
     def collision(self, grid_board, organisms, current_index):
-        return CollisionTypes("None"), None
+        return self.default_plant_collision()
 
 
     def get_static_counter(self):

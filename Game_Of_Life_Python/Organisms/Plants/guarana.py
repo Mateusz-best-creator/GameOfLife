@@ -5,6 +5,7 @@ from Organisms.animal import CollisionTypes
 
 class Guarana(Plant):
 
+    STRENGTH_INCREASE = 3
     static_counter = 0
 
     def __init__(self, name, row, column, given_strength = -1, given_initiative = -1):
@@ -21,7 +22,16 @@ class Guarana(Plant):
         return self.default_plant_action(grid_board, Guarana, "Guarana")
 
     def collision(self, grid_board, organisms, current_index):
-        return CollisionTypes("None"), None
+
+        for organism_index, organism in enumerate(organisms):
+
+            if organism.get_position_row() == self.row and organism.get_position_column() == self.column and organism_index != current_index:
+
+                organism.increase_strength(Guarana.STRENGTH_INCREASE)
+                self.print_to_journal(f"{self.character} vs {organism.get_character()} -> {organism.get_character()} += {Guarana.STRENGTH_INCREASE} to strength\n")
+                return CollisionTypes("Fight"), current_index
+
+        return self.default_plant_collision()
 
 
     def get_static_counter(self):

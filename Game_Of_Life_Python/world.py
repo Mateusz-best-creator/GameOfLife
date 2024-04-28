@@ -329,6 +329,7 @@ class World:
                         if CollisionType == CollisionTypes.MULTIPLICATION:
                             organisms_to_add.append(data)
                         elif CollisionType == CollisionTypes.FIGHT:
+                            indexes_organisms_to_remove.append(index)
                             indexes_organisms_to_remove.append(data)
 
                     elif type(organism) != Human:
@@ -340,6 +341,8 @@ class World:
                         if CollisionType == CollisionTypes.MULTIPLICATION:
                             organisms_to_add.append(data)
                         elif CollisionType == CollisionTypes.FIGHT:
+                            if type(organism) == Belladonna:
+                                indexes_organisms_to_remove.append(index)
                             indexes_organisms_to_remove.append(data)
 
 

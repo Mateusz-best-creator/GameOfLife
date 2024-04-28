@@ -20,7 +20,15 @@ class Belladonna(Plant):
         return self.default_plant_action(grid_board, Belladonna, "Belladonna")
 
     def collision(self, grid_board, organisms, current_index):
-        return CollisionTypes("None"), None
+        
+        for organism_index, organism in enumerate(organisms):
+
+            if organism.get_position_row() == self.row and organism.get_position_column() == self.column and organism_index != current_index:
+
+                self.print_to_journal(f"{self.character} vs {organism.get_character()} -> {self.character} eat {organism.get_character()}\n")
+                return CollisionTypes("Fight"), organism_index
+
+        return self.default_plant_collision()
 
 
     def get_static_counter(self):

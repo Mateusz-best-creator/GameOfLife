@@ -16,7 +16,7 @@ class Human(Animal):
         self.type = Human
 
     def action(self, grid_board):
-
+        
         self.previous_row = self.row
         self.previous_column = self.column
 

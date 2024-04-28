@@ -28,7 +28,7 @@ class Turtle(Animal):
                 f"{self.name} stays at ({self.row}, {self.column})\n")
 
     def collision(self, grid_board, organisms, current_index):
-        return CollisionTypes("None"), None
+        return self.default_collision_animal(grid_board, organisms, current_index)
 
     def get_static_counter(self):
         return Turtle.static_counter

@@ -26,7 +26,7 @@ class SowThistle(Plant):
         return None
 
     def collision(self, grid_board, organisms, current_index):
-        return CollisionTypes("None"), None
+        return self.default_plant_collision()
 
     def get_static_counter(self):
         return SowThistle.static_counter

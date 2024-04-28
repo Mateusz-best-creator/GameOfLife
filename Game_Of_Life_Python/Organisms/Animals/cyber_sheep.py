@@ -18,6 +18,7 @@ class CyberSheep(Animal):
                          character, row, column, "cyber_sheep.png")
         CyberSheep.static_counter += 1
         self.type = CyberSheep
+        self.distance_to_sosnowsky = float("inf")
 
     def action(self, grid_board):
         sosnowsky_rows = []
@@ -70,8 +71,25 @@ class CyberSheep(Animal):
         grid_board[self.row][self.column] = self.character
         self.print_to_journal(f"({self.row}, {self.column})\n")
 
+        self.distance_to_sosnowsky = (
+            (self.row - sosnowsky_row) ** 2 + 
+            (self.column - sosnowsky_col) ** 2) ** 0.5
+
     def collision(self, grid_board, organisms, current_index):
-        return CollisionTypes("None"), None
+        
+        # We are at sosnowsky hogweed
+        if self.distance_to_sosnowsky == 0:
+            for organism_index, organism in enumerate(organisms):
+
+                if organism.get_position_row() == self.row and organism.get_position_column() == self.column and organism_index != current_index:
+                    grid_board[self.row][self.column] = self.character
+                    self.print_to_journal(f"{self.name} eat {organism.get_character()} at ({self.row}, {self.column})\n")
+                    return CollisionTypes("Fight"), organism_index
+
+            return CollisionTypes("None"), None
+
+        else:
+            return self.default_collision_animal(grid_board, organisms, current_index)
 
     def get_static_counter(self):
         return CyberSheep.static_counter

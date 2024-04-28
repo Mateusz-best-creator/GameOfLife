@@ -104,6 +104,9 @@ class Organism(ABC):
     def get_type(self):
         return self.type
 
+    def increase_strength(self, value):
+        self.strength += value
+
     def print_to_journal(self, message):
         with open(self.JOURNAL_FILENAME, 'a') as f:
             f.write(message)

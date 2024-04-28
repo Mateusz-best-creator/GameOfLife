@@ -6,6 +6,7 @@ from Organisms.animal import MoveDirection
 class Antelope(Animal):
 
     static_counter = 0
+    ESCAPE_PROBABILITY = 0.5
 
     def __init__(self, name, row, column, given_strength=-1, given_initiative=-1):
         strength = OrganismInitialData[name]["strength"]
@@ -58,11 +59,10 @@ class Antelope(Animal):
 
 
     def collision(self, grid_board, organisms, current_index):
-        print("Antelope prevoius move: ", self.previous_row, self.previous_column)
         CollisionType, data = self.default_collision_animal(grid_board, organisms, current_index)
         if CollisionType.name == "FIGHT":
             rand = random.random()
-            if rand < 1:
+            if rand < Antelope.ESCAPE_PROBABILITY:
                 self.row = self.previous_row
                 self.column = self.previous_column
                 self.print_to_journal(f"{self.name} escapes to ({self.row}, {self.column})\n")

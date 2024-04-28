@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from Organisms.organism import Organism
 import random
+from Organisms.animal import CollisionTypes
 
 
 class Plant(Organism, ABC):
@@ -9,7 +10,7 @@ class Plant(Organism, ABC):
 
     def __init__(self, strength, initiative, name, character, row, column, image_path):
         super().__init__(strength, initiative, name, character, row, column, image_path)
-        self.probability = 0.1  # 10% that plant will sow
+        self.probability = 0.5  # 10% that plant will sow
 
     @abstractmethod
     def action(self, grid_board):
@@ -27,7 +28,6 @@ class Plant(Organism, ABC):
 
         self.age += 1
         rand = random.random()
-
         if rand > self.probability or self.get_static_counter() >= Plant.MAX_PLANT_AMOUNT:
             return None
 
@@ -41,3 +41,6 @@ class Plant(Organism, ABC):
                                                   self.row + i}, {self.column + j})\n""")
                             return type(organsim_name, self.row + i, self.column + j)
         return None
+
+    def default_plant_collision(self):
+        return CollisionTypes("None"), None

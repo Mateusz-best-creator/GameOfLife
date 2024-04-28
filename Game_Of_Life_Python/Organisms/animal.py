@@ -17,6 +17,7 @@ class CollisionTypes(Enum):
 class Animal(Organism, ABC):
 
     MAX_ANIMAL_AMOUNT = 5
+    MIN_STRENGTH_TURTLE_REFLECT = 4
 
     def __init__(self, strength, initiative, name, character, row, column, image_path):
         super().__init__(strength, initiative, name, character, row, column, image_path)
@@ -85,8 +86,12 @@ class Animal(Organism, ABC):
 
             if organism.get_position_row() == self.row and organism.get_position_column() == self.column and organism_index != current_index:
 
+                # Some special plant cases
+                if organism.get_name() == "Guarana" or organism.get_name() == "Belladonna":
+                    return CollisionTypes("None"), None
+
                 # Multiplication case
-                if self.character == organism.get_character():
+                elif self.character == organism.get_character():
                     
                     cur_row = self.row
                     cur_col = self.column
@@ -114,7 +119,8 @@ class Animal(Organism, ABC):
                                 return CollisionTypes("Multiplication"), self.type(self.name, new_row, new_column)
 
                 # Turtle collision
-                elif organism.get_name() == 'turtle' and self.strength <= 5:
+                elif organism.get_name() == 'turtle' and self.strength <= Animal.MIN_STRENGTH_TURTLE_REFLECT:
+                    
                     self.row = self.previous_row
                     self.column = self.previous_column
                     grid_board[self.row][self.column] = self.character
@@ -125,6 +131,10 @@ class Animal(Organism, ABC):
                 else:
 
                     if self.strength >= organism.get_strength():
+                        
+                        # if type(organism) == Plant:
+                        #     print("Animal eats plant!")
+
                         self.print_to_journal(f"""{self.character} vs {organism.get_character()} -> {self.character} wins at ({self.row}, {self.column})\n""")
                         grid_board[self.row][self.column] = self.character
                         return CollisionTypes("Fight"), organism_index
@@ -133,6 +143,7 @@ class Animal(Organism, ABC):
                         self.print_to_journal(f"""{self.character} vs {organism.get_character()} -> {organism.get_character()} wins at ({self.row}, {self.column})\n""")
                         grid_board[self.row][self.column] = organism.get_character()
                         return CollisionTypes("Fight"), current_index
-        
+
+
         grid_board[self.row][self.column] = self.character
         return CollisionTypes("None"), None
