@@ -34,6 +34,10 @@ class Animal(Organism, ABC):
     def get_static_counter(self):
         pass
 
+    @abstractmethod
+    def decrease_static_counter(self):
+        pass
+
     def default_action_animal(self, grid_board):
 
         self.age += 1
@@ -110,11 +114,11 @@ class Animal(Organism, ABC):
 
                             if new_row >= 0 and new_row < len(grid_board) and new_column >= 0 and new_column < len(grid_board[new_row]) and grid_board[new_row][new_column] == 'e':
 
-                                if self.get_static_counter() >= Animal.MAX_ANIMAL_AMOUNT:
+                                if self.get_static_counter() > Animal.MAX_ANIMAL_AMOUNT:
                                     self.print_to_journal(f"""{self.character} vs {organism.get_character()} -> cant be more than {Animal.MAX_ANIMAL_AMOUNT}\n""")
                                     return CollisionTypes("None"), None
 
-                                self.print_to_journal(f"""{self.character} vs {organism.get_character()} at ({cur_row}, {cur_col}) -> create {self.character} at ({new_row}, {new_column})\n""")
+                                self.print_to_journal(f"""{self.character} vs {organism.get_character()} at ({cur_row}, {cur_col}) -> new {self.character} at ({new_row}, {new_column})\n""")
                                 grid_board[new_row][new_column] = self.character
                                 return CollisionTypes("Multiplication"), self.type(self.name, new_row, new_column)
 
@@ -132,14 +136,12 @@ class Animal(Organism, ABC):
 
                     if self.strength >= organism.get_strength():
                         
-                        # if type(organism) == Plant:
-                        #     print("Animal eats plant!")
-
                         self.print_to_journal(f"""{self.character} vs {organism.get_character()} -> {self.character} wins at ({self.row}, {self.column})\n""")
                         grid_board[self.row][self.column] = self.character
                         return CollisionTypes("Fight"), organism_index
 
                     else:
+
                         self.print_to_journal(f"""{self.character} vs {organism.get_character()} -> {organism.get_character()} wins at ({self.row}, {self.column})\n""")
                         grid_board[self.row][self.column] = organism.get_character()
                         return CollisionTypes("Fight"), current_index

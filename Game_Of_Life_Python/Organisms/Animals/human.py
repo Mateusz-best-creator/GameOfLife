@@ -21,7 +21,7 @@ class Human(Animal):
         self.default_strength = strength
 
     def action(self, grid_board):
-        print("Human strength = ", self.strength)
+
         self.previous_row = self.row
         self.previous_column = self.column
 
@@ -37,7 +37,7 @@ class Human(Animal):
                             self.organism_go_left()
                         running = False
                     elif event.key == pygame.K_RIGHT:
-                        if self.column < len(grid_board[0]):
+                        if self.column < len(grid_board[0]) - 1:
                             self.organism_go_right()
                         running = False
                     elif event.key == pygame.K_UP:
@@ -45,7 +45,7 @@ class Human(Animal):
                             self.organism_go_top()
                         running = False
                     elif event.key == pygame.K_DOWN:
-                        if self.row < len(grid_board):
+                        if self.row < len(grid_board) - 1:
                             self.organism_go_bottom()
                         running = False
 
@@ -62,6 +62,9 @@ class Human(Animal):
 
     def get_static_counter(self):
         return 1
+
+    def decrease_static_counter(self):
+        pass
 
     def activate_ability(self):
         

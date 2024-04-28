@@ -6,11 +6,11 @@ from Organisms.animal import CollisionTypes
 
 class Plant(Organism, ABC):
 
-    MAX_PLANT_AMOUNT = 5
+    MAX_PLANT_AMOUNT = 6
 
     def __init__(self, strength, initiative, name, character, row, column, image_path):
         super().__init__(strength, initiative, name, character, row, column, image_path)
-        self.probability = 0.5  # 10% that plant will sow
+        self.probability = 0.10  # 10% that plant will sow
 
     @abstractmethod
     def action(self, grid_board):
@@ -22,6 +22,10 @@ class Plant(Organism, ABC):
 
     @abstractmethod
     def get_static_counter(self):
+        pass
+
+    @abstractmethod
+    def decrease_static_counter(self):
         pass
 
     def default_plant_action(self, grid_board, type, organsim_name):
@@ -37,8 +41,8 @@ class Plant(Organism, ABC):
                     if 0 <= self.row + i < len(grid_board) and 0 <= self.column + j < len(grid_board[self.row + i]):
                         if grid_board[self.row + i][self.column + j] == 'e':
 
-                            self.print_to_journal(f"""Creating {self.get_name()} at ({
-                                                  self.row + i}, {self.column + j})\n""")
+                            self.print_to_journal(f"""Creating {self.get_name()} at ({self.row + i}, {self.column + j})\n""")
+                            grid_board[self.row + i][self.column + j] = self.character
                             return type(organsim_name, self.row + i, self.column + j)
         return None
 

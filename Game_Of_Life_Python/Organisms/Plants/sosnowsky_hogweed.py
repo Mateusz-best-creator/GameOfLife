@@ -42,6 +42,7 @@ class SosnowskyHogweed(Plant):
                 if r >= 0 and r < len(grid_board) and c >= 0 and c < len(grid_board[r]) and self.can_kill(grid_board, r, c):
                     rows_columns_to_remove.append((r, c))
                     self.print_to_journal(f"Sosnowsky kill {grid_board[r][c]} at ({r}, {c})\n")
+                    grid_board[r][c] = 'e'
 
         if len(rows_columns_to_remove):
             return rows_columns_to_remove
@@ -54,7 +55,7 @@ class SosnowskyHogweed(Plant):
         for organism_index, organism in enumerate(organisms):
 
             if organism.get_position_row() == self.row and organism.get_position_column() == self.column and organism_index != current_index and organism.get_name() != "cyber_sheep":
-
+                
                 self.print_to_journal(f"{self.character} vs {organism.get_character()} -> {organism.get_character()} eat {self.character}, {self.character} eat {organism.get_character()}\n")
                 return CollisionTypes("Fight"), organism_index
 
@@ -63,3 +64,6 @@ class SosnowskyHogweed(Plant):
 
     def get_static_counter(self):
         return SosnowskyHogweed.static_counter
+
+    def decrease_static_counter(self):
+        SosnowskyHogweed.static_counter -= 1

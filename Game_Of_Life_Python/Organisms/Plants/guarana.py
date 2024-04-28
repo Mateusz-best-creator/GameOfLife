@@ -36,3 +36,6 @@ class Guarana(Plant):
 
     def get_static_counter(self):
         return Guarana.static_counter
+
+    def decrease_static_counter(self):
+        Guarana.static_counter -= 1

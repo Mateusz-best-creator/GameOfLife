@@ -73,3 +73,6 @@ class Antelope(Animal):
 
     def get_static_counter(self):
         return Antelope.static_counter
+
+    def decrease_static_counter(self):
+        Antelope.static_counter -= 1
