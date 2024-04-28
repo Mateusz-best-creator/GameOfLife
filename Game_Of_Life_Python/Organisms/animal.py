@@ -16,6 +16,8 @@ class CollisionTypes(Enum):
 
 class Animal(Organism, ABC):
 
+    MAX_ANIMAL_AMOUNT = 7
+
     def __init__(self, strength, initiative, name, character, row, column, image_path):
         super().__init__(strength, initiative, name, character, row, column, image_path)
 
@@ -79,15 +81,15 @@ class Animal(Organism, ABC):
 
     def default_collision_animal(self, grid_board, organisms, current_index):
         
-        organisms_to_add = indexes_to_remove = []
-
         for organism_index, organism in enumerate(organisms):
 
-            if organism.get_position_row() == self.row and organism.get_position_column() == self.column:
+            if organism.get_position_row() == self.row and organism.get_position_column() == self.column and organism_index != current_index:
 
                 # Multiplication case
                 if self.character == organism.get_character():
-
+                    
+                    cur_row = self.row
+                    cur_col = self.column
                     self.row = self.previous_row
                     self.column = self.previous_column
                     grid_board[self.row][self.column] = self.character
@@ -98,15 +100,21 @@ class Animal(Organism, ABC):
                             if i == 0 and j == 0:
                                 continue
                             
-                            new_row = self.row + i
-                            new_column = self.column + j
-                            if new_row >= 0 and new_row < len(grid_board) and new_column >= 0 and new_column < len(grid_board[new_row]):
-                                organisms_to_add.append(self.type(self.name, new_row, new_column))
-                                self.print_to_journal(f"""{self.character} vs {organism.get_character()} -> creating {self.character}\n""")
-                                return CollisionTypes("Multiplication"), organisms_to_add
+                            new_row = cur_row + i
+                            new_column = cur_col + j
+
+                            if new_row >= 0 and new_row < len(grid_board) and new_column >= 0 and new_column < len(grid_board[new_row]) and grid_board[new_row][new_column] == 'e':
+
+                                if self.get_static_counter() >= Animal.MAX_ANIMAL_AMOUNT:
+                                    self.print_to_journal(f"""{self.character} vs {organism.get_character()} -> cant be more than {Animal.MAX_ANIMAL_AMOUNT}\n""")
+                                    return CollisionTypes("None"), None
+
+                                self.print_to_journal(f"""{self.character} vs {organism.get_character()} at ({cur_row}, {cur_col}) -> creating {self.character} at ({new_row}, {new_column})\n""")
+                                grid_board[new_row][new_column] = self.character
+                                return CollisionTypes("Multiplication"), self.type(self.name, new_row, new_column)
 
                 # Turtle collision
-                elif organism.get_name() == 'turtle':
+                elif organism.get_name() == 'turtle' and self.strength <= 5:
                     self.row = self.previous_row
                     self.column = self.previous_column
                     self.print_to_journal(f"""{self.character} vs {organism.get_character()} -> {self.character} goes back to ({self.row}, {self.column})\n""")
@@ -116,13 +124,11 @@ class Animal(Organism, ABC):
                 else:
 
                     if self.strength >= organism.get_strength():
-                        indexes_to_remove.append(organism_index)
                         self.print_to_journal(f"""{self.character} vs {organism.get_character()} -> {self.character} wins at ({self.row}, {self.column})\n""")
-                        return CollisionTypes("Fight"), indexes_to_remove
+                        return CollisionTypes("Fight"), organism_index
 
                     else:
-                        indexes_to_remove.append(current_index)
                         self.print_to_journal(f"""{self.character} vs {organism.get_character()} -> {organism.get_character()} wins at ({self.row}, {self.column})\n""")
-                        return CollisionTypes("Fight"), indexes_to_remove
+                        return CollisionTypes("Fight"), current_index
         
         return CollisionTypes("None"), None

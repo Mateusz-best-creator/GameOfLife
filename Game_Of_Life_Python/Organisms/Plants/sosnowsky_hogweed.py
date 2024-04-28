@@ -49,7 +49,7 @@ class SosnowskyHogweed(Plant):
         return None
 
     def collision(self, grid_board, organisms, current_index):
-        pass
+        return "None", None
 
     def get_static_counter(self):
         return SosnowskyHogweed.static_counter

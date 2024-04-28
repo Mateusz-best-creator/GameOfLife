@@ -1,7 +1,2 @@
-2
-wolf 9 5 7 2
-wolf 9 5 0 2
-Sosnowsky_hogweed 10 0 5 4
-Sosnowsky_hogweed 10 0 3 8
-Sosnowsky_hogweed 10 0 3 7
-Human 5 4 3 2
+8
+wolf 9 5 8 0

@@ -112,6 +112,9 @@ class World:
         self.squares_left = []
         self.squares_right = []
 
+        self.organisms_to_add = []
+        self.organisms_indexes_to_remove = []
+
     def initialize_organisms(self):
         for index in range(1, self.ORGANISMS_TYPES + 1):
 
@@ -123,9 +126,9 @@ class World:
                 # We always want 1 human at the board
                 self.add_organisms(1, "Human", Human)
             elif type == OrganismType.WOLF:
-                self.add_organisms(random_amount, "wolf", Wolf)
-            elif type == OrganismType.SHEEP:
-                self.add_organisms(random_amount, "sheep", Sheep)
+                self.add_organisms(6, "wolf", Wolf)
+            # elif type == OrganismType.SHEEP:
+            #     self.add_organisms(random_amount, "sheep", Sheep)
             # elif type == OrganismType.FOX:
             #     self.add_organisms(random_amount, "fox", Fox)
             # elif type == OrganismType.TURTLE:
@@ -142,9 +145,9 @@ class World:
             #     self.add_organisms(random_amount, "Guarana", Guarana)
             # elif type == OrganismType.BELLADONNA:
             #     self.add_organisms(random_amount, "Belladonna", Belladonna)
-            elif type == OrganismType.SOSNOWSKY_HOGWEED:
-                self.add_organisms(
-                    random_amount, "Sosnowsky_hogweed", SosnowskyHogweed)
+            # elif type == OrganismType.SOSNOWSKY_HOGWEED:
+            #     self.add_organisms(
+            #         random_amount, "Sosnowsky_hogweed", SosnowskyHogweed)
 
     def add_organisms(self, times, name, object_type):
         for _ in range(times):
@@ -295,10 +298,9 @@ class World:
                             pygame.display.update()
                             human_object.action(self.grid_board)
                             
-                            # human_object.collision(self.grid_board, self.organisms, human_index)
-                            # self.handle_collision(CollisionType, data)
-
+                            CollisionType, data = human_object.collision(self.grid_board, self.organisms, human_index)
                             self.organisms[human_index] = human_object
+                            self.handle_collision(CollisionType, data)
 
                     elif event.key == pygame.K_s:
                         self.display_message(
@@ -314,22 +316,31 @@ class World:
             if pressed_play_key:
                 organisms_to_add = []
                 rows_cols_organisms_to_remove = []
+                indexes_organisms_to_remove = []
                 for index, organism in enumerate(self.organisms):
 
                     if type(organism) == SosnowskyHogweed:
+
                         result = organism.action(self.grid_board)
                         self.update_grid_board()
                         if result:
                             rows_cols_organisms_to_remove = result
-                        # organism.collision(self.grid_board, self.organisms, index)
-                        # self.handle_collision(CollisionType, data)
+                        CollisionType, data = organism.collision(self.grid_board, self.organisms, index)
+                        if CollisionType == CollisionTypes.MULTIPLICATION:
+                            organisms_to_add.append(data)
+                        elif CollisionType == CollisionTypes.FIGHT:
+                            indexes_organisms_to_remove.append(data)
 
                     elif type(organism) != Human:
+
                         new_organism = organism.action(self.grid_board)
                         if new_organism and organism.get_static_counter() < ORGANISM_NUM_LIMIT:
                             organisms_to_add.append(new_organism)
-                        # organism.collision(self.grid_board, self.organisms, index)
-                        # self.handle_collision(CollisionType, data)
+                        CollisionType, data = organism.collision(self.grid_board, self.organisms, index)
+                        if CollisionType == CollisionTypes.MULTIPLICATION:
+                            organisms_to_add.append(data)
+                        elif CollisionType == CollisionTypes.FIGHT:
+                            indexes_organisms_to_remove.append(data)
 
 
                 pressed_play_key = False
@@ -339,6 +350,9 @@ class World:
 
                 if len(rows_cols_organisms_to_remove):
                     self.remove_organisms(rows_cols_organisms_to_remove)
+
+                if len(indexes_organisms_to_remove):
+                    self.remove_indexes_organisms(indexes_organisms_to_remove)
 
                 self.sort_organisms()
                 self.update_grid_board()
@@ -496,16 +510,20 @@ class World:
         for index in indexes_to_remove:
             del self.organisms[index]
 
+    def remove_indexes_organisms(self, indexes):
+        indexes.sort(reverse=True)
+        for index in indexes:
+            del self.organisms[index]
+
     def handle_collision(self, CollisionType, data):
         
         if CollisionType == CollisionTypes.NONE:
             return
 
         if CollisionType == CollisionTypes.MULTIPLICATION:
-            for o in data:
-                self.organisms.append(o)
+            self.organisms.append(data)
+            self.draw_simulation_board()
+            pygame.display.update()
         
         elif CollisionType == CollisionTypes.FIGHT:
-            data.sort(reverse=True)
-            for index in data:
-                del self.organisms[index]
+            del self.organisms[data]
