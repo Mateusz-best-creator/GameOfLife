@@ -13,6 +13,7 @@ class Human(Animal):
         if given_initiative != -1:
             initiative = given_initiative
         super().__init__(strength, initiative, name, character, row, column, "human.png")
+        self.type = Human
 
     def action(self, grid_board):
 
@@ -47,8 +48,8 @@ class Human(Animal):
         grid_board[self.row][self.column] = self.character
         self.print_to_journal(f"""({self.row}, {self.column})\n""")
 
-    def collision(self):
-        pass
+    def collision(self, grid_board, organisms, current_index):
+        return self.default_collision_animal(grid_board, organisms, current_index)
 
     def get_static_counter(self):
         return 1

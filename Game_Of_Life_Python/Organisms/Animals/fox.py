@@ -18,6 +18,7 @@ class Fox(Animal):
             initiative = given_initiative
         super().__init__(strength, initiative, name, character, row, column, "fox.png")
         Fox.static_counter += 1
+        self.type = Fox
 
     def fox_can_go(self, character):
         return character == 't' or character == 'G' or character == 'U' or character == 'S' or character == 'e'
@@ -52,15 +53,15 @@ class Fox(Animal):
                     moved = True
             if moved:
                 self.print_to_journal(
-                    f"{self.name} from ({self.row}, {self.column}) to ")
+                    f"{self.name} from ({self.previous_row}, {self.previous_column}) to ")
                 self.print_to_journal(f"""({self.row}, {self.column})\n""")
                 return
 
         self.print_to_journal(f"""{self.name} stays at ({
                               self.row}, {self.column})\n""")
 
-    def collision(self):
-        pass
+    def collision(self, grid_board, organisms, current_index):
+        return self.default_collision_animal(grid_board, organisms, current_index)
 
     def get_static_counter(self):
         return Fox.static_counter

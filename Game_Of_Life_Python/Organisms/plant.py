@@ -16,7 +16,7 @@ class Plant(Organism, ABC):
         pass
 
     @abstractmethod
-    def collision(self):
+    def collision(self, grid_board, organisms, current_index):
         pass
 
     @abstractmethod

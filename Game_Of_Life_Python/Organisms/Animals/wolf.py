@@ -14,12 +14,13 @@ class Wolf(Animal):
         if given_initiative != -1: initiative = given_initiative
         super().__init__(strength, initiative, name, character, row, column, "wolf.png")
         Wolf.static_counter += 1
+        self.type = Wolf
 
     def action(self, grid_board):
         self.default_action_animal(grid_board)
 
-    def collision(self):
-        pass
+    def collision(self, grid_board, organisms, current_index):
+        return self.default_collision_animal(grid_board, organisms, current_index)
 
     def get_static_counter(self):
         return Wolf.static_counter

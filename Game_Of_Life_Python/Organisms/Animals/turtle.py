@@ -17,6 +17,7 @@ class Turtle(Animal):
             initiative = given_initiative
         super().__init__(strength, initiative, name, character, row, column, "turtle.png")
         Turtle.static_counter += 1
+        self.type = Turtle
 
     def action(self, grid_board):
         rand = random.randint(1, 4)
@@ -26,8 +27,8 @@ class Turtle(Animal):
             self.print_to_journal(
                 f"{self.name} stays at ({self.row}, {self.column})\n")
 
-    def collision(self):
-        pass
+    def collision(self, grid_board, organisms, current_index):
+        return "None", None
 
     def get_static_counter(self):
         return Turtle.static_counter

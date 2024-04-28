@@ -17,6 +17,7 @@ class CyberSheep(Animal):
         super().__init__(strength, initiative, name,
                          character, row, column, "cyber_sheep.png")
         CyberSheep.static_counter += 1
+        self.type = CyberSheep
 
     def action(self, grid_board):
         sosnowsky_rows = []
@@ -69,8 +70,8 @@ class CyberSheep(Animal):
         grid_board[self.row][self.column] = self.character
         self.print_to_journal(f"({self.row}, {self.column})\n")
 
-    def collision(self):
-        pass
+    def collision(self, grid_board, organisms, current_index):
+        return "None", None
 
     def get_static_counter(self):
         return CyberSheep.static_counter

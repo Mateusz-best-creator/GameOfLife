@@ -18,6 +18,7 @@ class Antelope(Animal):
             initiative = given_initiative
         super().__init__(strength, initiative, name, character, row, column, "antelope.png")
         Antelope.static_counter += 1
+        self.type = Antelope
 
     def action(self, grid_board):
         self.age += 1
@@ -57,8 +58,9 @@ class Antelope(Animal):
         self.print_to_journal(f"({self.row}, {self.column})\n")
         grid_board[self.row][self.column] = self.character
 
-    def collision(self):
-        pass
+    def collision(self, grid_board, organisms, current_index):
+        return "None", None
+
 
     def get_static_counter(self):
         return Antelope.static_counter

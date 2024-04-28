@@ -17,6 +17,7 @@ class SosnowskyHogweed(Plant):
         super().__init__(strength, initiative, name,
                          character, row, column, "sosnowsky_hogweed.png")
         SosnowskyHogweed.static_counter += 1
+        self.type = SosnowskyHogweed
 
     def can_kill(self, grid_board, row, column):
         return (grid_board[row][column] == 'w'
@@ -47,7 +48,7 @@ class SosnowskyHogweed(Plant):
             f"Sosnowsky at ({self.row}, {self.column}) will not kill\n")
         return None
 
-    def collision(self):
+    def collision(self, grid_board, organisms, current_index):
         pass
 
     def get_static_counter(self):

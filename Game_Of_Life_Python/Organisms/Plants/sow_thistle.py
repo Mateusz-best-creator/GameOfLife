@@ -14,6 +14,7 @@ class SowThistle(Plant):
         if given_initiative != -1: initiative = given_initiative
         super().__init__(strength, initiative, name, character, row, column, "sow_thistle.png")
         SowThistle.static_counter += 1
+        self.type = SowThistle
 
     def action(self, grid_board):
         for _ in range(3):
@@ -22,7 +23,7 @@ class SowThistle(Plant):
                 return result
         return None
 
-    def collision(self):
+    def collision(self, grid_board, organisms, current_index):
         pass
 
     def get_static_counter(self):

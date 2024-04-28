@@ -32,13 +32,14 @@ class Organism(ABC):
 
         self.previous_row = -1
         self.previous_column = -1
+        self.type = None
 
     @abstractmethod
     def action(self, grid_board):
         pass
 
     @abstractmethod
-    def collision(self):
+    def collision(self, grid_board, organisms, current_index):
         pass
 
     @abstractmethod
@@ -99,6 +100,9 @@ class Organism(ABC):
 
     def get_previous_column(self):
         return self.previous_column
+
+    def get_type(self):
+        return self.type
 
     def print_to_journal(self, message):
         with open(self.JOURNAL_FILENAME, 'a') as f:

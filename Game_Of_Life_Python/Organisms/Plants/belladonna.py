@@ -14,11 +14,12 @@ class Belladonna(Plant):
         if given_initiative != -1: initiative = given_initiative
         super().__init__(strength, initiative, name, character, row, column, "belladonna.png")
         Belladonna.static_counter += 1
+        self.type = Belladonna
 
     def action(self, grid_board):
         return self.default_plant_action(grid_board, Belladonna, "Belladonna")
 
-    def collision(self):
+    def collision(self, grid_board, organisms, current_index):
         pass
 
     def get_static_counter(self):

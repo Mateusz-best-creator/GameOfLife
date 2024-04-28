@@ -14,11 +14,12 @@ class Grass(Plant):
         if given_initiative != -1: self.initiative = given_initiative
         super().__init__(self.strength, self.initiative, name, self.character, row, column, "grass.png")
         Grass.static_counter += 1
+        self.type = Grass
 
     def action(self, grid_board):
         return self.default_plant_action(grid_board, Grass, "Grass")
 
-    def collision(self):
+    def collision(self, grid_board, organisms, current_index):
         pass
 
     def get_static_counter(self):

@@ -14,11 +14,12 @@ class Guarana(Plant):
         if given_initiative != -1: initiative = given_initiative
         super().__init__(strength, initiative, name, character, row, column, "guarana.png")
         Guarana.static_counter += 1
+        self.type = Guarana
 
     def action(self, grid_board):
         return self.default_plant_action(grid_board, Guarana, "Guarana")
 
-    def collision(self):
+    def collision(self, grid_board, organisms, current_index):
         pass
 
     def get_static_counter(self):

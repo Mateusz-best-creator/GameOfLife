@@ -17,9 +17,9 @@ from Organisms.Plants.sosnowsky_hogweed import SosnowskyHogweed
 from Organisms.Plants.sow_thistle import SowThistle
 from Organisms.Plants.guarana import Guarana
 
+from Organisms.animal import CollisionTypes
+
 # Enum type for types of organisms
-
-
 class OrganismType(Enum):
     WOLF = 1
     SHEEP = 2
@@ -40,10 +40,6 @@ class OptionType(Enum):
     PLAY_SIMULATION = 1
     LOAD_SIMULATION = 2
     QUIT_SIMULATION = 3
-
-
-ORGANISM_NUM_LIMIT = 7
-
 
 class World:
     def __init__(self, screen_height=800, screen_width=800):
@@ -130,22 +126,22 @@ class World:
                 self.add_organisms(random_amount, "wolf", Wolf)
             elif type == OrganismType.SHEEP:
                 self.add_organisms(random_amount, "sheep", Sheep)
-            elif type == OrganismType.FOX:
-                self.add_organisms(random_amount, "fox", Fox)
-            elif type == OrganismType.TURTLE:
-                self.add_organisms(random_amount, "turtle", Turtle)
-            elif type == OrganismType.ANTELOPE:
-                self.add_organisms(random_amount, "antelope", Antelope)
-            elif type == OrganismType.CYBER_SHEEP:
-                self.add_organisms(random_amount, "cyber_sheep", CyberSheep)
-            elif type == OrganismType.GRASS:
-                self.add_organisms(random_amount, "Grass", Grass)
-            elif type == OrganismType.SOW_THISTLE:
-                self.add_organisms(random_amount, "Sow_thistle", SowThistle)
-            elif type == OrganismType.GUARANA:
-                self.add_organisms(random_amount, "Guarana", Guarana)
-            elif type == OrganismType.BELLADONNA:
-                self.add_organisms(random_amount, "Belladonna", Belladonna)
+            # elif type == OrganismType.FOX:
+            #     self.add_organisms(random_amount, "fox", Fox)
+            # elif type == OrganismType.TURTLE:
+            #     self.add_organisms(random_amount, "turtle", Turtle)
+            # elif type == OrganismType.ANTELOPE:
+            #     self.add_organisms(random_amount, "antelope", Antelope)
+            # elif type == OrganismType.CYBER_SHEEP:
+            #     self.add_organisms(random_amount, "cyber_sheep", CyberSheep)
+            # elif type == OrganismType.GRASS:
+            #     self.add_organisms(random_amount, "Grass", Grass)
+            # elif type == OrganismType.SOW_THISTLE:
+            #     self.add_organisms(random_amount, "Sow_thistle", SowThistle)
+            # elif type == OrganismType.GUARANA:
+            #     self.add_organisms(random_amount, "Guarana", Guarana)
+            # elif type == OrganismType.BELLADONNA:
+            #     self.add_organisms(random_amount, "Belladonna", Belladonna)
             elif type == OrganismType.SOSNOWSKY_HOGWEED:
                 self.add_organisms(
                     random_amount, "Sosnowsky_hogweed", SosnowskyHogweed)
@@ -221,6 +217,7 @@ class World:
                              "human is alive you will be asked to press one of, the",
                              "arrow keys to move. If human is not alive the game will",
                              "play and the journal will be shown on the left side."]
+
         instruction_font_size = int(self.screen_width * 0.03)
         instruction_font = pygame.font.SysFont(None, instruction_font_size)
         instruction_font_color = "#333333"
@@ -297,7 +294,10 @@ class World:
                                 "Press one of arrow keys to move", self.screen_height * 0.93, self.screen_width * 0.5)
                             pygame.display.update()
                             human_object.action(self.grid_board)
-                            human_object.collision()
+                            
+                            # human_object.collision(self.grid_board, self.organisms, human_index)
+                            # self.handle_collision(CollisionType, data)
+
                             self.organisms[human_index] = human_object
 
                     elif event.key == pygame.K_s:
@@ -314,18 +314,23 @@ class World:
             if pressed_play_key:
                 organisms_to_add = []
                 rows_cols_organisms_to_remove = []
-                for organism in self.organisms:
+                for index, organism in enumerate(self.organisms):
+
                     if type(organism) == SosnowskyHogweed:
                         result = organism.action(self.grid_board)
                         self.update_grid_board()
                         if result:
                             rows_cols_organisms_to_remove = result
-                        organism.collision()
+                        # organism.collision(self.grid_board, self.organisms, index)
+                        # self.handle_collision(CollisionType, data)
+
                     elif type(organism) != Human:
                         new_organism = organism.action(self.grid_board)
                         if new_organism and organism.get_static_counter() < ORGANISM_NUM_LIMIT:
                             organisms_to_add.append(new_organism)
-                        organism.collision()
+                        # organism.collision(self.grid_board, self.organisms, index)
+                        # self.handle_collision(CollisionType, data)
+
 
                 pressed_play_key = False
 
@@ -333,8 +338,7 @@ class World:
                     self.organisms.append(o)
 
                 if len(rows_cols_organisms_to_remove):
-                    human_index = self.remove_organisms(
-                        rows_cols_organisms_to_remove)
+                    self.remove_organisms(rows_cols_organisms_to_remove)
 
                 self.sort_organisms()
                 self.update_grid_board()
@@ -492,7 +496,16 @@ class World:
         for index in indexes_to_remove:
             del self.organisms[index]
 
-        # Adjust human_index after all removals
-        human_index = next((i for i, organism in enumerate(
-            self.organisms) if isinstance(organism, Human)), -1)
-        return human_index
+    def handle_collision(self, CollisionType, data):
+        
+        if CollisionType == CollisionTypes.NONE:
+            return
+
+        if CollisionType == CollisionTypes.MULTIPLICATION:
+            for o in data:
+                self.organisms.append(o)
+        
+        elif CollisionType == CollisionTypes.FIGHT:
+            data.sort(reverse=True)
+            for index in data:
+                del self.organisms[index]
