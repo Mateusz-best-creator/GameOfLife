@@ -25,5 +25,8 @@ class Wolf(Animal):
     def get_static_counter(self):
         return Wolf.static_counter
 
+    def increase_static_counter(self):
+        Wolf.static_counter += 1
+
     def decrease_static_counter(self):
         Wolf.static_counter -= 1

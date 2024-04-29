@@ -47,6 +47,10 @@ class Organism(ABC):
         pass
 
     @abstractmethod
+    def increase_static_counter(self):
+        pass
+
+    @abstractmethod
     def decrease_static_counter(self):
         pass
 

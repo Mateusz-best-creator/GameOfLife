@@ -33,5 +33,8 @@ class Turtle(Animal):
     def get_static_counter(self):
         return Turtle.static_counter
 
+    def increase_static_counter(self):
+        Turtle.static_counter += 1
+
     def decrease_static_counter(self):
         Turtle.static_counter -= 1

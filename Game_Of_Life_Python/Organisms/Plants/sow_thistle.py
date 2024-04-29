@@ -31,5 +31,8 @@ class SowThistle(Plant):
     def get_static_counter(self):
         return SowThistle.static_counter
 
+    def increase_static_counter(self):
+        SowThistle.static_counter += 1
+
     def decrease_static_counter(self):
         SowThistle.static_counter -= 1

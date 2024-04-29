@@ -26,5 +26,8 @@ class Sheep(Animal):
     def get_static_counter(self):
         return Sheep.static_counter
 
+    def increase_static_counter(self):
+        Sheep.static_counter += 1
+
     def decrease_static_counter(self):
         Sheep.static_counter -= 1

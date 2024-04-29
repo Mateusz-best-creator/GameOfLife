@@ -18,6 +18,7 @@ from Organisms.Plants.sow_thistle import SowThistle
 from Organisms.Plants.guarana import Guarana
 
 from Organisms.animal import CollisionTypes
+import os
 
 # Enum type for types of organisms
 class OrganismType(Enum):
@@ -64,8 +65,7 @@ class World:
         # Title font
         self.font_title = pygame.font.SysFont(
             "chalkduster.ttf", int(self.screen_height * 0.085))
-        self.title = self.font_title.render(
-            "World Simulation", True, "#333333")
+        self.title = self.font_title.render("World Simulation", True, "#333333")
         self.title_width = self.title.get_width()
         self.title_left = (self.screen_width - self.title_width) / 2
         self.title_top = self.screen_height * 0.1
@@ -162,8 +162,7 @@ class World:
                 self.organisms) - 1].get_character()
 
     def update_grid_board(self):
-        self.grid_board = [
-            ['e' for _ in range(self.grid_width)] for _ in range(self.grid_height)]
+        self.grid_board = [['e' for _ in range(self.grid_width)] for _ in range(self.grid_height)]
         for organism in self.organisms:
             row = organism.get_position_row()
             column = organism.get_position_column()
@@ -262,6 +261,18 @@ class World:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     game_running = False
+
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    added_organism = self.handle_click_add(pressed_play_key)
+                    if added_organism:
+                        added_organism.print_to_journal(f"Adding {added_organism.get_character()} at ({added_organism.get_position_row()}, {added_organism.get_position_column()})\n")
+                        self.turn_number += 1
+                        self.organisms.append(added_organism)
+                        self.grid_board[added_organism.get_position_row()][added_organism.get_position_column()] = added_organism.get_character()
+                        self.draw_simulation_board()
+                        pygame.display.update()
+                    continue
+
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:
 
@@ -293,7 +304,7 @@ class World:
 
                     elif event.key == pygame.K_a:
                         if not self.is_human:
-                            self.display_message("Cant activate ability, no human..", self.screen_height * 0.965, self.screen_width * 0.5)
+                            self.display_message("Cant activate ability, no human...", self.screen_height * 0.965, self.screen_width * 0.5)
                             displayed_message = True
 
                         else:
@@ -302,11 +313,14 @@ class World:
                             self.organisms[human_index].activate_ability()
 
                     elif event.key == pygame.K_s:
+
                         self.display_message("Saving State Of The Simulation...", self.screen_height * 0.965, self.screen_width * 0.5)
                         displayed_message = True
                         self.save_state_of_simulation()
                         self.clear_journal()
+
                     elif event.key == pygame.K_q:
+                        
                         self.turn_number = 0
                         self.clear_journal()
                         return
@@ -372,11 +386,9 @@ class World:
         color_line = "#000000"
         vertical_line_left = self.screen_width*0.25
         separating_line_thickness = 5
-        pygame.draw.line(self.screen, color_line, (vertical_line_left, 0),
-                         (vertical_line_left, self.screen_height), separating_line_thickness)
-        pygame.draw.line(self.screen, color_line, (vertical_line_left, self.screen_height * 0.8),
-                         (self.screen_width, self.screen_height * 0.8), separating_line_thickness)
-        playing_board_height = self.screen_height*0.8
+        pygame.draw.line(self.screen, color_line, (vertical_line_left, 0), (vertical_line_left, self.screen_height), separating_line_thickness)
+        pygame.draw.line(self.screen, color_line, (vertical_line_left, self.screen_height * 0.8), (self.screen_width, self.screen_height * 0.8), separating_line_thickness)
+        playing_board_height = self.screen_height * 0.8
         board_line_thickness = 2
         board_line_height = playing_board_height / self.grid_height
         playing_board_width = self.screen_width - vertical_line_left
@@ -384,17 +396,13 @@ class World:
 
         # Display playing board
         for i in range(self.grid_height):
-            for j in range(self.grid_height):
-                self.squares_top.append(j*board_line_height)
-                self.squares_bottom.append((j+1)*board_line_height - 1)
+            self.squares_top.append(i*board_line_height)
+            self.squares_bottom.append((i+1)*board_line_height - 1)
             pygame.draw.line(self.screen, color_line, (vertical_line_left, i * board_line_height),
                              (self.screen_width, i * board_line_height), board_line_thickness)
         for i in range(self.grid_width):
-            for j in range(self.grid_width):
-                self.squares_left.append(
-                    vertical_line_left + j * board_line_width)
-                self.squares_right.append(
-                    vertical_line_left + (j+1) * board_line_width - 1)
+            self.squares_left.append(vertical_line_left + i * board_line_width)
+            self.squares_right.append(vertical_line_left + (i+1) * board_line_width - 1)
             pygame.draw.line(self.screen, color_line, (vertical_line_left + i * board_line_width, 0),
                              (vertical_line_left + i * board_line_width, self.screen_height*0.8))
 
@@ -405,8 +413,7 @@ class World:
             organism.print(self.screen, self.squares_top[organism_row], self.squares_bottom[organism_row],
                            self.squares_left[organism_column], self.squares_right[organism_column])
 
-        journal_font = pygame.font.SysFont(
-            None, int(self.screen_height * 0.085 * 0.275))
+        journal_font = pygame.font.SysFont(None, int(self.screen_height * 0.085 * 0.275))
         journal_font_left = self.screen_width * 0.02
         journal_vertical_offset = self.screen_height * 0.03
         # Display journal
@@ -526,3 +533,91 @@ class World:
             if type(self.organisms[data]) == Human:
                     self.is_human = False
             del self.organisms[data]
+
+    def handle_click_add(self, pressed_play_key):
+        pos = pygame.mouse.get_pos()
+        click_x, click_y = pos
+        self.clear_journal()
+        pressed_play_key = False
+        
+        row, column = -1, -1
+        for i in range(0, len(self.squares_top)):
+            if self.squares_top[i] <= click_y < self.squares_bottom[i]:
+                row = i
+                break
+        for i in range(0, len(self.squares_left)):
+            if self.squares_left[i] <= click_x < self.squares_right[i]:
+                column = i
+                break
+
+        if row == -1 or column == -1:
+            return
+
+        if 0 <= row < len(self.grid_board) and 0 <= column < len(self.grid_board[0]) and self.grid_board[row][column] != 'e':
+            self.display_message("Cant add here, select empty cell...", self.screen_height * 0.965, self.screen_width * 0.5)
+            return
+
+        option = self.add_organism_click()
+        if option == 1: return Antelope("antelope", row, column)
+        if option == 2: return Belladonna("Belladonna", row, column)
+        if option == 3: return CyberSheep("cyber_sheep", row, column)
+        if option == 4: return Fox("fox", row, column)
+        if option == 5: return Grass("Grass", row, column)
+        if option == 6: return Guarana("Guarana", row, column)
+        if option == 7: return Sheep("sheep", row, column)
+        if option == 8: return SosnowskyHogweed("Sosnowsky_hogweed", row, column)
+        if option == 9: return SowThistle("Sow_thistle", row, column)
+        if option == 10: return Turtle("turtle", row, column)
+        if option == 11: return Wolf("wolf", row, column)
+
+        return None
+
+    def add_organism_click(self):
+        self.screen.fill("#ffffff")
+        self.screen.blit(self.font_title.render("Choose Your Animal", True, "#333333"), (self.title_left, self.title_top))
+
+        image_height = image_width = 80
+        images = []
+
+        image_path = ""
+        for root, dirs, files in os.walk('.'):
+            for name in files:
+                if name.endswith(".png") and name != "human.png":
+                    image_path = os.path.abspath(os.path.join(root, name))
+                    images.append(pygame.transform.scale(pygame.image.load(image_path).convert_alpha(), (image_height, image_width)))
+
+        choosing_option = True
+        images_top_coordinates = [150 + i * 100 for j in range(2) for i in range(6)]
+        images_bottom_coordinates = [150 + image_height + i * 100 for j in range(2) for i in range(6)]
+        images_left_coordinates = [(self.screen_width - (2 * image_width)) / 4 for i in range(6)]
+        images_right_coordinates = [images_left_coordinates[i] + image_width for i in range(6)]
+
+        for i in range(6):
+            images_left_coordinates.append(images_left_coordinates[0] + image_width + ((self.screen_width - 2 * image_width) / 2))
+            images_right_coordinates.append(images_left_coordinates[i + 6] + image_width)
+
+        for i in range(len(images_top_coordinates) - 1): # No human
+            self.screen.blit(images[i], (images_left_coordinates[i], images_top_coordinates[i]))
+
+        while choosing_option:
+            for event in pygame.event.get():
+
+                if event.type == pygame.QUIT:
+                    choosing_option = False
+                    return 1
+
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    pos = pygame.mouse.get_pos()
+                    click_x, click_y = pos
+                    for i in range(len(images_left_coordinates) - 1):
+                        if images_left_coordinates[i] <= click_x < images_right_coordinates[i] and images_top_coordinates[i] <= click_y < images_bottom_coordinates[i]:
+                            return i + 1
+
+            pygame.display.flip()
+            self.clock.tick(60)
+            pygame.display.update()
+
+        option = 1
+        self.draw_simulation_board()
+        pygame.display.update()
+        return option

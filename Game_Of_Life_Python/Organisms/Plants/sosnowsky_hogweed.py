@@ -65,5 +65,8 @@ class SosnowskyHogweed(Plant):
     def get_static_counter(self):
         return SosnowskyHogweed.static_counter
 
+    def increase_static_counter(self):
+        SosnowskyHogweed.static_counter += 1
+
     def decrease_static_counter(self):
         SosnowskyHogweed.static_counter -= 1

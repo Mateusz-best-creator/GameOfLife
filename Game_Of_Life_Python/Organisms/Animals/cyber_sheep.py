@@ -94,5 +94,8 @@ class CyberSheep(Animal):
     def get_static_counter(self):
         return CyberSheep.static_counter
 
+    def increase_static_counter(self):
+        CyberSheep.static_counter += 1
+
     def decrease_static_counter(self):
         CyberSheep.static_counter -= 1

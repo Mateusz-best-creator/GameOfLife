@@ -63,6 +63,9 @@ class Human(Animal):
     def get_static_counter(self):
         return 1
 
+    def increase_static_counter(self):
+        pass
+
     def decrease_static_counter(self):
         pass
 

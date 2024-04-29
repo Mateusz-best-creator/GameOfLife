@@ -66,5 +66,8 @@ class Fox(Animal):
     def get_static_counter(self):
         return Fox.static_counter
 
+    def increase_static_counter(self):
+        Fox.static_counter += 1
+
     def decrease_static_counter(self):
         Fox.static_counter -= 1

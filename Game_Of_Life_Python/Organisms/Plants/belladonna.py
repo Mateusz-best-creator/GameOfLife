@@ -34,5 +34,8 @@ class Belladonna(Plant):
     def get_static_counter(self):
         return Belladonna.static_counter
 
+    def increase_static_counter(self):
+        Belladonna.static_counter += 1
+
     def decrease_static_counter(self):
         Belladonna.static_counter -= 1
