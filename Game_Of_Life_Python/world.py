@@ -576,7 +576,7 @@ class World:
         self.screen.fill("#ffffff")
         self.screen.blit(self.font_title.render("Choose Your Animal", True, "#333333"), (self.title_left, self.title_top))
 
-        image_height = image_width = 80
+        image_height, image_width = self.screen_height * 0.1, self.screen_width * 0.1
         images = []
 
         image_path = ""
@@ -586,9 +586,10 @@ class World:
                     image_path = os.path.abspath(os.path.join(root, name))
                     images.append(pygame.transform.scale(pygame.image.load(image_path).convert_alpha(), (image_height, image_width)))
 
+        horizontal_gap = image_height * 1.2
         choosing_option = True
-        images_top_coordinates = [150 + i * 100 for j in range(2) for i in range(6)]
-        images_bottom_coordinates = [150 + image_height + i * 100 for j in range(2) for i in range(6)]
+        images_top_coordinates = [150 + i * horizontal_gap for j in range(2) for i in range(6)]
+        images_bottom_coordinates = [150 + image_height + i * horizontal_gap for j in range(2) for i in range(6)]
         images_left_coordinates = [(self.screen_width - (2 * image_width)) / 4 for i in range(6)]
         images_right_coordinates = [images_left_coordinates[i] + image_width for i in range(6)]
 
