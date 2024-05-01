@@ -11,6 +11,7 @@ from Organisms.Animals.fox import Fox
 from Organisms.Animals.antelope import Antelope
 from Organisms.Animals.cyber_sheep import CyberSheep
 
+from Organisms.plant import Plant
 from Organisms.Plants.grass import Grass
 from Organisms.Plants.belladonna import Belladonna
 from Organisms.Plants.sosnowsky_hogweed import SosnowskyHogweed
@@ -369,7 +370,7 @@ class World:
                 pressed_play_key = False
 
                 for o in organisms_to_add:
-                    self.organisms.append(o)
+                    self.multiply_organism(o)
 
                 if len(rows_cols_organisms_to_remove):
                     self.remove_organisms(rows_cols_organisms_to_remove)
@@ -522,6 +523,26 @@ class World:
                 if type(self.organisms[index]) == Human:
                     self.is_human = False
                 del self.organisms[index]
+
+    def multiply_organism(self, organism):
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+                
+                if i == 0 and j == 0:
+                    continue
+
+                new_row, new_column = organism.get_position_row() + i, organism.get_position_column() + j
+                if 0 <= new_row < len(self.grid_board) and 0 <= new_column < len(self.grid_board[new_row]) and self.grid_board[new_row][new_column] == 'e':
+                    type = organism.get_type()
+                    name = organism.get_name()
+                    char = organism.get_character()
+                    self.organisms.append(type(name, new_row, new_column))
+                    self.grid_board[new_row][new_column] = char
+                    if char == "G" or char == "S" or char == "U" or char == "B" or char == "O":
+                        organism.print_to_journal(f"{char} at ({new_row - i}, {new_column - j}) sow -> new {char} at ({new_row}, {new_column})\n")
+                    else:
+                        organism.print_to_journal(f"{char} mult at {new_row - i},{new_column - j} -> new {char} at ({new_row}, {new_column})\n")
+                    return
 
     def handle_human_collision(self, CollisionType, data):
         

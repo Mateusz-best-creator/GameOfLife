@@ -25,10 +25,10 @@ class Belladonna(Plant):
 
             if organism.get_position_row() == self.row and organism.get_position_column() == self.column and organism_index != current_index:
 
-                self.print_to_journal(f"{self.character} vs {organism.get_character()} -> {organism.get_character()} eat {self.character}, {self.character} eat {organism.get_character()}\n")
+                self.print_to_journal(f"{self.character}vs{organism.get_character()} at {self.row},{self.column} -> {organism.get_character()} eat {self.character}, {self.character} eat {organism.get_character()}\n")
                 return CollisionTypes("Fight"), organism_index
 
-        return self.default_plant_collision()
+        return CollisionTypes("None"), None
 
 
     def get_static_counter(self):

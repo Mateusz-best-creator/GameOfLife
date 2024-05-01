@@ -36,9 +36,7 @@ class CyberSheep(Animal):
             return  # Stop execution if no hogweed is found
 
         # Sosnowsky found, use cyber for short instaed of cyber_sheep
-        self.print_to_journal(
-            f"""cyber from ({self.row}, {self.column}) to """
-        )
+        self.print_to_journal(f"""cyber from ({self.row}, {self.column}) to """)
         grid_board[self.row][self.column] = 'e'
         self.previous_row = self.row
         self.previous_column = self.column
@@ -79,6 +77,7 @@ class CyberSheep(Animal):
         
         # We are at sosnowsky hogweed
         if self.distance_to_sosnowsky == 0:
+            self.distance_to_sosnowsky = -1
             for organism_index, organism in enumerate(organisms):
 
                 if organism.get_position_row() == self.row and organism.get_position_column() == self.column and organism_index != current_index:

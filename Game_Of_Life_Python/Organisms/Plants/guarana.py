@@ -28,7 +28,7 @@ class Guarana(Plant):
             if organism.get_position_row() == self.row and organism.get_position_column() == self.column and organism_index != current_index:
 
                 organism.increase_strength(Guarana.STRENGTH_INCREASE)
-                self.print_to_journal(f"{self.character} vs {organism.get_character()} -> {organism.get_character()} += {Guarana.STRENGTH_INCREASE} to strength\n")
+                self.print_to_journal(f"{self.character}vs{organism.get_character()} at {self.row},{self.column} -> {organism.get_character()} += {Guarana.STRENGTH_INCREASE} to strength\n")
                 return CollisionTypes("Fight"), current_index
 
         return self.default_plant_collision()

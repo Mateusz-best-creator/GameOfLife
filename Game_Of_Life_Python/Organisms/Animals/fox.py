@@ -21,7 +21,7 @@ class Fox(Animal):
         self.type = Fox
 
     def fox_can_go(self, character):
-        return character == 't' or character == 'G' or character == 'U' or character == 'S' or character == 'e'
+        return character == 't' or character == 'G' or character == 'U' or character == 'S' or character == 'e' or character == 'f'
 
     def action(self, grid_board):
 

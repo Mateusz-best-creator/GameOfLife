@@ -95,36 +95,22 @@ class Animal(Organism, ABC):
             if organism.get_position_row() == self.row and organism.get_position_column() == self.column and organism_index != current_index:
 
                 # Some special plant cases
-                if organism.get_name() == "Guarana" or organism.get_name() == "Belladonna":
+                if organism.get_name() == "Guarana" or organism.get_name() == "Belladonna" or organism.get_name() == "Sosnowsky_hogweed":
+                    # self.print_to_journal(f"{self.character} vs {organism.get_character()} at ({self.row}, {self.column})\n")
                     return CollisionTypes("None"), None
 
                 # Multiplication case
                 elif self.character == organism.get_character():
                     
-                    cur_row = self.row
-                    cur_col = self.column
                     self.row = self.previous_row
                     self.column = self.previous_column
                     grid_board[self.row][self.column] = self.character
+                    if self.get_static_counter() > Animal.MAX_ANIMAL_AMOUNT:
+                        self.print_to_journal(f"""{self.character} vs {organism.get_character()} -> cant be more than {Animal.MAX_ANIMAL_AMOUNT}\n""")
+                        return CollisionTypes("None"), None
 
-                    for i in range(-1, 2):
-                        for j in range(-1, 2):
-                            
-                            if i == 0 and j == 0:
-                                continue
-                            
-                            new_row = cur_row + i
-                            new_column = cur_col + j
-
-                            if new_row >= 0 and new_row < len(grid_board) and new_column >= 0 and new_column < len(grid_board[new_row]) and grid_board[new_row][new_column] == 'e':
-
-                                if self.get_static_counter() > Animal.MAX_ANIMAL_AMOUNT:
-                                    self.print_to_journal(f"""{self.character} vs {organism.get_character()} -> cant be more than {Animal.MAX_ANIMAL_AMOUNT}\n""")
-                                    return CollisionTypes("None"), None
-
-                                self.print_to_journal(f"""{self.character} vs {organism.get_character()} at ({cur_row}, {cur_col}) -> new {self.character} at ({new_row}, {new_column})\n""")
-                                grid_board[new_row][new_column] = self.character
-                                return CollisionTypes("Multiplication"), self.type(self.name, new_row, new_column)
+                    else:
+                        return CollisionTypes("Multiplication"), self.type(self.name, self.row, self.column)
 
                 # Turtle collision
                 elif organism.get_name() == 'turtle' and self.strength <= Animal.MIN_STRENGTH_TURTLE_REFLECT:
