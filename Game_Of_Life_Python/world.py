@@ -128,7 +128,7 @@ class World:
                 # We always want 1 human at the board
                 self.add_organisms(1, "Human", Human)
             elif type == OrganismType.WOLF:
-                self.add_organisms(4, "wolf", Wolf)
+                self.add_organisms(random_amount, "wolf", Wolf)
             elif type == OrganismType.SHEEP:
                 self.add_organisms(random_amount, "sheep", Sheep)
             elif type == OrganismType.FOX:
@@ -303,6 +303,11 @@ class World:
                             self.handle_human_collision(CollisionType, data)
 
                     elif event.key == pygame.K_a:
+                        for index, organism in enumerate(self.organisms):
+                            if type(organism) == Human:
+                                human_object = organism
+                                human_index = index
+                                break
                         if not self.is_human:
                             self.display_message("Cant activate ability, no human...", self.screen_height * 0.965, self.screen_width * 0.5)
                             displayed_message = True
@@ -320,7 +325,7 @@ class World:
                         self.clear_journal()
 
                     elif event.key == pygame.K_q:
-                        
+
                         self.turn_number = 0
                         self.clear_journal()
                         return
@@ -551,25 +556,24 @@ class World:
                 break
 
         if row == -1 or column == -1:
-            return
+            return None
 
         if 0 <= row < len(self.grid_board) and 0 <= column < len(self.grid_board[0]) and self.grid_board[row][column] != 'e':
             self.display_message("Cant add here, select empty cell...", self.screen_height * 0.965, self.screen_width * 0.5)
-            return
+            return None
 
         option = self.add_organism_click()
-        if option == 1: return Antelope("antelope", row, column)
-        if option == 2: return Belladonna("Belladonna", row, column)
+        if option == 1: return Guarana("Guarana", row, column)
+        if option == 2: return Fox("fox", row, column)
         if option == 3: return CyberSheep("cyber_sheep", row, column)
-        if option == 4: return Fox("fox", row, column)
-        if option == 5: return Grass("Grass", row, column)
-        if option == 6: return Guarana("Guarana", row, column)
-        if option == 7: return Sheep("sheep", row, column)
-        if option == 8: return SosnowskyHogweed("Sosnowsky_hogweed", row, column)
-        if option == 9: return SowThistle("Sow_thistle", row, column)
-        if option == 10: return Turtle("turtle", row, column)
-        if option == 11: return Wolf("wolf", row, column)
-
+        if option == 4: return Belladonna("Belladonna", row, column)
+        if option == 5: return SowThistle("Sow_thistle", row, column)
+        if option == 6: return Wolf("wolf", row, column)
+        if option == 7: return Turtle("turtle", row, column)
+        if option == 8: return Sheep("sheep", row, column)
+        if option == 9: return Grass("Grass", row, column)
+        if option == 10: return SosnowskyHogweed("Sosnowsky_hogweed", row, column)
+        if option == 11: return Antelope("antelope", row, column)
         return None
 
     def add_organism_click(self):
