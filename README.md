@@ -27,8 +27,8 @@ Before running the C++ project, ensure you have Microsoft Visual Studio installe
 
 Enjoy exploring the C++ implementation of the Game of Life in Microsoft Visual Studio!
 
-<img src="Screenshots/Game_Of_Life_Cpp.png" alt="Simulation" width="650">
-<img src="Screenshots/Game_Of_Life_Cpp_2.png" alt="Simulation" width="650">
+<img src="Screenshots/Game_Of_Life_Cpp.png" alt="Simulation" width="450">
+<img src="Screenshots/Game_Of_Life_Cpp_2.png" alt="Simulation" width="450">
 
 ## Running the Python Project
 
@@ -65,3 +65,6 @@ python3 main.py
 
 The entire project should launch, and you should be able to play!
 
+<img src="Screenshots/start_page.png" alt="Start Page" width="450">
+<img src="Screenshots/simulation.png" alt="Simulation Gameplay" width="450">
+<img src="Screenshots/adding_animal.png" alt="Adding Animals" width="450">
