@@ -1,0 +1,3 @@
+[submodule "Game_Of_Life_Java"]
+	path = Game_Of_Life_Java
+	url = git@github.com:Mateusz-best-creator/Game_Of_Life_Java.git
