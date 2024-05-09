@@ -35,10 +35,10 @@ Enjoy exploring the C++ implementation of the Game of Life in Microsoft Visual S
 I used the Swing library to build this Game of Life simulation. If you want to clone this repo with the Java project, you have to clone the submodule:
 
 ```sh
-git clone --recurse-submodules git@github.com:yourusername/yourproject.git
+git clone --recurse-submodules https://github.com/Mateusz-best-creator/GameOfLife.git
 ```
 
-Once you've cloned the project, you can open your IDE and start the game! At the beginning you have to type board height and width, then at the beginning of the turn, you can:
+Once you've cloned the project, you can open your IDE and start the game! Messages about what is going on are displayed in the console. You can click on an empty cell and then decide by typing the appropriate character in the console what kind of organism you want to add. At the beginning you have to type board height and width, then at the start of the turn, you can:
 
 - Press `p` to play
 - Press `s` to save the state of the game to a file
