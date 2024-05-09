@@ -30,6 +30,25 @@ Enjoy exploring the C++ implementation of the Game of Life in Microsoft Visual S
 <img src="Screenshots/Game_Of_Life_Cpp.png" alt="Simulation" width="450">
 <img src="Screenshots/Game_Of_Life_Cpp_2.png" alt="Simulation" width="450">
 
+## Running the Java Project
+
+I used the Swing library to build this Game of Life simulation. If you want to clone this repo with the Java project, you have to clone the submodule:
+
+```sh
+git clone --recurse-submodules git@github.com:yourusername/yourproject.git
+```
+
+Once you've cloned the project, you can open your IDE and start the game! At the beginning of the turn, you can:
+
+- Press `p` to play
+- Press `s` to save the state of the game to a file
+- Press `r` to read the state of the game from a file
+
+Once you've clicked `p`, you can use the arrow keys to move the human if they are alive or press `s` to activate the human's special ability, which temporarily increases their strength.
+
+<img src="Screenshots/Game_Of_Life_Java.png" alt="Simulation" width="450">
+
+
 ## Running the Python Project
 
 This is a Python GameOfLife project. To run it, you need to have Python installed along with the Pygame framework on your computer. You can check your Python version by typing:
