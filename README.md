@@ -38,7 +38,7 @@ I used the Swing library to build this Game of Life simulation. If you want to c
 git clone --recurse-submodules git@github.com:yourusername/yourproject.git
 ```
 
-Once you've cloned the project, you can open your IDE and start the game! At the beginning of the turn, you can:
+Once you've cloned the project, you can open your IDE and start the game! At the beginning you have to type board height and width, then at the beginning of the turn, you can:
 
 - Press `p` to play
 - Press `s` to save the state of the game to a file
