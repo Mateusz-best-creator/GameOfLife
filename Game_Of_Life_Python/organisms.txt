@@ -1,18 +1,23 @@
-14
-wolf 12 5 9 3
-wolf 9 5 5 4
-sheep 4 4 3 9
-fox 3 7 2 8
-turtle 2 1 9 0
-cyber_sheep 11 4 2 2
-Sow_thistle 0 0 0 5
-Sosnowsky_hogweed 10 0 2 0
-Sow_thistle 0 0 0 4
-Sow_thistle 0 0 0 3
-Sow_thistle 0 0 1 3
-wolf 21 5 5 1
-wolf 9 5 4 1
-Sow_thistle 0 0 0 2
-wolf 12 5 6 2
-Sow_thistle 0 0 0 6
-wolf 9 5 4 0
+1
+wolf 9 5 8 4
+sheep 4 4 8 9
+fox 3 7 1 0
+fox 3 7 2 4
+turtle 2 1 6 2
+antelope 4 4 3 6
+cyber_sheep 11 4 0 8
+Grass 0 0 9 0
+Grass 0 0 3 8
+Sow_thistle 0 0 3 4
+Sow_thistle 0 0 4 2
+Sow_thistle 0 0 8 5
+Guarana 0 0 1 3
+Guarana 0 0 6 0
+Guarana 0 0 7 1
+Belladonna 99 0 8 0
+Belladonna 99 0 7 2
+Belladonna 99 0 3 5
+Sosnowsky_hogweed 10 0 5 8
+Sosnowsky_hogweed 10 0 0 7
+Sosnowsky_hogweed 10 0 0 9
+Human 5 4 7 6 NO 5

@@ -7,7 +7,7 @@ class Human(Animal):
 
     ABILITY_STRENGTH_INCREASE = 10
 
-    def __init__(self, name, row, column, given_strength=-1, given_initiative=-1):
+    def __init__(self, name, row, column, given_strength=-1, given_initiative=-1, default_strength = None, ability_activated = None):
         strength = OrganismInitialData[name]["strength"]
         initiative = OrganismInitialData[name]["initiative"]
         character = OrganismInitialData[name]["character"]
@@ -17,8 +17,12 @@ class Human(Animal):
             initiative = given_initiative
         super().__init__(strength, initiative, name, character, row, column, "human.png")
         self.type = Human
-        self.ability_activated = False
-        self.default_strength = strength
+        if ability_activated == True:
+            self.ability_activated = True
+            self.default_strength = default_strength
+        else:
+            self.ability_activated = False
+            self.default_strength = strength
 
     def action(self, grid_board):
 
@@ -68,6 +72,15 @@ class Human(Animal):
 
     def decrease_static_counter(self):
         pass
+
+    def get_default_strength(self):
+        return self.default_strength
+
+    def get_ability_activated(self):
+        return self.ability_activated
+    
+    def set_default_strength(self, value):
+        self.strength = value
 
     def activate_ability(self):
         

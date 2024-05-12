@@ -107,8 +107,7 @@ class World:
         # Grid dimensions
         self.grid_height = 10
         self.grid_width = 10
-        self.grid_board = [
-            ['e' for _ in range(self.grid_width)] for _ in range(self.grid_height)]
+        self.grid_board = [['e' for _ in range(self.grid_width)] for _ in range(self.grid_height)]
         # Dimensions for all squares in game simulation
         self.squares_top = []
         self.squares_bottom = []
@@ -294,7 +293,6 @@ class World:
                         if human_object:
                             if displayed_message:
                                 displayed_message = False
-                                self.draw_simulation_board()
                             self.display_message("Press one of arrow keys to move", self.screen_height * 0.965, self.screen_width * 0.5)
                             pygame.display.update()
                             human_object.action(self.grid_board)
@@ -450,8 +448,21 @@ class World:
         with open(self.SAVED_STATE_FILENAME, 'w') as f:
             f.write(f"{self.turn_number}\n")
             for organism in self.organisms:
-                f.write(f"""{organism.get_name()} {organism.get_strength()} {organism.get_initiative()} {
-                        organism.get_position_row()} {organism.get_position_column()}\n""")
+                if organism.get_character() == 'H':
+                    temp = organism
+                    ability_activated = temp.get_ability_activated()
+                    msg = None
+                    def_strength = 5
+                    if ability_activated: 
+                        msg = "YES"
+                        def_strength = organism.get_default_strength()
+                    else: 
+                        msg = "NO"
+                    f.write(f"""{organism.get_name()} {organism.get_strength()} {organism.get_initiative()} {
+                            organism.get_position_row()} {organism.get_position_column()} {msg} {def_strength}\n""")
+                else:
+                    f.write(f"""{organism.get_name()} {organism.get_strength()} {organism.get_initiative()} {
+                            organism.get_position_row()} {organism.get_position_column()}\n""")
 
     def display_message(self, message, top_coor, left_coor):
         # Display text message in bottom rectangle
@@ -466,13 +477,16 @@ class World:
                 if index == 0:
                     self.turn_number = int(line)
                     continue
-                name, strength, initiative, row, column = line.split(" ")
+                if len(line.split(" ")) > 5:
+                    name, strength, initiative, row, column, ability_activated, default_strength = line.split(" ")
+                else:
+                    name, strength, initiative, row, column = line.split(" ")
                 strength = int(strength)
                 initiative = int(initiative)
                 row = int(row)
                 column = int(column)
                 if name == "Human":
-                    self.organisms.append(Human(name, row, column, strength, initiative))
+                    self.organisms.append(Human(name, row, column, strength, initiative, ability_activated=ability_activated, default_strength=int(default_strength)))
                 elif name == "wolf":
                     self.organisms.append(Wolf(name, row, column, strength, initiative))
                 elif name == "sheep":
@@ -522,6 +536,8 @@ class World:
                 self.organisms[index].decrease_static_counter()
                 if type(self.organisms[index]) == Human:
                     self.is_human = False
+                o = self.organisms[index]
+                o.print_to_journal(f"Removing {o.get_character()} at ({o.get_position_row()}, {o.get_position_column()})\n")
                 del self.organisms[index]
 
     def multiply_organism(self, organism):
