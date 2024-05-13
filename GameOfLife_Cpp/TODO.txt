@@ -1,0 +1,4 @@
+0. Removing and multiplication
+1. Adding FOX
+2. Adding Turtle
+3. Adding Antelope

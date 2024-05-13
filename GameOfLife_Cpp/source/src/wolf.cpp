@@ -13,14 +13,14 @@ Wolf::~Wolf()
     WOLF_STATIC_COUNTER--;
 }
 
-Organism::ActionType Wolf::action(std::vector<std::vector<char>>& grid_board)
+ActionType Wolf::action(std::vector<std::vector<char>>& grid_board)
 {
-    Animal::default_action_animal(grid_board);
+    return Animal::default_action_animal(grid_board);
 }
 
-Organism::CollisionType Wolf::collision()
+CollisionResult Wolf::collision(std::vector<std::vector<char>>& grid_board, std::vector<Organism*>& organisms, int current_index)
 {
-
+    return this->default_collision_animal(grid_board, organisms, current_index);
 }
 
 int Wolf::get_static_counter()

@@ -8,7 +8,7 @@ Animal::Animal(int strength, int initiative, std::string name, char character, i
     
 }
 
-Organism::ActionType Animal::default_action_animal(std::vector<std::vector<char>>& grid_board)
+ActionType Animal::default_action_animal(std::vector<std::vector<char>>& grid_board)
 {
     this->previous_row = this->row;
     this->previous_column = this->column;
@@ -21,13 +21,9 @@ Organism::ActionType Animal::default_action_animal(std::vector<std::vector<char>
             || (this->row == BOARD_HEIGHT - 1 && direction == Direction::BOTTOM)
             || (this->column == 0 && direction == Direction::LEFT)
             || (this->column == BOARD_WIDTH - 1 && direction == Direction::RIGHT))
-        {
             direction = static_cast<Direction>((rand()%4)+1);
-        }
         else
-        {
             break;
-        }
     }
 
     switch (direction)
@@ -55,7 +51,51 @@ Organism::ActionType Animal::default_action_animal(std::vector<std::vector<char>
     return ActionType::MOVE;
 }
 
-Organism::CollisionType Animal::default_collision_animal()
+CollisionResult Animal::default_collision_animal(std::vector<std::vector<char>>& grid_board, std::vector<Organism*>& organisms, int current_index)
 {
-    
+    int index = 0;
+    std::vector<int> indexes;
+    for (auto organism : organisms)
+    {
+        // We found collision with another organism
+        if (organism->get_row() == this->row && organism->get_column() == this->column && index != current_index)
+        {
+            // Multiplication case
+            if (organism->get_type() == this->get_type())
+            {
+                std::cout << this->get_name() << " multiplication at (" << this->row << ", " << column << ") " 
+                << this->get_name() << " goes back to (" << this->previous_row << ", " << this->previous_column << ")\n";
+                int original_row = row;
+                int original_col = column;
+                row = previous_row;
+                column = previous_column;
+                return CollisionResult(CollisionType::MULTIPLICATION, Point(original_row, original_col), this->get_type());
+            }
+            // Turtle collision case
+            else if (organism->get_type() == OrganismType::TURTLE && this->get_strength() < 5)
+            {
+                std::cout << organism->get_name() << " reflects the attack at (" << this->row << ", " << column << ")\n";
+                row = previous_row;
+                column = previous_column;
+                return CollisionResult(CollisionType::NONE);
+            }
+            // Fight case
+            else if (organism->get_type() != this->get_type())
+            {
+                if (this->get_strength() >= organism->get_strength())
+                {
+                    std::cout << this->get_name() << " wins with " << organism->get_name() << " at (" << this->row << ", " << column << ")\n";
+                    indexes.push_back(index);
+                }
+                else 
+                {
+                    std::cout << organism->get_name() << " wins with " << this->get_name() << " at (" << this->row << ", " << column << ")\n";
+                    indexes.push_back(current_index);
+                }
+                return CollisionResult(CollisionType::FIGHT, indexes);
+            }
+        }
+        index++;
+    }
+    return CollisionResult(CollisionType::NONE);
 }

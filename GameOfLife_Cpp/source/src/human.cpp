@@ -16,7 +16,7 @@ Human::~Human()
     HUMAN_STATIC_COUNTER--;
 }
 
-Organism::ActionType Human::action(std::vector<std::vector<char>>& grid_board)
+ActionType Human::action(std::vector<std::vector<char>>& grid_board)
 {
     bool isRunning = true;
     while (isRunning) 
@@ -76,9 +76,9 @@ Organism::ActionType Human::action(std::vector<std::vector<char>>& grid_board)
     return ActionType::MOVE;
 }
 
-Organism::CollisionType Human::collision()
+CollisionResult Human::collision(std::vector<std::vector<char>>& grid_board, std::vector<Organism*>& organisms, int current_index)
 {
-    return CollisionType::FIGHT;
+    return this->default_collision_animal(grid_board, organisms, current_index);
 }
 
 int Human::get_static_counter()

@@ -8,6 +8,13 @@
 Organism::Organism(int strength, int initiative, std::string name, unsigned char character, int row, int column, std::string image_name, OrganismType type)
     : strength(strength), initiative(initiative), name(name), character(character), row(row), column(column), type(type)
 {
+    int image_last_index = image_name.size() - 1;
+    assert(row >= 0 && row < BOARD_HEIGHT && column >= 0 && column < BOARD_WIDTH 
+    && image_name.size() > 4
+    && image_name[image_last_index] == 'g' 
+    && image_name[image_last_index - 1] == 'n' 
+    && image_name[image_last_index - 2] == 'p'
+    && image_name[image_last_index - 3] == '.'); // Make sure image has .png extension
     filepath = "./source/Assets/" + image_name;
 }
 
@@ -67,6 +74,6 @@ void Organism::move_right()
 
 void Organism::move_bottom()
 {
-    assert(this->column < BOARD_HEIGHT - 1);
+    assert(this->row < BOARD_HEIGHT - 1);
     this->row++;
 }

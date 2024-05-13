@@ -14,6 +14,8 @@ set(SOURCES
     src/animal.cpp
     src/human.cpp
     src/wolf.cpp
+    src/sheep.cpp
+    src/fox.cpp
 )
 
 # Find SDL2 package
