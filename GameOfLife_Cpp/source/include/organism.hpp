@@ -52,7 +52,8 @@ protected:
         LEFT = 1,
         TOP = 2,
         RIGHT = 3,
-        BOTTOM = 4
+        BOTTOM = 4,
+        NONE = 5,
     };
     int row, column, age = 0, previous_row = -1, previous_column = -1;
     static const int MAX_ORGANISM_AMOUNT = 5;

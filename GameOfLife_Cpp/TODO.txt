@@ -1,4 +1,4 @@
-0. Removing and multiplication
-1. Adding FOX
+0. Removing and multiplication DONE
+1. Adding FOX DONE
 2. Adding Turtle
 3. Adding Antelope

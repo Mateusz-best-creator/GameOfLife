@@ -67,11 +67,11 @@ void World::initialize_organisms()
     for (char character : characters)
     {
         int random_amount = rand() % MAX_RANDOM_AMOUNT + 1;
-        this->add_organism(random_amount, static_cast<OrganismType>(character));
+        this->add_organism(5, static_cast<OrganismType>(character));
     }
 }
 
-void World::add_organism(int random_amount, OrganismType type)
+void World::add_organism(int random_amount, OrganismType type, int specified_row, int specified_column)
 {
     // We always want one human at the board
     if (type == OrganismType::HUMAN)
@@ -81,24 +81,32 @@ void World::add_organism(int random_amount, OrganismType type)
     for (int i = 0; i < random_amount; i++)
     {
         int random_row = -1, random_column = -1;
-        do
+        if (specified_row != -1 && specified_column != -1)
         {
-            random_row = rand() % this->BOARD_SIZE;
-            random_column = rand() % this->BOARD_SIZE;
-            assert(0 <= random_row && random_row < BOARD_SIZE && 0 <= random_column && random_column < BOARD_SIZE);
-        } while (this->grid_board[random_row][random_column] != 'e');
+            random_row = specified_row;
+            random_column = specified_column;
+        }
+        else
+        {
+            do
+            {
+                random_row = rand() % this->BOARD_SIZE;
+                random_column = rand() % this->BOARD_SIZE;
+                assert(0 <= random_row && random_row < BOARD_SIZE && 0 <= random_column && random_column < BOARD_SIZE);
+            } while (this->grid_board[random_row][random_column] != 'e');
+        }
 
         switch (type)
         {
             case OrganismType::HUMAN:
                 this->organisms.push_back(new Human(random_row, random_column));
                 break;
-            case OrganismType::WOLF:
-                this->organisms.push_back(new Wolf(random_row, random_column));
-                break;
-            case OrganismType::SHEEP:
-                this->organisms.push_back(new Sheep(random_row, random_column));
-                break;
+            // case OrganismType::WOLF:
+            //     this->organisms.push_back(new Wolf(random_row, random_column));
+            //     break;
+            // case OrganismType::SHEEP:
+            //     this->organisms.push_back(new Sheep(random_row, random_column));
+            //     break;
             case OrganismType::FOX:
                 this->organisms.push_back(new Fox(random_row, random_column));
             default:
@@ -190,6 +198,7 @@ void World::play_turn()
 
     remove_organisms();
     multiply_organisms();
+    update_grid_board();
 }
 
 void World::sort_organisms()
@@ -207,6 +216,15 @@ void World::sort_organisms()
     });
 }
 
+void World::update_grid_board()
+{
+    for (int i = 0; i < BOARD_SIZE; i++)
+        for (int j = 0; j < BOARD_SIZE; j++)
+            this->grid_board[i][j] = 'e';
+    for (auto o : this->organisms)
+        this->grid_board[o->get_row()][o->get_column()] = o->get_character();
+}
+
 void World::modify_grid_board(int row, int column, char ch)
 {
     assert(row >= 0 && row < this->BOARD_SIZE && column >= 0 && column < this->BOARD_SIZE);
@@ -215,8 +233,9 @@ void World::modify_grid_board(int row, int column, char ch)
 
 void World::remove_organisms()
 {
-    for (int index : this->organism_indexes_to_remove)
+    for (size_t index : this->organism_indexes_to_remove)
     {
+        assert(index < this->organisms.size());
         auto o = organisms[index];
         std::cout << "Removing " << o->get_name() << " at(" << o->get_row() << ", " << o->get_column() << ")\n";
         organisms.erase(organisms.begin() + index);
@@ -226,7 +245,7 @@ void World::remove_organisms()
 
 void World::multiply_organisms()
 {
-    for (int i = 0; i < points_to_multiply.size(); i++)
+    for (size_t i = 0; i < points_to_multiply.size(); i++)
     {
         bool added = false;
         Point point = points_to_multiply.at(i);
@@ -246,8 +265,8 @@ void World::multiply_organisms()
                 assert(new_row >= 0 && new_row < BOARD_SIZE && new_column >= 0 && new_column < BOARD_SIZE);
                 if (grid_board[new_row][new_column] == 'e')
                 {
-                    std::cout << "Creating new " << grid_board[point.row][point.col] << " at (" << new_row << ", " << new_column << ")\n";
-                    this->add_organism(1, type);
+                    std::cout << "Creating new " << static_cast<char>(type) << " at (" << new_row << ", " << new_column << ")\n";
+                    this->add_organism(1, type, new_row, new_column);
                     added = true;
                     break;
                 }

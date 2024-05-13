@@ -25,12 +25,12 @@ public:
     ~World();
 
     void initialize_organisms();
-    void add_organism(int, OrganismType);
+    void add_organism(int, OrganismType,  int specified_row = -1, int specified_column = -1);
     void draw_world();
     void play_turn();
     void sort_organisms();
     void remove_organisms();
     void multiply_organisms();
-
+    void update_grid_board();
     void modify_grid_board(int, int, char);
 };

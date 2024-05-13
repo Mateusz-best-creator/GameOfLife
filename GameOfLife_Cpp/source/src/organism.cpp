@@ -58,22 +58,26 @@ void Organism::move_left()
 {
     assert(this->column > 0);
     this->column--;
+    std::cout << "Move left: ";
 }
 
 void Organism::move_top()
 {
     assert(this->row > 0);
     this->row--;
+    std::cout << "Move top: ";
 }
 
 void Organism::move_right()
 {
     assert(this->column < BOARD_WIDTH - 1);
     this->column++;
+    std::cout << "Move right: ";
 }
 
 void Organism::move_bottom()
 {
     assert(this->row < BOARD_HEIGHT - 1);
     this->row++;
+    std::cout << "Move bottom: ";
 }

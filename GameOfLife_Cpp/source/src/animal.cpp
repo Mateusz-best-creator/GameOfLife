@@ -69,14 +69,26 @@ CollisionResult Animal::default_collision_animal(std::vector<std::vector<char>>&
                 int original_col = column;
                 row = previous_row;
                 column = previous_column;
+                assert(row >= 0 && row < BOARD_HEIGHT && column >= 0 && column < BOARD_WIDTH);
+                grid_board[row][column] = this->get_character();
+
+                // Check for max amount
+                if (this->get_static_counter() > MAX_ORGANISM_AMOUNT)
+                {
+                    std::cout << "Cannot add more " << this->get_name() << ", we arleady have " << this->get_static_counter() << " of them on the board...\n";
+                    return CollisionResult(CollisionType::NONE);
+                }
+
                 return CollisionResult(CollisionType::MULTIPLICATION, Point(original_row, original_col), this->get_type());
             }
             // Turtle collision case
             else if (organism->get_type() == OrganismType::TURTLE && this->get_strength() < 5)
             {
                 std::cout << organism->get_name() << " reflects the attack at (" << this->row << ", " << column << ")\n";
+                grid_board[row][column] = 't';
                 row = previous_row;
                 column = previous_column;
+                grid_board[row][column] = this->get_character();
                 return CollisionResult(CollisionType::NONE);
             }
             // Fight case
@@ -86,11 +98,13 @@ CollisionResult Animal::default_collision_animal(std::vector<std::vector<char>>&
                 {
                     std::cout << this->get_name() << " wins with " << organism->get_name() << " at (" << this->row << ", " << column << ")\n";
                     indexes.push_back(index);
+                    grid_board[row][column] = this->get_character();
                 }
                 else 
                 {
                     std::cout << organism->get_name() << " wins with " << this->get_name() << " at (" << this->row << ", " << column << ")\n";
                     indexes.push_back(current_index);
+                    grid_board[row][column] = organism->get_character();
                 }
                 return CollisionResult(CollisionType::FIGHT, indexes);
             }

@@ -72,7 +72,10 @@ ActionType Human::action(std::vector<std::vector<char>>& grid_board)
             }
         }
     }
+    
     this->move_message();
+    grid_board[row][column] = this->get_character();
+
     return ActionType::MOVE;
 }
 
