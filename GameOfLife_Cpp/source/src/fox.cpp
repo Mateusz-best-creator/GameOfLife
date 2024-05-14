@@ -4,7 +4,13 @@
 int Fox::FOX_STATIC_COUNTER = 0;
 
 Fox::Fox(int row, int column)
-    : Animal(3, 7, "fox", 'f', row, column, "fox.png", OrganismType::FOX)
+    : Animal(3, 7, 0, "fox", 'f', row, column, "fox.png", OrganismType::FOX)
+{
+    FOX_STATIC_COUNTER++;
+}
+
+Fox::Fox(int row, int column, int strength, int initiative, int age)
+    : Animal(strength, initiative, age, "fox", 'f', row, column, "fox.png", OrganismType::FOX)
 {
     FOX_STATIC_COUNTER++;
 }
@@ -14,7 +20,7 @@ Fox::~Fox()
     FOX_STATIC_COUNTER--;
 }
 
-ActionType Fox::action(std::vector<std::vector<char>>& grid_board)
+ActionResult Fox::action(std::vector<std::vector<char>>& grid_board)
 {
     previous_row = row;
     previous_column = column;
@@ -85,7 +91,7 @@ ActionType Fox::action(std::vector<std::vector<char>>& grid_board)
     std::cout << this->get_name() << " moves from (" << previous_row << ", " << previous_column << ") to (" << row << ", " << column << ")\n";
     grid_board[row][column] = this->get_character();
 
-    return ActionType::MOVE;
+    return ActionResult(ActionType::MOVE);
 }
 
 CollisionResult Fox::collision(std::vector<std::vector<char>>& grid_board, std::vector<Organism*>& organisms, int current_index)

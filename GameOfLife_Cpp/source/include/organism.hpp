@@ -7,7 +7,8 @@
 enum class ActionType
 {
     MOVE,
-    STAY
+    STAY,
+    SOW
 };
 enum class CollisionType
 {
@@ -20,8 +21,10 @@ enum class OrganismType : unsigned char
     HUMAN = 'H',
     WOLF = 'w',
     SHEEP = 's',
-    TURTLE = 't',
     FOX = 'f',
+    TURTLE = 't',
+    ANTELOPE = 'a',
+    CYBER_SHEEP = 'c',
     GRASS = 'G'
 };
 
@@ -30,6 +33,17 @@ struct Point
     int row, col;
     Point() : row(0), col(0) {}
     Point(int r, int c) : row(r), col(c) {}
+    Point(const Point& p) : row(p.row), col(p.col) {}
+};
+
+struct ActionResult
+{
+    ActionType type;
+    Point point;
+    OrganismType orgainsm_type_to_add;
+
+    ActionResult(ActionType t, Point p, OrganismType o_type) : type(t), point(p), orgainsm_type_to_add(o_type) {}
+    ActionResult(ActionType t) : type(t) {}
 };
 
 struct CollisionResult
@@ -55,7 +69,7 @@ protected:
         BOTTOM = 4,
         NONE = 5,
     };
-    int row, column, age = 0, previous_row = -1, previous_column = -1;
+    int row, column, age, previous_row = -1, previous_column = -1;
     static const int MAX_ORGANISM_AMOUNT = 5;
     static const int BOARD_HEIGHT = 10, BOARD_WIDTH = 10;
 
@@ -69,7 +83,7 @@ private:
 
 public:
     // Constructors and destructors
-    Organism(int, int, std::string, unsigned char, int, int, std::string, OrganismType);
+    Organism(int, int, int, std::string, unsigned char, int, int, std::string, OrganismType);
     virtual ~Organism();
 
     // Setters and getters
@@ -94,7 +108,7 @@ public:
     void move_bottom();
 
     // Virtual methods
-    virtual ActionType action(std::vector<std::vector<char>>&) = 0;
+    virtual ActionResult action(std::vector<std::vector<char>>&) = 0;
     virtual CollisionResult collision(std::vector<std::vector<char>>&, std::vector<Organism*>&, int) = 0;
     virtual int get_static_counter() = 0;
 };

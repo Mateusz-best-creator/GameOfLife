@@ -1,4 +1,6 @@
 0. Removing and multiplication DONE
 1. Adding FOX DONE
-2. Adding Turtle
-3. Adding Antelope
+1.5. Update constructors to specift strength and initiative and age DONE
+2. Adding Turtle DONE
+3. Adding Antelope DONE
+4. Adding cyber_sheep

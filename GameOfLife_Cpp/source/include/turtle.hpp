@@ -2,15 +2,15 @@
 
 #include "animal.hpp"
 
-class Human : public Animal
+class Turtle : public Animal
 {
 private:
-    static int HUMAN_STATIC_COUNTER;
+    static int TURTLE_STATIC_COUNTER;
 
 public:
-    Human(int, int);
-    Human(int, int, int, int, int);
-    ~Human();
+    Turtle(int, int);
+    Turtle(int, int, int, int, int);
+    ~Turtle();
 
     virtual ActionResult action(std::vector<std::vector<char>>&) override final;
     virtual CollisionResult collision(std::vector<std::vector<char>>&, std::vector<Organism*>&, int) override final;

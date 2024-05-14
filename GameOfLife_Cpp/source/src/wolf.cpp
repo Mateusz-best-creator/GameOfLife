@@ -3,9 +3,16 @@
 int Wolf::WOLF_STATIC_COUNTER = 0;
 
 Wolf::Wolf(int row, int column)
-    : Animal(9, 5, "wolf", 'w', row, column, "wolf.png", OrganismType::WOLF)
+    : Animal(9, 5, 0, "wolf", 'w', row, column, "wolf.png", OrganismType::WOLF)
 {
     WOLF_STATIC_COUNTER++;  
+}
+
+Wolf::Wolf(int row, int column, int strength, int initiative, int age)
+    : Animal(strength, initiative, age, "wolf", 'w', row, column, "wolf.png", OrganismType::WOLF)
+{
+    WOLF_STATIC_COUNTER++;  
+    this->get_age() = age;
 }
 
 Wolf::~Wolf()
@@ -13,7 +20,7 @@ Wolf::~Wolf()
     WOLF_STATIC_COUNTER--;
 }
 
-ActionType Wolf::action(std::vector<std::vector<char>>& grid_board)
+ActionResult Wolf::action(std::vector<std::vector<char>>& grid_board)
 {
     return Animal::default_action_animal(grid_board);
 }

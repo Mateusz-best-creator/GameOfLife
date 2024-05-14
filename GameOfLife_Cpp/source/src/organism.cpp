@@ -5,8 +5,8 @@
 #include <cassert>
 #include <iostream>
 
-Organism::Organism(int strength, int initiative, std::string name, unsigned char character, int row, int column, std::string image_name, OrganismType type)
-    : strength(strength), initiative(initiative), name(name), character(character), row(row), column(column), type(type)
+Organism::Organism(int strength, int initiative, int age, std::string name, unsigned char character, int row, int column, std::string image_name, OrganismType type)
+    : strength(strength), initiative(initiative), age(age), name(name), character(character), row(row), column(column), type(type)
 {
     int image_last_index = image_name.size() - 1;
     assert(row >= 0 && row < BOARD_HEIGHT && column >= 0 && column < BOARD_WIDTH 

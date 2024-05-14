@@ -16,6 +16,9 @@ set(SOURCES
     src/wolf.cpp
     src/sheep.cpp
     src/fox.cpp
+    src/turtle.cpp
+    src/antelope.cpp
+    src/cyber_sheep.cpp
 )
 
 # Find SDL2 package

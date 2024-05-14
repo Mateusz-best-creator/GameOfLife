@@ -7,6 +7,9 @@
 #include "wolf.hpp"
 #include "sheep.hpp"
 #include "fox.hpp"
+#include "turtle.hpp"
+#include "antelope.hpp"
+#include "cyber_sheep.hpp"
 
 World::World()
     : grid_board(BOARD_SIZE, std::vector<char>(BOARD_SIZE, 'e'))
@@ -62,12 +65,12 @@ World::~World()
 
 void World::initialize_organisms()
 {
-    char characters[] = {'H', 'w', 's', 'f'};
+    char characters[] = {'H', 'w', 's', 'f', 't', 'a', 'c'};
 
     for (char character : characters)
     {
         int random_amount = rand() % MAX_RANDOM_AMOUNT + 1;
-        this->add_organism(5, static_cast<OrganismType>(character));
+        this->add_organism(random_amount, static_cast<OrganismType>(character));
     }
 }
 
@@ -101,14 +104,24 @@ void World::add_organism(int random_amount, OrganismType type, int specified_row
             case OrganismType::HUMAN:
                 this->organisms.push_back(new Human(random_row, random_column));
                 break;
-            // case OrganismType::WOLF:
-            //     this->organisms.push_back(new Wolf(random_row, random_column));
-            //     break;
-            // case OrganismType::SHEEP:
-            //     this->organisms.push_back(new Sheep(random_row, random_column));
-            //     break;
+            case OrganismType::WOLF:
+                this->organisms.push_back(new Wolf(random_row, random_column));
+                break;
+            case OrganismType::SHEEP:
+                this->organisms.push_back(new Sheep(random_row, random_column));
+                break;
             case OrganismType::FOX:
                 this->organisms.push_back(new Fox(random_row, random_column));
+                break;
+            case OrganismType::TURTLE:
+                this->organisms.push_back(new Turtle(random_row, random_column));
+                break;
+            case OrganismType::ANTELOPE:
+                this->organisms.push_back(new Antelope(random_row, random_column));
+                break;
+            case OrganismType::CYBER_SHEEP:
+                this->organisms.push_back(new CyberSheep(random_row, random_column));
+                break;
             default:
                 break;
         }
@@ -167,13 +180,13 @@ void World::play_turn()
             continue;
         }
 
-        ActionType action_type = organism->action(this->grid_board);
+        ActionResult action_type = organism->action(this->grid_board);
         CollisionResult collision_result = organism->collision(this->grid_board, this->organisms, index);
 
-        switch (action_type)
+        switch (action_type.type)
         {
             case ActionType::MOVE:
-                break;
+            case ActionType::STAY:
             default:
                 break;
         }
@@ -237,7 +250,7 @@ void World::remove_organisms()
     {
         assert(index < this->organisms.size());
         auto o = organisms[index];
-        std::cout << "Removing " << o->get_name() << " at(" << o->get_row() << ", " << o->get_column() << ")\n";
+        std::cout << "Removing " << o->get_name() << " at (" << o->get_row() << ", " << o->get_column() << ")\n";
         organisms.erase(organisms.begin() + index);
     }
     this->organism_indexes_to_remove.clear();

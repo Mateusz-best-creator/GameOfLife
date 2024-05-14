@@ -3,7 +3,13 @@
 int Sheep::SHEEP_STATIC_COUNTER = 0;
 
 Sheep::Sheep(int row, int column)
-    : Animal(4, 4, "sheep", 's', row, column, "sheep.png", OrganismType::SHEEP)
+    : Animal(4, 4, 0, "sheep", 's', row, column, "sheep.png", OrganismType::SHEEP)
+{
+    SHEEP_STATIC_COUNTER++;  
+}
+
+Sheep::Sheep(int row, int column, int strength, int initiative, int age)
+    : Animal(strength, initiative, age, "sheep", 's', row, column, "sheep.png", OrganismType::SHEEP)
 {
     SHEEP_STATIC_COUNTER++;  
 }
@@ -13,7 +19,7 @@ Sheep::~Sheep()
     SHEEP_STATIC_COUNTER--;
 }
 
-ActionType Sheep::action(std::vector<std::vector<char>>& grid_board)
+ActionResult Sheep::action(std::vector<std::vector<char>>& grid_board)
 {
     return Animal::default_action_animal(grid_board);
 }

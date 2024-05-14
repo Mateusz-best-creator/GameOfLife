@@ -3,8 +3,16 @@
 
 int Human::HUMAN_STATIC_COUNTER = 0;
 
-Human::Human(int row, int column, int strength, int initiative)
-    : Animal(5, 4, "Human", 'H', row, column, "human.png", OrganismType::HUMAN)
+Human::Human(int row, int column)
+    : Animal(5, 4, 0, "Human", 'H', row, column, "human.png", OrganismType::HUMAN)
+{
+    this->previous_row = row;
+    this->previous_column = column;
+    HUMAN_STATIC_COUNTER++;
+}
+
+Human::Human(int row, int column, int strength, int initiative, int age)
+    : Animal(strength, initiative, age, "Human", 'H', row, column, "human.png", OrganismType::HUMAN)
 {
     this->previous_row = row;
     this->previous_column = column;
@@ -16,7 +24,7 @@ Human::~Human()
     HUMAN_STATIC_COUNTER--;
 }
 
-ActionType Human::action(std::vector<std::vector<char>>& grid_board)
+ActionResult Human::action(std::vector<std::vector<char>>& grid_board)
 {
     bool isRunning = true;
     while (isRunning) 
@@ -76,7 +84,7 @@ ActionType Human::action(std::vector<std::vector<char>>& grid_board)
     this->move_message();
     grid_board[row][column] = this->get_character();
 
-    return ActionType::MOVE;
+    return ActionResult(ActionType::MOVE);
 }
 
 CollisionResult Human::collision(std::vector<std::vector<char>>& grid_board, std::vector<Organism*>& organisms, int current_index)
