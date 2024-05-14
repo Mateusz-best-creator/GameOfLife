@@ -5,8 +5,8 @@
 #include <cassert>
 #include <iostream>
 
-Organism::Organism(int strength, int initiative, int age, std::string name, unsigned char character, int row, int column, std::string image_name, OrganismType type)
-    : strength(strength), initiative(initiative), age(age), name(name), character(character), row(row), column(column), type(type)
+Organism::Organism(int strength, int initiative, int age, std::string name, char ch, int r, int c, std::string image_name, OrganismType t)
+    : strength(strength), initiative(initiative), age(age), name(name), character(ch), row(r), column(c), type(t)
 {
     int image_last_index = image_name.size() - 1;
     assert(row >= 0 && row < BOARD_HEIGHT && column >= 0 && column < BOARD_WIDTH 
@@ -80,4 +80,12 @@ void Organism::move_bottom()
     assert(this->row < BOARD_HEIGHT - 1);
     this->row++;
     std::cout << "Move bottom: ";
+}
+
+void Organism::default_grid_update(std::vector<std::vector<char>>& grid_board) const
+{
+    assert(row >= 0 && row < BOARD_HEIGHT && column >= 0 && column < BOARD_WIDTH);
+    assert(previous_row >= 0 && previous_row < BOARD_HEIGHT && previous_column >= 0 && previous_column < BOARD_WIDTH);
+    grid_board[previous_row][previous_column] = 'e';
+    grid_board[row][column] = this->get_character();
 }

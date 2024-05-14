@@ -19,6 +19,9 @@ set(SOURCES
     src/turtle.cpp
     src/antelope.cpp
     src/cyber_sheep.cpp
+    src/plant.cpp
+    src/grass.cpp
+    src/sosnowsky_hogweed.cpp
 )
 
 # Find SDL2 package

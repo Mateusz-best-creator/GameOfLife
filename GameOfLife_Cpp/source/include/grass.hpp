@@ -1,19 +1,16 @@
 #pragma once
 
-#include "animal.hpp"
+#include "plant.hpp"
 
-class Human : public Animal
+class Grass : public Plant
 {
 private:
-    static int HUMAN_STATIC_COUNTER;
-    bool ability_activated;
-    int ability_counter;
-    int normal_strength;
+    static int GRASS_STATIC_COUNTER;
 
 public:
-    Human(int, int);
-    Human(int, int, int, int, int, bool, int);
-    ~Human();
+    Grass(int, int);
+    Grass(int, int, int, int, int);
+    ~Grass();
 
     virtual ActionResult action(std::vector<std::vector<char>>&) override final;
     virtual CollisionResult collision(std::vector<std::vector<char>>&, std::vector<Organism*>&, int) override final;

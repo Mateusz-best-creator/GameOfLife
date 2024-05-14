@@ -10,6 +10,8 @@
 #include "turtle.hpp"
 #include "antelope.hpp"
 #include "cyber_sheep.hpp"
+#include "grass.hpp"
+#include "sosnowsky_hogweed.hpp"
 
 World::World()
     : grid_board(BOARD_SIZE, std::vector<char>(BOARD_SIZE, 'e'))
@@ -47,7 +49,7 @@ World::World()
 
 World::~World()
 {
-    for (auto o : this->organisms)
+    for (auto& o : this->organisms)
         delete o;
 
     if (renderer) 
@@ -65,20 +67,25 @@ World::~World()
 
 void World::initialize_organisms()
 {
-    char characters[] = {'H', 'w', 's', 'f', 't', 'a', 'c'};
+    char characters[] = {'H', 'w', 's', 'f', 't', 'a', 'c', 'G', 'O'};
 
     for (char character : characters)
     {
         int random_amount = rand() % MAX_RANDOM_AMOUNT + 1;
         this->add_organism(random_amount, static_cast<OrganismType>(character));
     }
+    std::cout << "Size = " << this->organisms.size() << std::endl;
+    this->update_grid_board();
 }
 
 void World::add_organism(int random_amount, OrganismType type, int specified_row, int specified_column)
 {
     // We always want one human at the board
     if (type == OrganismType::HUMAN)
+    {
         random_amount = 1;
+        std::cout << "Human!!\n";
+    }
     
     // Add Organism random amount of times
     for (int i = 0; i < random_amount; i++)
@@ -104,25 +111,32 @@ void World::add_organism(int random_amount, OrganismType type, int specified_row
             case OrganismType::HUMAN:
                 this->organisms.push_back(new Human(random_row, random_column));
                 break;
-            case OrganismType::WOLF:
-                this->organisms.push_back(new Wolf(random_row, random_column));
+            // case OrganismType::WOLF:
+            //     this->organisms.push_back(new Wolf(random_row, random_column));
+            //     break;
+            // case OrganismType::SHEEP:
+            //     this->organisms.push_back(new Sheep(random_row, random_column));
+            //     break;
+            // case OrganismType::FOX:
+            //     this->organisms.push_back(new Fox(random_row, random_column));
+            //     break;
+            // case OrganismType::TURTLE:
+            //     this->organisms.push_back(new Turtle(random_row, random_column));
+            //     break;
+            // case OrganismType::ANTELOPE:
+            //     this->organisms.push_back(new Antelope(random_row, random_column));
+            //     break;
+            // case OrganismType::CYBER_SHEEP:
+            //     this->organisms.push_back(new CyberSheep(random_row, random_column));
+            //     break;
+            case OrganismType::GRASS:
+                this->organisms.push_back(new Grass(random_row, random_column));
                 break;
-            case OrganismType::SHEEP:
-                this->organisms.push_back(new Sheep(random_row, random_column));
-                break;
-            case OrganismType::FOX:
-                this->organisms.push_back(new Fox(random_row, random_column));
-                break;
-            case OrganismType::TURTLE:
-                this->organisms.push_back(new Turtle(random_row, random_column));
-                break;
-            case OrganismType::ANTELOPE:
-                this->organisms.push_back(new Antelope(random_row, random_column));
-                break;
-            case OrganismType::CYBER_SHEEP:
-                this->organisms.push_back(new CyberSheep(random_row, random_column));
-                break;
+            // case OrganismType::SOSNOWSKY_HOGWEED:
+            //     this->organisms.push_back(new SosnowskyHogweed(random_row, random_column));
+            //     break;
             default:
+                std::cout << "Incorrect organism type...\n";
                 break;
         }
         if (!this->organisms.empty())
@@ -139,7 +153,7 @@ void World::draw_world()
     int cellWidth = WINDOW_WIDTH / BOARD_SIZE;
     int cellHeight = WINDOW_HEIGHT / BOARD_SIZE;
 
-    for (auto organism : this->organisms)
+    for (const auto& organism : this->organisms)
     {
         organism->draw(this->renderer, this->IMAGE_HEIGHT, this->IMAGE_WIDTH, organism->get_column() * cellWidth, organism->get_row() * cellHeight);
     }
@@ -155,9 +169,9 @@ void World::draw_world()
     SDL_RenderPresent(renderer);
 }
 
-bool is_in_vector(const std::vector<int>& vector, int value)
+bool is_in_set(const std::set<int>& set, int value)
 {
-    for (auto v : vector)
+    for (const auto& v : set)
     {
         if (value == v)
             return true;
@@ -170,21 +184,43 @@ void World::play_turn()
     this->sort_organisms();
     std::cout << "\n### Turn number " << this->turn_number << " ###\n" << std::endl;
     int index = 0;
-    for (auto organism : this->organisms)
+
+    this->update_grid_board();
+
+    for (auto& organism : this->organisms)
     {
         organism->get_age()++;
      
-        if (is_in_vector(organism_indexes_to_remove, index))
+        if (is_in_set(organism_indexes_to_remove, index))
         {
             index++;
             continue;
         }
 
-        ActionResult action_type = organism->action(this->grid_board);
+        ActionResult action_result = organism->action(this->grid_board);
         CollisionResult collision_result = organism->collision(this->grid_board, this->organisms, index);
 
-        switch (action_type.type)
+        switch (action_result.type)
         {
+            case ActionType::SOW:
+                this->points_to_multiply.push_back(action_result.point);
+                this->o_types.push_back(action_result.orgainsm_type_to_add);
+                break;
+            case ActionType::KILLING:
+                for (const Point& point : action_result.points_to_remove)
+                {
+                    int local_organism_index = 0;
+                    for (const auto& o : this->organisms)
+                    {
+                        if (o->get_row() == point.row && o->get_column() == point.col)
+                        {
+                            this->organism_indexes_to_remove.insert(local_organism_index);
+                            break;
+                        }
+                        local_organism_index++;
+                    }
+                }
+                break;
             case ActionType::MOVE:
             case ActionType::STAY:
             default:
@@ -193,8 +229,8 @@ void World::play_turn()
         switch (collision_result.type)
         {
             case CollisionType::FIGHT:
-                for (int index : collision_result.organism_indexes)
-                    organism_indexes_to_remove.push_back(index);
+                for (const int& index : collision_result.organism_indexes)
+                    organism_indexes_to_remove.insert(index);
                 break;
             case CollisionType::MULTIPLICATION:
                 this->points_to_multiply.push_back(collision_result.point);
@@ -234,7 +270,7 @@ void World::update_grid_board()
     for (int i = 0; i < BOARD_SIZE; i++)
         for (int j = 0; j < BOARD_SIZE; j++)
             this->grid_board[i][j] = 'e';
-    for (auto o : this->organisms)
+    for (auto& o : this->organisms)
         this->grid_board[o->get_row()][o->get_column()] = o->get_character();
 }
 
@@ -246,11 +282,14 @@ void World::modify_grid_board(int row, int column, char ch)
 
 void World::remove_organisms()
 {
-    for (size_t index : this->organism_indexes_to_remove)
+    std::vector<int> i_remove(organism_indexes_to_remove.begin(), organism_indexes_to_remove.end());
+    std::sort(i_remove.begin(), i_remove.end(), std::greater<int>());
+    for (size_t index : i_remove)
     {
         assert(index < this->organisms.size());
         auto o = organisms[index];
         std::cout << "Removing " << o->get_name() << " at (" << o->get_row() << ", " << o->get_column() << ")\n";
+        delete organisms.at(index);
         organisms.erase(organisms.begin() + index);
     }
     this->organism_indexes_to_remove.clear();

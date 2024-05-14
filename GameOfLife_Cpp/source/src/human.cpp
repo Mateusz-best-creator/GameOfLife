@@ -9,14 +9,18 @@ Human::Human(int row, int column)
     this->previous_row = row;
     this->previous_column = column;
     HUMAN_STATIC_COUNTER++;
+    ability_activated = false;
+    ability_counter = 0;
 }
 
-Human::Human(int row, int column, int strength, int initiative, int age)
+Human::Human(int row, int column, int strength, int initiative, int age, bool activated, int counter)
     : Animal(strength, initiative, age, "Human", 'H', row, column, "human.png", OrganismType::HUMAN)
 {
     this->previous_row = row;
     this->previous_column = column;
     HUMAN_STATIC_COUNTER++;
+    ability_activated = activated;
+    ability_counter = counter;
 }
 
 Human::~Human()
@@ -26,6 +30,18 @@ Human::~Human()
 
 ActionResult Human::action(std::vector<std::vector<char>>& grid_board)
 {
+    if (ability_activated)
+    {
+        this->get_strength()--;
+        if (this->get_strength() == this->normal_strength)
+        {
+            ability_activated = false;
+            ability_counter = 5;
+        }
+    }
+    else if (!ability_activated && ability_counter != 0)
+        ability_counter--;
+
     bool isRunning = true;
     while (isRunning) 
     {
@@ -45,6 +61,19 @@ ActionResult Human::action(std::vector<std::vector<char>>& grid_board)
                 {
                     case SDLK_q:
                         exit(EXIT_SUCCESS);
+                        break;
+                    case SDLK_a:
+                        if (ability_activated)
+                            std::cout << "Human ability arleady activated...\n";
+                        else if (!ability_activated && ability_counter == 0)
+                        {
+                            std::cout << "Activating human ability +10 strength\n";
+                            ability_activated = true;
+                            normal_strength = this->get_strength();
+                            this->get_strength() += 10;
+                        }
+                        else
+                            std::cout << "Cannot activate ability now, you have to wait " << ability_counter << " more turns\n";
                         break;
                     case SDLK_UP:
                         if (this->row > 0)
@@ -82,6 +111,7 @@ ActionResult Human::action(std::vector<std::vector<char>>& grid_board)
     }
     
     this->move_message();
+    grid_board[previous_row][previous_column] = 'e';
     grid_board[row][column] = this->get_character();
 
     return ActionResult(ActionType::MOVE);

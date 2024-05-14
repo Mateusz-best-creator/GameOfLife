@@ -80,6 +80,7 @@ ActionResult Antelope::action(std::vector<std::vector<char>>& grid_board)
     }
     assert(row != previous_row || column != previous_column);
     std::cout << row << ", " << column << ")\n";
+    this->default_grid_update(grid_board);
     return ActionResult(ActionType::MOVE);
 }
 

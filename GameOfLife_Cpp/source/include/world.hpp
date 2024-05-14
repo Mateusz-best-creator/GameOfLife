@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include <vector>
+#include <set>
 
 #include "organism.hpp"
 
@@ -16,7 +17,7 @@ private:
     const int MAX_RANDOM_AMOUNT = 3;
 
     std::vector<std::vector<char>> grid_board;
-    std::vector<int> organism_indexes_to_remove;
+    std::set<int> organism_indexes_to_remove;
     std::vector<OrganismType> o_types;
     std::vector<Point> points_to_multiply;
 

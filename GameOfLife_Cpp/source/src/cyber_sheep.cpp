@@ -1,5 +1,7 @@
 #include "cyber_sheep.hpp"
 #include <cmath>
+#include <iostream>
+#include <cassert>
 
 int CyberSheep::CYBER_SHEEP_STATIC_COUNTER = 0;
 
@@ -22,6 +24,8 @@ CyberSheep::~CyberSheep()
 
 ActionResult CyberSheep::action(std::vector<std::vector<char>>& grid_board)
 {
+    previous_row = row;
+    previous_column = column;
     float shortest_distance = -1;
     int sosnowsky_row = - 1, sosnowsky_column = -1;
 
@@ -56,6 +60,8 @@ ActionResult CyberSheep::action(std::vector<std::vector<char>>& grid_board)
         move_left();
     else
         return ActionResult(ActionType::STAY);
+    std::cout << this->get_name() << " moves from (" << row <<", " << column << ")\n";
+    this->default_grid_update(grid_board);
     return ActionResult(ActionType::MOVE);
 }
 

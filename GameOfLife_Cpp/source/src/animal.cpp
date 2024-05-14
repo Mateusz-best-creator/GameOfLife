@@ -2,8 +2,8 @@
 #include <cassert>
 #include <iostream>
 
-Animal::Animal(int strength, int initiative, int age, std::string name, char character, int row, int column, std::string image_name, OrganismType type)
-    : Organism(strength, initiative, age, name, character, row, column, image_name, type)
+Animal::Animal(int strength, int initiative, int age, std::string name, char ch, int r, int c, std::string image_name, OrganismType t)
+    : Organism(strength, initiative, age, name, ch, r, c, image_name, t)
 {
     
 }
@@ -47,6 +47,7 @@ ActionResult Animal::default_action_animal(std::vector<std::vector<char>>& grid_
 
     this->move_message();
     assert(this->row >= 0 && this->row < BOARD_HEIGHT && this->column >= 0 && this->column < BOARD_WIDTH);
+    grid_board[previous_row][previous_column] = 'e';
     grid_board[this->row][this->column] = this->get_character();
     return ActionResult(ActionType::MOVE);
 }
@@ -55,7 +56,7 @@ CollisionResult Animal::default_collision_animal(std::vector<std::vector<char>>&
 {
     int index = 0;
     std::vector<int> indexes;
-    for (auto organism : organisms)
+    for (auto& organism : organisms)
     {
         // We found collision with another organism
         if (organism->get_row() == this->row && organism->get_column() == this->column && index != current_index)
@@ -63,6 +64,7 @@ CollisionResult Animal::default_collision_animal(std::vector<std::vector<char>>&
             // Multiplication case
             if (organism->get_type() == this->get_type())
             {
+                assert(previous_row >= 0 && previous_row < BOARD_HEIGHT && previous_column >= 0 && previous_column < BOARD_WIDTH);
                 std::cout << this->get_name() << " multiplication at (" << this->row << ", " << column << ") " 
                 << this->get_name() << " goes back to (" << this->previous_row << ", " << this->previous_column << ")\n";
                 int original_row = row;
@@ -73,7 +75,7 @@ CollisionResult Animal::default_collision_animal(std::vector<std::vector<char>>&
                 grid_board[row][column] = this->get_character();
 
                 // Check for max amount
-                if (this->get_static_counter() > MAX_ORGANISM_AMOUNT)
+                if (this->get_static_counter() >= MAX_ORGANISM_AMOUNT)
                 {
                     std::cout << "Cannot add more " << this->get_name() << ", we arleady have " << this->get_static_counter() << " of them on the board...\n";
                     return CollisionResult(CollisionType::NONE);

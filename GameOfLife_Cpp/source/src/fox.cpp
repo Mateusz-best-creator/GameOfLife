@@ -1,5 +1,6 @@
 #include "fox.hpp"
 #include <iostream>
+#include <cassert>
 
 int Fox::FOX_STATIC_COUNTER = 0;
 
@@ -89,7 +90,7 @@ ActionResult Fox::action(std::vector<std::vector<char>>& grid_board)
     }
 
     std::cout << this->get_name() << " moves from (" << previous_row << ", " << previous_column << ") to (" << row << ", " << column << ")\n";
-    grid_board[row][column] = this->get_character();
+    this->default_grid_update(grid_board);
 
     return ActionResult(ActionType::MOVE);
 }

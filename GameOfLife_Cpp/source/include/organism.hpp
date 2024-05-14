@@ -8,12 +8,14 @@ enum class ActionType
 {
     MOVE,
     STAY,
-    SOW
+    SOW,
+    KILLING
 };
 enum class CollisionType
 {
     FIGHT,
     MULTIPLICATION,
+    POISON_PLANT,
     NONE
 };
 enum class OrganismType : unsigned char
@@ -25,7 +27,8 @@ enum class OrganismType : unsigned char
     TURTLE = 't',
     ANTELOPE = 'a',
     CYBER_SHEEP = 'c',
-    GRASS = 'G'
+    GRASS = 'G',
+    SOSNOWSKY_HOGWEED = 'O',
 };
 
 struct Point
@@ -41,8 +44,15 @@ struct ActionResult
     ActionType type;
     Point point;
     OrganismType orgainsm_type_to_add;
+    std::vector<Point> points_to_remove;
 
     ActionResult(ActionType t, Point p, OrganismType o_type) : type(t), point(p), orgainsm_type_to_add(o_type) {}
+    ActionResult(ActionType t, const std::vector<Point> p)
+    {
+        type = t;
+        for (auto point : p)
+            points_to_remove.push_back(point);
+    }
     ActionResult(ActionType t) : type(t) {}
 };
 
@@ -70,20 +80,20 @@ protected:
         NONE = 5,
     };
     int row, column, age, previous_row = -1, previous_column = -1;
-    static const int MAX_ORGANISM_AMOUNT = 5;
+    static const int MAX_ORGANISM_AMOUNT = 6;
     static const int BOARD_HEIGHT = 10, BOARD_WIDTH = 10;
 
 private:
     int strength, initiative, default_strength;
     std::string name, filepath;
-    unsigned char character;
+    char character;
     OrganismType type;
     static const int GUARANA_STRENGTH_INCREASE = 3;
     SDL_Texture *img = NULL;
 
 public:
     // Constructors and destructors
-    Organism(int, int, int, std::string, unsigned char, int, int, std::string, OrganismType);
+    Organism(int, int, int, std::string, char, int, int, std::string, OrganismType);
     virtual ~Organism();
 
     // Setters and getters
@@ -91,7 +101,7 @@ public:
     int& get_strength() { return this->strength; }
     const int& get_initiative() const { return this->initiative; }
     const std::string& get_name() const { return this->name; }
-    const unsigned char& get_character() const { return this->character; }
+    const char& get_character() const { return this->character; }
     const int& get_row() const { return this->row; }
     const int& get_column() const { return this->column; }
     const OrganismType& get_type() const { return this->type; }
@@ -106,6 +116,8 @@ public:
     void move_top();
     void move_right();
     void move_bottom();
+
+    void default_grid_update(std::vector<std::vector<char>>& grid_board) const;
 
     // Virtual methods
     virtual ActionResult action(std::vector<std::vector<char>>&) = 0;
