@@ -10,25 +10,7 @@ Feel free to explore each implementation and experiment with the Game of Life si
 
 ## Running the C++ Project
 
-Before running the C++ project, ensure you have Microsoft Visual Studio installed on your system. Follow these steps to run the project:
 
-1. Clone the repository to your local machine using Git:
-    ```
-    git clone <repository_url>
-    ```
-
-2. Open Microsoft Visual Studio.
-
-3. Navigate to File > Open > Project/Solution and select the C++ project file (`.sln`) from the cloned repository directory.
-
-4. Once the project is loaded in Visual Studio, press F5 or click on the green "Start" button to build and run the project.
-
-5. If you want to save the state of your game your files will be in `./filenames` folder.
-
-Enjoy exploring the C++ implementation of the Game of Life in Microsoft Visual Studio!
-
-<img src="Screenshots/Game_Of_Life_Cpp.png" alt="Simulation" width="450">
-<img src="Screenshots/Game_Of_Life_Cpp_2.png" alt="Simulation" width="450">
 
 ## Running the Java Project
 
