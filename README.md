@@ -2,7 +2,7 @@
 
 This repository contains a Game of Life simulation implemented in three programming languages: C++, Java, and Python.
 
-- The C++ project uses the console to display the entire simulation.
+- The C++ project uses SDL2 window to display the entire simulation.
 - The Java implementation utilizes Swing for the graphical user interface.
 - The Python version utilizes the Pygame framework for visualization.
 
@@ -10,7 +10,17 @@ Feel free to explore each implementation and experiment with the Game of Life si
 
 ## Running the C++ Project
 
+In order to start this project you have to have SDL2, SDL_image and CMake installed on your computer.
 
+Once you have it you can navigate to project directory (when you type `ls` or `dir` you should see `source` folder) and type 
+
+```
+cmake -S source -B build
+cmake --build build
+./build/GameOfLife
+```
+
+This should launch the project, have fun!
 
 ## Running the Java Project
 
