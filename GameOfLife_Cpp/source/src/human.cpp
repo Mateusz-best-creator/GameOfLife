@@ -13,7 +13,7 @@ Human::Human(int row, int column)
     ability_counter = 0;
 }
 
-Human::Human(int row, int column, int strength, int initiative, int age, bool activated, int counter)
+Human::Human(int row, int column, int strength, int initiative, int age, bool activated, int counter, int def_strength)
     : Animal(strength, initiative, age, "Human", 'H', row, column, "human.png", OrganismType::HUMAN)
 {
     this->previous_row = row;
@@ -21,6 +21,18 @@ Human::Human(int row, int column, int strength, int initiative, int age, bool ac
     HUMAN_STATIC_COUNTER++;
     ability_activated = activated;
     ability_counter = counter;
+    this->get_default_strength() = def_strength;
+}
+
+Human::Human(const Human& other)
+    : Animal(other.get_strength(), other.get_initiative(), other.get_age(), "Human", 'H', other.get_row(), other.get_column(), "human.png", OrganismType::HUMAN)
+{
+    this->previous_row = other.previous_row;
+    this->previous_column = other.previous_column;
+    HUMAN_STATIC_COUNTER++;
+    ability_activated = other.ability_activated;
+    ability_counter = other.ability_counter;
+    this->get_default_strength() = other.get_default_strength();
 }
 
 Human::~Human()
@@ -33,7 +45,7 @@ ActionResult Human::action(std::vector<std::vector<char>>& grid_board)
     if (ability_activated)
     {
         this->get_strength()--;
-        if (this->get_strength() == this->normal_strength)
+        if (this->get_strength() == this->get_default_strength())
         {
             ability_activated = false;
             ability_counter = 5;
@@ -69,7 +81,7 @@ ActionResult Human::action(std::vector<std::vector<char>>& grid_board)
                         {
                             std::cout << "Activating human ability +10 strength\n";
                             ability_activated = true;
-                            normal_strength = this->get_strength();
+                            this->get_default_strength() = this->get_strength();
                             this->get_strength() += 10;
                         }
                         else

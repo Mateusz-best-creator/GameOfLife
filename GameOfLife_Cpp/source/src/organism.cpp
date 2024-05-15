@@ -16,6 +16,7 @@ Organism::Organism(int strength, int initiative, int age, std::string name, char
     && image_name[image_last_index - 2] == 'p'
     && image_name[image_last_index - 3] == '.'); // Make sure image has .png extension
     filepath = "./source/Assets/" + image_name;
+    default_strength = strength;
 }
 
 Organism::~Organism()

@@ -21,6 +21,9 @@ set(SOURCES
     src/cyber_sheep.cpp
     src/plant.cpp
     src/grass.cpp
+    src/sow_thistle.cpp
+    src/guarana.cpp
+    src/belladonna.cpp
     src/sosnowsky_hogweed.cpp
 )
 

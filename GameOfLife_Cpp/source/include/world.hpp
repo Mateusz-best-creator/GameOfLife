@@ -21,6 +21,8 @@ private:
     std::vector<OrganismType> o_types;
     std::vector<Point> points_to_multiply;
 
+    std::string FILEPATH = "./source/Filenames/organisms.txt";
+
 public:
     World();
     ~World();
@@ -34,4 +36,8 @@ public:
     void multiply_organisms();
     void update_grid_board();
     void modify_grid_board(int, int, char);
+
+    // Saving and loading from file
+    void save_to_file();
+    void read_from_file();
 };

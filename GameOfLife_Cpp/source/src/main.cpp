@@ -2,7 +2,7 @@
 #include <cstdlib> 
 #include <ctime> 
 
-int main(int argc, char* argv[]) 
+int main() 
 {
     srand((unsigned)time(0)); 
     World world;
@@ -25,6 +25,12 @@ int main(int argc, char* argv[])
                 {
                     case SDLK_p:
                         world.play_turn();
+                        break;
+                    case SDLK_s:
+                        world.save_to_file();
+                        break;
+                    case SDLK_r:
+                        world.read_from_file();
                         break;
                     case SDLK_q:
                         exit(EXIT_SUCCESS);

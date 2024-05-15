@@ -28,6 +28,9 @@ enum class OrganismType : unsigned char
     ANTELOPE = 'a',
     CYBER_SHEEP = 'c',
     GRASS = 'G',
+    SOW_THISTLE = 'S',
+    GUARANA = 'U',
+    BELLADONNA = 'B',
     SOSNOWSKY_HOGWEED = 'O',
 };
 
@@ -107,7 +110,8 @@ public:
     const OrganismType& get_type() const { return this->type; }
     const int& get_age() const { return this->age; }
     int& get_age() { return this->age; }
-
+    const int& get_default_strength() const { return this->default_strength; }
+    int& get_default_strength() { return this->default_strength; }
 
     // Methods
     void draw(SDL_Renderer*, int, int, int, int);
@@ -116,7 +120,6 @@ public:
     void move_top();
     void move_right();
     void move_bottom();
-
     void default_grid_update(std::vector<std::vector<char>>& grid_board) const;
 
     // Virtual methods

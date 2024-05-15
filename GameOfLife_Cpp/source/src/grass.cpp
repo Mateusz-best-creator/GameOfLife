@@ -1,5 +1,4 @@
 #include "grass.hpp"
-#include <iostream>
 
 int Grass::GRASS_STATIC_COUNTER = 0;
 

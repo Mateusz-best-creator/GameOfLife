@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cassert>
 #include <algorithm>
+#include <fstream>
+#include <sstream>
 
 #include "world.hpp"
 #include "human.hpp"
@@ -11,6 +13,9 @@
 #include "antelope.hpp"
 #include "cyber_sheep.hpp"
 #include "grass.hpp"
+#include "sow_thistle.hpp"
+#include "guarana.hpp"
+#include "belladonna.hpp"
 #include "sosnowsky_hogweed.hpp"
 
 World::World()
@@ -49,8 +54,10 @@ World::World()
 
 World::~World()
 {
+    std::cout << "Clearning world... BYE..." << std::endl;
     for (auto& o : this->organisms)
         delete o;
+    this->organisms.clear();
 
     if (renderer) 
     {
@@ -67,14 +74,13 @@ World::~World()
 
 void World::initialize_organisms()
 {
-    char characters[] = {'H', 'w', 's', 'f', 't', 'a', 'c', 'G', 'O'};
+    char characters[] = {'H', 'w', 's', 'f', 't', 'a', 'c', 'G', 'S', 'B', 'U', 'O'};
 
     for (char character : characters)
     {
         int random_amount = rand() % MAX_RANDOM_AMOUNT + 1;
         this->add_organism(random_amount, static_cast<OrganismType>(character));
     }
-    std::cout << "Size = " << this->organisms.size() << std::endl;
     this->update_grid_board();
 }
 
@@ -82,10 +88,7 @@ void World::add_organism(int random_amount, OrganismType type, int specified_row
 {
     // We always want one human at the board
     if (type == OrganismType::HUMAN)
-    {
         random_amount = 1;
-        std::cout << "Human!!\n";
-    }
     
     // Add Organism random amount of times
     for (int i = 0; i < random_amount; i++)
@@ -111,30 +114,39 @@ void World::add_organism(int random_amount, OrganismType type, int specified_row
             case OrganismType::HUMAN:
                 this->organisms.push_back(new Human(random_row, random_column));
                 break;
-            // case OrganismType::WOLF:
-            //     this->organisms.push_back(new Wolf(random_row, random_column));
-            //     break;
-            // case OrganismType::SHEEP:
-            //     this->organisms.push_back(new Sheep(random_row, random_column));
-            //     break;
-            // case OrganismType::FOX:
-            //     this->organisms.push_back(new Fox(random_row, random_column));
-            //     break;
-            // case OrganismType::TURTLE:
-            //     this->organisms.push_back(new Turtle(random_row, random_column));
-            //     break;
-            // case OrganismType::ANTELOPE:
-            //     this->organisms.push_back(new Antelope(random_row, random_column));
-            //     break;
-            // case OrganismType::CYBER_SHEEP:
-            //     this->organisms.push_back(new CyberSheep(random_row, random_column));
-            //     break;
+            case OrganismType::WOLF:
+                this->organisms.push_back(new Wolf(random_row, random_column));
+                break;
+            case OrganismType::SHEEP:
+                this->organisms.push_back(new Sheep(random_row, random_column));
+                break;
+            case OrganismType::FOX:
+                this->organisms.push_back(new Fox(random_row, random_column));
+                break;
+            case OrganismType::TURTLE:
+                this->organisms.push_back(new Turtle(random_row, random_column));
+                break;
+            case OrganismType::ANTELOPE:
+                this->organisms.push_back(new Antelope(random_row, random_column));
+                break;
+            case OrganismType::CYBER_SHEEP:
+                this->organisms.push_back(new CyberSheep(random_row, random_column));
+                break;
             case OrganismType::GRASS:
                 this->organisms.push_back(new Grass(random_row, random_column));
                 break;
-            // case OrganismType::SOSNOWSKY_HOGWEED:
-            //     this->organisms.push_back(new SosnowskyHogweed(random_row, random_column));
-            //     break;
+            case OrganismType::SOW_THISTLE:
+                this->organisms.push_back(new SowThistle(random_row, random_column));
+                break;
+            case OrganismType::GUARANA:
+                this->organisms.push_back(new Guarana(random_row, random_column));
+                break;    
+            case OrganismType::BELLADONNA:
+                this->organisms.push_back(new Belladonna(random_row, random_column));
+                break;
+            case OrganismType::SOSNOWSKY_HOGWEED:
+                this->organisms.push_back(new SosnowskyHogweed(random_row, random_column));
+                break;
             default:
                 std::cout << "Incorrect organism type...\n";
                 break;
@@ -329,4 +341,115 @@ void World::multiply_organisms()
     }
     this->points_to_multiply.clear();
     this->o_types.clear();
+}
+
+void World::save_to_file()
+{
+    std::cout << "Saving state of the game to " << FILEPATH << std::endl;
+    std::ofstream file(FILEPATH);
+
+    if (!file.is_open())
+    {
+        std::cout << "Error opening " << FILEPATH << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    for (const auto& organism : this->organisms)
+    {
+        if (organism->get_type() == OrganismType::HUMAN)
+        {
+            Human* original = static_cast<Human*>(organism);
+            Human* temp = new Human(*original);
+            file << temp->get_character() << " " << temp->get_strength() << " " << temp->get_initiative() << " " << temp->get_age()
+            << " " << temp->get_row() << " " << temp->get_column() << " " << temp->get_ability_activated() << " " << temp->get_ability_counter() 
+            << " " << temp->get_default_strength() << std::endl;
+            delete temp;
+        }
+        else
+            file << organism->get_character() << " " << organism->get_strength() << " " << organism->get_initiative() << " " 
+            << organism->get_age() << " " << organism->get_row() << " " << organism->get_column() << std::endl;
+    }
+}
+
+void World::read_from_file()
+{
+    std::cout << "Loading state of the game from " << FILEPATH << std::endl;
+    std::ifstream file(FILEPATH);
+
+    if (!file.is_open())
+    {
+        std::cout << "Error opening " << FILEPATH << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    for (auto& o : this->organisms)
+        delete o;
+    this->organisms.clear();
+
+    std::string line;
+    while (getline (file, line)) 
+    {
+        // Human case
+        if (line[0] == 'H')
+        {
+            std::istringstream iss(line);
+            char arg0;
+            int strength, initiative, age, row, col;
+            char activated;
+            int counter, def_strength;
+            iss >> arg0 >> strength >> initiative >> age >> row >> col >> activated >> counter >> def_strength;
+            bool is_activated = activated == 'Y' ? true : false;
+            this->organisms.push_back(new Human(row, col, strength, initiative, age, is_activated, counter, def_strength));
+        }
+        else
+        {
+            std::istringstream iss(line);
+            char arg0;
+            int strength, initiative, age, row, col;
+            iss >> arg0 >> strength >> initiative >> age >> row >> col;
+
+            OrganismType type = static_cast<OrganismType>(arg0);
+            switch (type)
+            {
+                case OrganismType::WOLF:
+                    this->organisms.push_back(new Wolf(row, col, strength, initiative, age));
+                    break;
+                case OrganismType::SHEEP:
+                    this->organisms.push_back(new Sheep(row, col, strength, initiative, age));
+                    break;
+                case OrganismType::FOX:
+                    this->organisms.push_back(new Fox(row, col, strength, initiative, age));
+                    break;
+                case OrganismType::TURTLE:
+                    this->organisms.push_back(new Turtle(row, col, strength, initiative, age));
+                    break;
+                case OrganismType::ANTELOPE:
+                    this->organisms.push_back(new Antelope(row, col, strength, initiative, age));
+                    break;
+                case OrganismType::CYBER_SHEEP:
+                    this->organisms.push_back(new CyberSheep(row, col, strength, initiative, age));
+                    break;
+                case OrganismType::GRASS:
+                    this->organisms.push_back(new Grass(row, col, strength, initiative, age));
+                    break;
+                case OrganismType::SOW_THISTLE:
+                    this->organisms.push_back(new SowThistle(row, col, strength, initiative, age));
+                    break;
+                case OrganismType::GUARANA:
+                    this->organisms.push_back(new Guarana(row, col, strength, initiative, age));
+                    break;    
+                case OrganismType::BELLADONNA:
+                    this->organisms.push_back(new Belladonna(row, col, strength, initiative, age));
+                    break;
+                case OrganismType::SOSNOWSKY_HOGWEED:
+                    this->organisms.push_back(new SosnowskyHogweed(row, col, strength, initiative, age));
+                    break;
+                default:
+                    std::cout << "Incorrect organism type...\n";
+                    break;
+            }
+        }
+        std::cout << "Line = " << line << std::endl;
+    }
+    this->update_grid_board();
 }

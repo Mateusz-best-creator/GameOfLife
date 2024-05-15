@@ -12,7 +12,6 @@ ActionResult Animal::default_action_animal(std::vector<std::vector<char>>& grid_
 {
     this->previous_row = this->row;
     this->previous_column = this->column;
-    grid_board[previous_row][previous_column] = 'e';
 
     Direction direction = static_cast<Direction>((rand()%4)+1);
     while (true)
@@ -46,9 +45,7 @@ ActionResult Animal::default_action_animal(std::vector<std::vector<char>>& grid_
     }
 
     this->move_message();
-    assert(this->row >= 0 && this->row < BOARD_HEIGHT && this->column >= 0 && this->column < BOARD_WIDTH);
-    grid_board[previous_row][previous_column] = 'e';
-    grid_board[this->row][this->column] = this->get_character();
+    this->default_grid_update(grid_board);
     return ActionResult(ActionType::MOVE);
 }
 
@@ -97,11 +94,30 @@ CollisionResult Animal::default_collision_animal(std::vector<std::vector<char>>&
             // Fight case
             else if (organism->get_type() != this->get_type())
             {
+                // Poison plants case
+                if ((organism->get_type() == OrganismType::SOSNOWSKY_HOGWEED && this->get_type() != OrganismType::CYBER_SHEEP) 
+                || organism->get_type() == OrganismType::BELLADONNA)
+                {
+                    std::cout << get_name() << " eats " << organism->get_name() << " and " 
+                    << organism->get_name() << " eats " << get_name() << " at (" << row << ", " << column << ")\n";
+                    indexes.push_back(current_index);
+                    indexes.push_back(index);
+                    return CollisionResult(CollisionType::FIGHT, indexes);
+                }
+                
                 if (this->get_strength() >= organism->get_strength())
                 {
                     std::cout << this->get_name() << " wins with " << organism->get_name() << " at (" << this->row << ", " << column << ")\n";
                     indexes.push_back(index);
                     grid_board[row][column] = this->get_character();
+                    
+                    // If we eat guarana we get +3 to strength permanently
+                    if (organism->get_type() == OrganismType::GUARANA)
+                    {
+                        this->get_default_strength() += 3;
+                        this->get_strength() += 3;
+                        std::cout << this->get_name() << " +3 to strength, current strength = " << this->get_strength() << "...\n";
+                    }
                 }
                 else 
                 {
