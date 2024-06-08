@@ -312,9 +312,12 @@ class World:
                             displayed_message = True
 
                         else:
-                            self.display_message("Activating human special ability...", self.screen_height * 0.965, self.screen_width * 0.5)
+                            if self.organisms[human_index].get_ability_activated():
+                                self.display_message("Cant activate human special ability...", self.screen_height * 0.965, self.screen_width * 0.5)
+                            else:
+                                self.organisms[human_index].activate_ability()
+                                self.display_message("Activating human special ability...", self.screen_height * 0.965, self.screen_width * 0.5)
                             displayed_message = True
-                            self.organisms[human_index].activate_ability()
 
                     elif event.key == pygame.K_s:
 
@@ -452,10 +455,9 @@ class World:
                     temp = organism
                     ability_activated = temp.get_ability_activated()
                     msg = None
-                    def_strength = 5
+                    def_strength = organism.get_default_strength()
                     if ability_activated: 
                         msg = "YES"
-                        def_strength = organism.get_default_strength()
                     else: 
                         msg = "NO"
                     f.write(f"""{organism.get_name()} {organism.get_strength()} {organism.get_initiative()} {
@@ -486,6 +488,10 @@ class World:
                 row = int(row)
                 column = int(column)
                 if name == "Human":
+                    if ability_activated == "YES":
+                        ability_activated = True
+                    else:
+                        ability_activated = False
                     self.organisms.append(Human(name, row, column, strength, initiative, ability_activated=ability_activated, default_strength=int(default_strength)))
                 elif name == "wolf":
                     self.organisms.append(Wolf(name, row, column, strength, initiative))

@@ -87,3 +87,5 @@ class Human(Animal):
         if not self.ability_activated:
             self.ability_activated = True
             self.strength += Human.ABILITY_STRENGTH_INCREASE
+            return True
+        return False
